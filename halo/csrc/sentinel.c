@@ -109,7 +109,8 @@ static void send_probe(int ri, uint32_t *seqc, pend_t *pend) {
     for (int i = 0; i < MAXPEND; i++) if (!pend[i].used) { pend[i] = (pend_t){ seq, ts, ri, 0, 1 }; return; }
 }
 
-/* Two modes while armed.  CALM: probes at probe_s, byte counters / telemetry / heartbeat every tick_s, alerts.
+/* Two modes while armed. CALM: counters / telemetry / heartbeat every tick_s, probes at probe_s
+ * (up to once per tick at saturation), and alerts.
  * FAST: full-rate probing (fast_s) only; samples, late and lost probes are queued for Python, which runs the control loop
  * at its own tick and decides when calm returns (hs_arm).  An alert in CALM switches to FAST by itself, without a gap. */
 void *sentinel_thread(void *arg) {
@@ -255,12 +256,14 @@ void *sentinel_thread(void *arg) {
                     char hb[48]; int n = snprintf(hb, sizeof hb, "%.3f %s", now, p.fsm);
                     if (pwrite(G.fd_hb, hb, n, 0) == n && n != G.hb_len) { if (ftruncate(G.fd_hb, n) == 0) G.hb_len = n; }
                 }
+                double probe_period = p.probe_s;
                 for (int d = 0; d < 2; d++) {
                     if (peak[d] > 0.5 * p.rate[d] && ach[d] < p.collapse * p.rate[d] && ach[d] <= 0.8 * peak[d]) alert = AL_COLLAPSE;
                     else if (p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= 0.9 * p.load_thresh * p.rate[d] && now >= p.hold_until[d] - 0.5) alert = AL_PROBEUP;
-                    else if (p.sat_frac > 0 && ach[d] >= p.sat_frac * p.rate[d]) alert = AL_PROBEUP;   /* shaper saturated: stay at the full rate */
+                    if (p.sat_frac > 0 && ach[d] >= p.sat_frac * p.rate[d])
+                        probe_period = fmin(probe_period, p.tick_s);  /* stay alert without running the Python rate loop */
                 }
-                if (!alert && now - last_probe >= p.probe_s - 0.5 * p.tick_s && G.nsock > 0) {
+                if (!alert && now - last_probe >= probe_period - 0.5 * p.tick_s && G.nsock > 0) {
                     last_probe = now; send_probe(p.rr % G.nsock, &seqc, pend); p.rr++;
                 }
             }

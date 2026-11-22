@@ -175,8 +175,8 @@ MANY_FLOWS_N = int(os.environ.get("HALO_MANY_FLOWS_N", policy.MANY_FLOWS_N))
 MANY_FLOWS_MARGIN = float(os.environ.get("HALO_MANY_FLOWS_MARGIN", policy.MANY_FLOWS_MARGIN))
 HEUR_SIZE_ACTS = os.environ.get("HALO_HEUR_SIZE_ACTS") == "1"     # diagnostics: act on the elephant (size) verdict
 NEED_BINS = max(HORIZONS) + 1      # baseline poll + bins for the largest classification horizon
-# Saturated shaper (arrival >= SAT_FRAC x shaped rate): a capacity drop matters most now and is detected by the delay vote, so
-# the prober stays at the full rate instead of calm mode (calm adds 0.1-0.2 s to the first cut; M4). 0 = off (A/B).
+# At saturation the native sentinel probes on every calm tick, and immediately starts fast probing when it sees
+# a capacity-loss signal. Keep full-rate saturation monitoring on the Python fallback, which lacks this native path.
 SAT_FRAC = float(os.environ.get("HALO_SAT_FRAC", "0.9"))
 GUARD_POLL_S = 5.0                 # otherwise dump only for the demote-on-behaviour / per-host rate guard
 
@@ -880,8 +880,8 @@ class Ctl:
                 hot = True                                   # about to probe upwards
             elif collapsed(ach[d], e.rate, peak[d], e.p.collapse):
                 hot = True                                   # the arrival rate fell away: possible capacity loss
-            elif SAT_FRAC > 0 and ach[d] >= SAT_FRAC * e.rate:
-                hot = True                                   # shaper saturated: a capacity drop would show as delay at once
+            elif self.sent is None and SAT_FRAC > 0 and ach[d] >= SAT_FRAC * e.rate:
+                hot = True                                   # fallback saturation monitoring
         if self.txn is not None or self.fsm == "VERIFYING":
             hot = True               # (fsm "ADAPTING" is sticky after a rate change and is covered by the estimator states)
         if hot:

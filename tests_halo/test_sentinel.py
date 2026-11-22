@@ -111,7 +111,7 @@ def test_heartbeat_is_gated_on_the_python_liveness_counter(refl, tmp_path):
         while time.time() - t0 < 0.8:                             # alive: heartbeat advances
             sent.bump()
             time.sleep(0.1)
-        assert time.time() - hb.stat().st_mtime < 0.3
+        assert time.time() - hb.stat().st_mtime < 0.6
         assert hb.read_text().endswith(" STEADY")
         time.sleep(S.GATE_S + 0.5)                                 # "hung": nobody bumps any more
         age = time.time() - hb.stat().st_mtime
@@ -238,16 +238,16 @@ def test_collapse_and_probe_up_alerts_use_the_params_python_hands_over(refl, tmp
             assert _wait_alert(sent, 3.0) == S.AL_PROBEUP
             sent.disarm()
 
-            # At the ceiling, sustained traffic increases the native probe cadence without an alert.
+            # At the ceiling, steady traffic keeps the configured native probe cadence.
             # Stopping a sender should cause a check, but successful probes must leave Python asleep.
-            p = _params(sat_frac=0.9, probe_s=1.0)
+            p = _params(sat_frac=0.9, probe_s=0.2)
             p.rate[0] = p.rmax[0] = 1.0
             sent.arm(p)
             n0 = refl.n
             for _ in range(7):
                 sent.bump()
                 time.sleep(0.1)
-            assert refl.n - n0 >= 4
+            assert 2 <= refl.n - n0 <= 5
             assert sent.ack_alert() == S.AL_NONE
             stopl.set()
             th.join()

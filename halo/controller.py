@@ -175,8 +175,8 @@ MANY_FLOWS_N = int(os.environ.get("HALO_MANY_FLOWS_N", policy.MANY_FLOWS_N))
 MANY_FLOWS_MARGIN = float(os.environ.get("HALO_MANY_FLOWS_MARGIN", policy.MANY_FLOWS_MARGIN))
 HEUR_SIZE_ACTS = os.environ.get("HALO_HEUR_SIZE_ACTS") == "1"     # diagnostics: act on the elephant (size) verdict
 NEED_BINS = max(HORIZONS) + 1      # baseline poll + bins for the largest classification horizon
-# At saturation the native sentinel probes on every calm tick, and immediately starts fast probing when it sees
-# a capacity-loss signal. Keep full-rate saturation monitoring on the Python fallback, which lacks this native path.
+# The native sentinel samples arrivals on every calm tick and confirms suspected capacity loss with a probe burst.
+# The Python fallback keeps full-rate saturation monitoring.
 SAT_FRAC = float(os.environ.get("HALO_SAT_FRAC", "0.9"))
 GUARD_POLL_S = 5.0                 # otherwise dump only for the demote-on-behaviour / per-host rate guard
 
@@ -1005,6 +1005,17 @@ class Ctl:
         fds = {p: os.open("/sys/class/net/%s/statistics/%s" % (WAN, p), os.O_RDONLY) for p in ("rx_bytes", "tx_bytes")}
         rd = lambda p: int(os.pread(fds[p], 32, 0))
         last_b, last_t = (rd("rx_bytes"), rd("tx_bytes")), time.time()
+
+        def sample_arrival(now, last_b, last_t):
+            measured = (rd("rx_bytes"), rd("tx_bytes"))
+            dt = now - last_t
+            alpha = ewma_alpha(dt)
+            for i, direction in enumerate(("dl", "ul")):
+                instant = (measured[i] - last_b[i]) * 8 / dt / 1e6
+                ach[direction] += alpha * (instant - ach[direction])
+            self.ach_hist.append((now, ach["dl"]))
+            return measured, dt
+
         with open(os.path.join(STATE_DIR, "ctl.pid"), "w") as f:
             f.write(str(os.getpid()))
         try:
@@ -1055,6 +1066,9 @@ class Ctl:
                 dt = 0.0
                 if alert:
                     armed = False                           # the C thread switched itself to full-rate probing
+                    if alert == _sentinel.AL_COLLAPSE and now - last_t >= 0.05:
+                        last_b, dt = sample_arrival(now, last_b, last_t)
+                        last_t = now
                     if alert == _sentinel.AL_ERROR:
                         self.sent_failed("C thread reported an error")
                         sent = None
@@ -1066,14 +1080,8 @@ class Ctl:
                     if time.time() - last_t < 0.05:
                         time.sleep(0.05 - (time.time() - last_t))
                 now = time.time()
-                b = (rd("rx_bytes"), rd("tx_bytes"))
-                dt = now - last_t
-                inst = {"dl": (b[0] - last_b[0]) * 8 / dt / 1e6, "ul": (b[1] - last_b[1]) * 8 / dt / 1e6}
-                last_b, last_t = b, now
-                al = ewma_alpha(dt)
-                for d in ("dl", "ul"):
-                    ach[d] += al * (inst[d] - ach[d])             # ~200 ms EWMA (alpha follows the tick length)
-                self.ach_hist.append((now, ach["dl"]))
+                last_b, dt = sample_arrival(now, last_b, last_t)
+                last_t = now
                 n_tick += 1
                 if sent is not None:                        # full-rate probe samples of the C thread -> estimators
                     if self.sent_collect(now, ach, peak, calm=False)[0] == _sentinel.AL_ERROR:

@@ -191,10 +191,9 @@ class DirEstimator:
         elif self.t_bloat_on < 0:
             self.t_bloat_on, self.ach_onset = t, achieved
             if self.behind and 0 <= t - self.t_native_collapse <= p.sample_ttl and self._collapsed(t, achieved):
-                # The native watcher sampled the rate drop before waking Python. Credit the
-                # delay time already observed since that sample, but still require the normal vote.
-                self.t_bloat_on = min(ts for ts, delayed in self.votes if delayed and t - ts <= p.sample_ttl)
-                self.t_bloat_on = max(self.t_bloat_on, self.t_native_collapse)
+                # The native watcher confirmed the arrival drop with a directional probe burst.
+                # Count the time spent confirming it, while retaining this estimator's delay vote.
+                self.t_bloat_on = self.t_native_collapse
         if bloat and (t - self.t_bloat_on < (p.confirm_fast if self._collapsed(t, achieved) else p.confirm)
                       or achieved > p.ramp_tol * max(self.ach_onset, 1e-3)
                       or self._flow_start(t, achieved)):

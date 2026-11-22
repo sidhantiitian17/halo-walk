@@ -115,8 +115,8 @@ static void confirm_burst(double now, uint32_t *seqc, pend_t *pend) {
     for (int j = 0; j < G.nsock; j++) send_probe(j, seqc, pend);
 }
 
-/* Two modes while armed. CALM: counters / telemetry / heartbeat every tick_s, probes at probe_s
- * (up to once per tick at saturation), and alerts.
+/* Two modes while armed. CALM: counters and telemetry every tick_s, gated heartbeats,
+ * probes at probe_s, and confirmation bursts when conditions change.
  * FAST: full-rate probing (fast_s) only; samples, late and lost probes are queued for Python, which runs the control loop
  * at its own tick and decides when calm returns (hs_arm).  An alert in CALM switches to FAST by itself, without a gap. */
 void *sentinel_thread(void *arg) {
@@ -142,6 +142,7 @@ void *sentinel_thread(void *arg) {
         { uint64_t x; if (read(G.cefd, &x, 8) < 0) { } }
         double now = rt(), next_tick = now + p.tick_s, last_probe = now - p.probe_s, next_fprobe = now;
         double confirm_until = 0, watch_until = 0, dl_delay_since = 0, dl_collapse_at = 0;
+        double next_heartbeat = now;
         int confirm_bad[2] = {0, 0};
         uint64_t rx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : 0, tx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : 0;
         double t_last = now, ach[2] = { p.ach[0], p.ach[1] }, peak[2] = { p.peak[0], p.peak[1] }, ld[2] = { p.last_delta[0], p.last_delta[1] };
@@ -281,19 +282,19 @@ void *sentinel_thread(void *arg) {
                 if (lv != G.last_live) { G.last_live = lv; G.last_live_t = now; }
                 int fresh = now - G.last_live_t <= p.gate_s;
                 pthread_mutex_unlock(&G.mu);
-                if (fresh && G.fd_hb >= 0) {                                /* heartbeat only while Python is alive */
+                if (fresh && G.fd_hb >= 0 && now >= next_heartbeat) {
                     char hb[48]; int n = snprintf(hb, sizeof hb, "%.3f %s", now, p.fsm);
-                    if (pwrite(G.fd_hb, hb, n, 0) == n && n != G.hb_len) { if (ftruncate(G.fd_hb, n) == 0) G.hb_len = n; }
+                    if (pwrite(G.fd_hb, hb, n, 0) == n) {
+                        if (n != G.hb_len && ftruncate(G.fd_hb, n) == 0) G.hb_len = n;
+                        next_heartbeat = now + fmin(0.5, p.gate_s / 2.0);
+                    }
                 }
                 int drop[2] = {0, 0};
-                double probe_period = p.probe_s;
                 for (int d = 0; d < 2; d++) {
                     drop[d] = peak[d] > 0.5 * p.rate[d] && ach[d] >= 0.10 * p.rate[d]
                               && ach[d] < p.collapse * p.rate[d] && ach[d] <= 0.8 * peak[d];
                     if (!drop[d] && p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= 0.9 * p.load_thresh * p.rate[d]
                             && now >= p.hold_until[d] - 0.5) alert = AL_PROBEUP;
-                    if (p.sat_frac > 0 && ach[d] >= p.sat_frac * p.rate[d])
-                        probe_period = fmin(probe_period, p.tick_s);  /* stay alert without running the Python rate loop */
                 }
                 /* A disappearing sender also causes an arrival drop. Ask the reflectors before
                  * waking Python. The next tick or a delayed reply can still escalate immediately. */
@@ -303,7 +304,7 @@ void *sentinel_thread(void *arg) {
                     confirm_bad[0] = confirm_bad[1] = 0;
                     confirm_burst(now, &seqc, pend);
                 }
-                if (!alert && now - last_probe >= probe_period - 0.5 * p.tick_s && G.nsock > 0) {
+                if (!alert && now - last_probe >= p.probe_s - 0.5 * p.tick_s && G.nsock > 0) {
                     last_probe = now; send_probe(p.rr % G.nsock, &seqc, pend); p.rr++;
                 }
             }

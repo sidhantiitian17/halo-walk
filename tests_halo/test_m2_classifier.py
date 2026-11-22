@@ -151,6 +151,10 @@ def test_model_wrapper_loads_and_predicts(tmp_path, kind):
         assert len(probs) == len(C.CLASSES)
         assert sum(probs) == pytest.approx(1.0)
         assert p == max(probs)
+    samples = [flow(), flow(proto="tcp", port=443)]
+    stage1, stage2 = m.predict_batch(samples, [(f, h) for f in samples for h in C.HORIZONS])
+    assert stage1 == [m.predict1(f) for f in samples]
+    assert stage2 == [m.predict2(f, h) for f in samples for h in C.HORIZONS]
 
 
 def test_temperature_calibration_flattens():

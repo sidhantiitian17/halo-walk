@@ -230,6 +230,22 @@ def test_collapse_and_probe_up_alerts_use_the_params_python_hands_over(refl, tmp
         try:
             sent.arm(p)
             assert _wait_alert(sent, 3.0) == S.AL_PROBEUP
+            sent.disarm()
+
+            # At the ceiling, sustained traffic increases the native probe cadence without an alert.
+            # Keep the reflector healthy while withdrawing the background traffic to test the wakeup.
+            p = _params(sat_frac=0.9, probe_s=1.0)
+            p.rate[0] = p.rmax[0] = 1.0
+            sent.arm(p)
+            n0 = refl.n
+            for _ in range(7):
+                sent.bump()
+                time.sleep(0.1)
+            assert refl.n - n0 >= 4
+            assert sent.ack_alert() == S.AL_NONE
+            stopl.set()
+            th.join()
+            assert _wait_alert(sent, 1.0) == S.AL_COLLAPSE
         finally:
             stopl.set(); th.join()
     finally:

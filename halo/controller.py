@@ -504,6 +504,24 @@ class Ctl:
         self.host_rate = host
 
     # ---------------------------------------------------------------- classification + marks (M2 -> M5 -> M6)
+    def ml_predictions(self, items, overrides, now):
+        early, later = {}, {}
+        for key, flow in items:
+            if now - flow["seen"] > 30 or key in overrides:
+                continue
+            npkts = len(flow["pkts"])
+            if flow["stage"] == 0 and npkts >= 2 and (npkts >= N1 or now - flow["t0"] > 1.0):
+                early[key] = flow
+            for h in HORIZONS:
+                if flow["done_h"] < h <= len(flow["bins"]):
+                    later[key, h] = flow, h
+        try:
+            stage1, stage2 = self.model.predict_batch(early.values(), later.values())
+        except Exception:
+            # Retry individually so one bad sample can't suppress a different flow's verdict.
+            return {}, {}
+        return dict(zip(early, stage1)), dict(zip(later, stage2))
+
     def classify(self, now):
         a, lines, dump = self.a, [], []
         ovr = {}
@@ -518,6 +536,14 @@ class Ctl:
             self._ovr_cache = (None, {})
         with self.flock:
             items = list(self.flows.items())
+        overrides = {}
+        if ovr:
+            for key, _ in items:
+                item = ovr.get("|".join(map(str, key))) or ovr.get(key[1])
+                if item and item["until"] > now:
+                    overrides[key] = item
+        if a.classifier == "ml":
+            stage1, stage2 = self.ml_predictions(items, overrides, now)
         voice = []
         for key, f in items:
             age = now - f["t0"]
@@ -526,8 +552,8 @@ class Ctl:
                     self.flows.pop(key, None)
                 continue
             old = (f["cls"], f["tin"])
-            o = ovr.get("|".join(map(str, key))) or ovr.get(key[1])
-            if o and o["until"] > now:
+            o = overrides.get(key)
+            if o:
                 f.update(cls=o["cls"], p=1.0, abstain=False, stage=9, ovr=o["cls"])
             elif a.classifier == "heur":
                 c, p, ab = heuristic(f)
@@ -543,11 +569,11 @@ class Ctl:
             elif a.classifier == "ml":
                 try:
                     if f["stage"] == 0 and (len(f["pkts"]) >= N1 or age > 1.0) and len(f["pkts"]) >= 2:
-                        c, p, _ = self.model.predict1(f)
+                        c, p, _ = stage1.get(key) or self.model.predict1(f)
                         f.update(cls=c, p=p, abstain=p < self.promote_p, stage=1)
                     for h in HORIZONS:
                         if f["done_h"] < h and len(f["bins"]) >= h:
-                            c, p, _ = self.model.predict2(f, h)
+                            c, p, _ = stage2.get((key, h)) or self.model.predict2(f, h)
                             if p >= self.promote_p or h == HORIZONS[-1]:
                                 f.update(cls=c, p=p, abstain=p < self.promote_p, stage=2)
                             f["done_h"] = h

@@ -161,8 +161,8 @@ def test_probing_up_at_rmax_is_calm(tmp_path, fake_sh, state_dir, monkeypatch):
     assert not c.gov.is_fast(now)
 
 
-def test_saturated_shaper_keeps_full_rate_probing(tmp_path, fake_sh, state_dir):
-    """M4: while the shaper is saturated (arrival >= 0.9 x shaped rate) a capacity drop must be seen at the full probe rate"""
+def test_saturated_shaper_uses_native_monitor_or_fast_fallback(tmp_path, fake_sh, state_dir):
+    """The native sentinel monitors saturation independently; Python falls back to the fast loop."""
     c = _ctl(tmp_path, fake_sh, state_dir)
     now = time.time() + 100
     for e in c.est.values():
@@ -170,6 +170,10 @@ def test_saturated_shaper_keeps_full_rate_probing(tmp_path, fake_sh, state_dir):
     r = c.est["dl"].rate
     c.govern(now, {"dl": 0.5 * r, "ul": 0.0}, {"dl": 0.5 * r, "ul": 0.0}, 0.2)
     assert not c.gov.is_fast(now)                         # half loaded: calm
+    c.sent = object()
+    c.govern(now, {"dl": 0.95 * r, "ul": 0.0}, {"dl": 0.95 * r, "ul": 0.0}, 0.2)
+    assert not c.gov.is_fast(now)
+    c.sent = None
     c.govern(now, {"dl": 0.95 * r, "ul": 0.0}, {"dl": 0.95 * r, "ul": 0.0}, 0.2)
     assert c.gov.is_fast(now)                             # saturated: full rate
 

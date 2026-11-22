@@ -102,19 +102,29 @@ class Model:
         s = sum(q)
         return [x / s for x in q]
 
-    def _predict(self, stage, x):
+    def _predict_rows(self, stage, rows):
         import numpy as np
+        if not rows:
+            return []
         m = self.b["m%d" % stage]
-        p = m.predict_proba(np.asarray([x], dtype=float))[0].tolist()
-        p = self._cal(p, self.b["cal%d" % stage])
-        i = max(range(len(p)), key=lambda k: p[k])
-        return CLASSES[i], p[i], p
+        cal = self.b["cal%d" % stage]
+        results = []
+        for raw in m.predict_proba(np.asarray(rows, dtype=np.float32)).tolist():
+            p = self._cal(raw, cal)
+            i = max(range(len(p)), key=p.__getitem__)
+            results.append((CLASSES[i], p[i], p))
+        return results
+
+    def predict_batch(self, stage1, stage2):
+        """Infer all ready samples in one call per model, preserving order and per-row calibration."""
+        return (self._predict_rows(1, [feat1(flow) for flow in stage1]),
+                self._predict_rows(2, [feat2(flow, h) for flow, h in stage2]))
 
     def predict1(self, flow):
-        return self._predict(1, feat1(flow))
+        return self._predict_rows(1, [feat1(flow)])[0]
 
     def predict2(self, flow, h):
-        return self._predict(2, feat2(flow, h))
+        return self._predict_rows(2, [feat2(flow, h)])[0]
 
 
 def ece(probs, labels, bins=15):

@@ -1,0 +1,3 @@
+HALO_GUEST_READY 6.12.118+deb13-amd64 3 CPUs
+qdisc netem 8002: dev check1 root refcnt 4 limit 1000 delay 10ms seed 12464378581260605305
+qdisc cake 8001: dev check0 root refcnt 4 bandwidth 100Mbit diffserv3 triple-isolate nonat nowash no-ack-filter split-gso rtt 100ms raw overhead 0 

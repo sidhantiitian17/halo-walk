@@ -47,9 +47,13 @@ Each experimental revision has a separate directory under [results/codex-cloud](
 | `candidate6` | `21ca28e044252507f7559f98a8359bc5ba5a8463` |
 | `candidate7` | `6247ae4e8ec1c81b22e1f46e14f5f40479ad5420` |
 | `candidate8` | `5c8bf0016999091f9949d08cbf652f848579d130` |
+| `three-vcpu-candidate8` | `5c8bf0016999091f9949d08cbf652f848579d130` (three-vCPU guest) |
+| `three-vcpu-candidate9` | `6f6005e04020053e47d8d10e79c45beacae1c2c7` (three-vCPU guest) |
 
 The original evidence campaign used Ubuntu 6.8. This Debian guest is a separate measurement environment. Compare baseline and candidate within the cloud guest. The original results remain in `results/raw`.
 
 The second guest reproduced the kernel preflight. Its diagnostic C4 run began traffic before the model finished loading, so the scorer excludes its CPU number. The batch helper now warms dependency imports before its first C4 run. The scorer checks that adaptive-controller telemetry started before the workload.
 
 The 22 tracked source and model files in each guest input bundle were byte-compared with its source revision. See [native build fingerprints](native-builds.txt) and [unchanged harness and scorer fingerprints](unchanged-files.sha256). The separate setup diagnostic overlapped part of the candidate4 campaign. The candidate6 and candidate7 campaigns ran without the diagnostic guest.
+
+The three-vCPU diagnostic used `HALO_VM_VCPUS=3` with the same C8 source, kernel and workload. The first guest had exited before the diagnostic began. The three-vCPU evidence is scored separately. See [three-vCPU preflight](three-vcpu-preflight.txt).

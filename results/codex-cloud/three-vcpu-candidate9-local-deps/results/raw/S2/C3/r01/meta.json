@@ -1,0 +1,51 @@
+{
+ "scenario": "S2",
+ "config": "C3",
+ "rep": 1,
+ "seed": 1133,
+ "kernel": "6.12.118+deb13-amd64",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795387783.3403096,
+   "rel": 0.0
+  },
+  {
+   "down": 10,
+   "up": 2,
+   "name": "rate_down",
+   "t": 1795387801.6875172,
+   "rel": 18.347
+  },
+  {
+   "down": 50,
+   "up": 10,
+   "name": "rate_up",
+   "t": 1795387825.9365616,
+   "rel": 42.596
+  },
+  {
+   "name": "end",
+   "t": 1795387864.43767,
+   "rel": 81.097
+  }
+ ],
+ "down": 50,
+ "up": 10,
+ "steps": [
+  [
+   18,
+   10,
+   2
+  ],
+  [
+   42,
+   50,
+   10
+  ]
+ ],
+ "scaled_from": "100->20->100"
+}

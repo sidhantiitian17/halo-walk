@@ -2,19 +2,19 @@
   "campaign_pass": null,
   "run_counts": {
     "S2/C3": {
-      "observed": 0,
+      "observed": 2,
       "expected": 3
     },
     "CPU/C1": {
-      "observed": 0,
+      "observed": 2,
       "expected": 2
     },
     "CPU/C3": {
-      "observed": 0,
+      "observed": 1,
       "expected": 2
     },
     "CPU/C4": {
-      "observed": 1,
+      "observed": 2,
       "expected": 2
     }
   },
@@ -23,27 +23,145 @@
     "4": {
       "id": 4,
       "name": "S2 capacity step: adaptation, recovery, stability",
-      "value": "pending: no data",
-      "pass": null,
+      "value": "C3 T_adapt 2.15 s, recovery 6.1 s, 0.0 changes/min (medians, N=2)",
+      "pass": false,
       "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
-      "detail": {}
+      "detail": {
+        "C3": {
+          "n": 2,
+          "runs": [
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.463,
+              "low_phase_added_p99_ms": 170.92,
+              "low_phase_added_p95_ms": 65.021,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 2.1,
+              "t_settle_strict_s": 18.4,
+              "recovery_s": 10.068,
+              "telemetry_end_rel_s": 36.11,
+              "changes_pre_down": 0,
+              "changes_last15": 0,
+              "changes_per_min": 0.0
+            },
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.523,
+              "low_phase_added_p99_ms": 175.566,
+              "low_phase_added_p95_ms": 71.773,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 2.2,
+              "t_settle_strict_s": null,
+              "recovery_s": 2.231,
+              "telemetry_end_rel_s": 35.766,
+              "changes_pre_down": 0,
+              "changes_last15": 0,
+              "changes_per_min": 0.0
+            }
+          ],
+          "t_adapt_median_s": 2.15,
+          "recovery_median_s": 6.15,
+          "changes_per_min_median": 0.0,
+          "t_adapt_s": {
+            "n": 2,
+            "median": 2.15,
+            "ci95": [
+              2.1,
+              2.2
+            ],
+            "values": [
+              2.1,
+              2.2
+            ]
+          },
+          "recovery_s": {
+            "n": 2,
+            "median": 6.15,
+            "ci95": [
+              2.231,
+              10.068
+            ],
+            "values": [
+              10.068,
+              2.231
+            ]
+          },
+          "changes_per_min": {
+            "n": 2,
+            "median": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "values": [
+              0.0,
+              0.0
+            ]
+          },
+          "low_phase_added_p99_ms": {
+            "n": 2,
+            "median": 173.243,
+            "ci95": [
+              170.92,
+              175.566
+            ],
+            "values": [
+              170.92,
+              175.566
+            ]
+          },
+          "pass": false
+        },
+        "capacity_steps_mbps": [
+          [
+            10.0,
+            50.0
+          ]
+        ]
+      }
     },
     "12": {
       "id": 12,
       "name": "Controller CPU cost",
-      "value": "C4 1.53% [CI n/a, N<2], N=1 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
+      "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core; C3 1.58% [CI n/a, N<2], N=1 of a core; C4 1.80% [95% CI 1.53, 2.07], N=2 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
       "pass": true,
       "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
       "detail": {
-        "C4": {
+        "C1": {
+          "n": 2,
+          "median": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "values": [
+            0.0,
+            0.0
+          ]
+        },
+        "C3": {
           "n": 1,
-          "median": 1.53,
+          "median": 1.585,
           "ci95": [
             null,
             null
           ],
           "values": [
-            1.53
+            1.585
+          ]
+        },
+        "C4": {
+          "n": 2,
+          "median": 1.802,
+          "ci95": [
+            1.53,
+            2.074
+          ],
+          "values": [
+            1.53,
+            2.074
           ]
         },
         "baseline_C1": 0.0,
@@ -51,15 +169,39 @@
           3
         ],
         "softirq_pct": {
-          "C4": {
+          "C1": {
+            "n": 2,
+            "median": 47.196,
+            "ci95": [
+              45.625,
+              48.766
+            ],
+            "values": [
+              48.766,
+              45.625
+            ]
+          },
+          "C3": {
             "n": 1,
-            "median": 51.656,
+            "median": 48.838,
             "ci95": [
               null,
               null
             ],
             "values": [
+              48.838
+            ]
+          },
+          "C4": {
+            "n": 2,
+            "median": 51.143,
+            "ci95": [
+              50.63,
               51.656
+            ],
+            "values": [
+              51.656,
+              50.63
             ]
           }
         }

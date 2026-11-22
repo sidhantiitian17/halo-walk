@@ -14,7 +14,7 @@
       "expected": 2
     },
     "CPU/C4": {
-      "observed": 0,
+      "observed": 1,
       "expected": 2
     }
   },
@@ -98,7 +98,7 @@
     "12": {
       "id": 12,
       "name": "Controller CPU cost",
-      "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core; C3 11.17% [CI n/a, N<2], N=1 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
+      "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core; C3 11.17% [CI n/a, N<2], N=1 of a core; C4 11.80% [CI n/a, N<2], N=1 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
       "pass": false,
       "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
       "detail": {
@@ -123,6 +123,17 @@
           ],
           "values": [
             11.169
+          ]
+        },
+        "C4": {
+          "n": 1,
+          "median": 11.8,
+          "ci95": [
+            null,
+            null
+          ],
+          "values": [
+            11.8
           ]
         },
         "baseline_C1": 0.0,
@@ -151,6 +162,17 @@
             ],
             "values": [
               59.831
+            ]
+          },
+          "C4": {
+            "n": 1,
+            "median": 59.057,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              59.057
             ]
           }
         }

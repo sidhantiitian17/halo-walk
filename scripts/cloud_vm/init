@@ -21,8 +21,9 @@ while true; do
         bash /exchange/running
         rc=$?
         set -e
-        echo "$rc" > /exchange/status
+        printf '%s\n' "$rc" > /exchange/status.tmp
         rm /exchange/running
+        mv /exchange/status.tmp /exchange/status
     fi
     sleep 1
 done

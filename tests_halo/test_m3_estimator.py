@@ -74,7 +74,7 @@ def test_capacity_step_5_to_1_drains_and_settles():
     # first tick at which the rate is within +-10 % of target and the estimator left DRAIN
     idx = next(i for i, o in enumerate(out) if o[1] != "DRAIN" and abs(o[2] - target) <= 0.10 * target and i > 0)
     assert idx <= 35, "settling took %d ticks (> 3.5 s incl. 0.5 s confirmation)" % idx
-    assert "settle_at_margin" in reasons
+    assert reasons.index("drain_refill") < reasons.index("settle_at_margin")
     # stays within +-10 % for the rest of the ceiling-hold window
     for o in out[idx:idx + int(p.hold_base / 0.1) - 5]:
         assert abs(o[2] - target) <= 0.10 * target, o

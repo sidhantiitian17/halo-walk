@@ -1114,12 +1114,12 @@ class Ctl:
                         self.event("estimator_degraded", dir=d)
                     if new is None:
                         continue
-                    emergency = why in ("bloat_fast_down", "drain_refine", "settle_at_margin")
+                    emergency = why in ("bloat_fast_down", "drain_refine", "drain_refill", "settle_at_margin")
                     lo, hi = (self.lim.r_min_dl, self.lim.r_max_dl) if d == "dl" else (self.lim.r_min_ul, self.lim.r_max_ul)
                     if d == "dl" and why in ("bloat_fast_down", "drain_refine") and getattr(self, "voice_dl", 0.0) > 0:
                         lo = policy.voice_floor(lo, self.voice_dl, e.c_est, self.lim, self.lim.video_share)
                     v = policy.shield_rate(new, old, lo, hi, self.lim, emergency, now - self.last_action[d],
-                                          restore_to=new if why == "settle_at_margin" else None,
+                                          restore_to=new if why in ("drain_refill", "settle_at_margin") else None,
                                           probe=(why == "slow_up"))
                     if not v.ok:
                         e.rate = old

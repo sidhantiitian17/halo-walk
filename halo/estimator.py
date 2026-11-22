@@ -84,6 +84,7 @@ class DirEstimator:
     last_delta: float = 0.0
     t_last_action: float = -1e9
     t_clear: float = -1e9
+    t_refill: float = 0.0
     t_hold_until: float = -1e9
     hold: float = 0.0
     up_streak: int = 0
@@ -155,6 +156,7 @@ class DirEstimator:
                 self.c_est = self._smooth(srt[min(len(srt) - 1, int(p.sample_q * len(srt)))])
             if bloat:
                 self.t_clear = t
+                self.t_refill = 0.0
                 if t - self.t_last_action >= p.refractory:
                     self.t_last_action = t
                     if self.behind:
@@ -174,12 +176,22 @@ class DirEstimator:
                 # episode confirmed (>= confirm s of sustained bloat with a non-rising arrival rate), so it is
                 # never undone: settle at margin x the capacity evidence gathered during the episode
                 # (behind: 90th pct of arrival rate while the queue stood; ahead/upload: the cut estimate).
+                severe = self.behind and self.c_est < 0.5 * self.rate_before
+                margin = min(p.margin, p.deep_settle_margin) if severe else p.margin
+                if severe and not self.t_refill:
+                    # Release the deep clamp in two steps. A single jump from the drain rate
+                    # to the operating rate can release a new burst into the upstream queue.
+                    self.t_refill = t + p.refractory / 2
+                    target = margin * self.c_est
+                    return self._set(max(self.rate, 0.5 * (self.rate + target)), "drain_refill")
+                if t < self.t_refill:
+                    return None, ""
+                self.t_refill = 0.0
                 self.state = "STEADY"
                 head = p.r_max / max(1e-9, p.margin * self.c_est)
                 self.t_hold_until = t + self.hold * (p.near_max_hold if head <= 1.15 else 1.0)
                 self.c_lo, self.c_hi = 0.95 * self.c_est, 1.05 * self.c_est
                 self.t_last_action = t
-                margin = min(p.margin, p.deep_settle_margin) if self.behind and self.c_est < 0.5 * self.rate_before else p.margin
                 return self._set(max(p.r_min, margin * self.c_est), "settle_at_margin")
             return None, ""
         if bloat and achieved < 0.10 * self.rate:

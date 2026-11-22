@@ -1,0 +1,33 @@
+{
+ "scenario": "CPU",
+ "config": "C1",
+ "rep": 2,
+ "seed": 2232,
+ "kernel": "6.12.118+deb13-amd64",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795383781.8489263,
+   "rel": 0.0
+  },
+  {
+   "name": "end",
+   "t": 1795383818.056433,
+   "rel": 36.208
+  }
+ ],
+ "down": 50,
+ "up": 10,
+ "cpu": {
+  "ctl_cpu_s": NaN,
+  "wall_s": 21.12085485458374,
+  "ctl_pct_of_core": NaN,
+  "softirq_pct": 52.85609217945575,
+  "idle_pct": 7.746996812944349,
+  "ncpu": 2,
+  "threads_pct": {}
+ }
+}

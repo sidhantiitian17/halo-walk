@@ -1,0 +1,50 @@
+{"mode": {"plan_dl": 50.0, "plan_ul": 10.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 20.0, "safe_ul": 4.0, "autorate": 1, "classifier": "heur", "model": "/tmp/candidate2/halo/model.pkl", "collect": false, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "quiet_probe_hz": 2.0, "quiet_tick": 0.25, "sentinel": 1, "sentinel_lib": "", "health_s": 5.0, "out": "/tmp/candidate2/results/raw/S2/C3/r01/ctl", "nice": 10}, "t": 1795383487.4297, "kind": "start"}
+{"lkg": "08622e7c6c2fe6e5", "why": "initial", "t": 1795383487.559, "kind": "commit"}
+{"msg": "C calm-mode thread loaded", "t": 1795383487.576, "kind": "sentinel"}
+{"key": ["udp", "10.0.0.10", 35990, "10.9.0.2", 3478], "cls": "call", "p": 1.0, "abstain": false, "tin": 4, "stage": 1, "age": 0.0, "t": 1795383500.1197, "kind": "classify"}
+{"probes": 0, "ticks": 50, "ticks_full": 47, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {}, "cpu_main": 1.0, "cpu_slow": 0.1, "cpu_poll": 0.03, "slow_runs": 4, "slow_polls": 3, "ct_in_c": true, "t": 1795383500.532, "kind": "gov"}
+{"why": "collapse", "ach_dl": 20.83, "ach_ul": 1.66, "t": 1795383504.5402, "kind": "sent_alert"}
+{"dir": "dl", "old": 47.5, "new": 8.482, "why": "bloat_fast_down", "c_est": 28.273, "ach": 28.273, "shield": [], "t": 1795383505.036, "kind": "rate"}
+{"dir": "dl", "old": 8.482, "new": 25.446, "why": "settle_at_margin", "c_est": 28.273, "ach": 6.907, "shield": [], "t": 1795383505.452, "kind": "rate"}
+{"why": "probe_up", "ach_dl": 25.33, "ach_ul": 1.68, "t": 1795383511.0304, "kind": "sent_alert"}
+{"probes": 0, "ticks": 94, "ticks_full": 90, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 1, "probe_up": 1}, "cpu_main": 1.23, "cpu_slow": 0.17, "cpu_poll": 0.05, "slow_runs": 17, "slow_polls": 5, "ct_in_c": true, "t": 1795383511.0479, "kind": "gov"}
+{"dir": "dl", "old": 25.446, "new": 26.464, "why": "slow_up", "c_est": 28.273, "ach": 24.393, "shield": [], "t": 1795383511.5184, "kind": "rate"}
+{"dir": "dl", "old": 26.464, "new": 28.369, "why": "slow_up", "c_est": 28.273, "ach": 25.983, "shield": [], "t": 1795383512.0813, "kind": "rate"}
+{"dir": "dl", "old": 28.369, "new": 32.046, "why": "slow_up", "c_est": 28.766, "ach": 28.766, "shield": [], "t": 1795383512.6164, "kind": "rate"}
+{"dir": "dl", "old": 32.046, "new": 39.522, "why": "slow_up", "c_est": 32.384, "ach": 32.384, "shield": [], "t": 1795383513.1572, "kind": "rate"}
+{"dir": "dl", "old": 39.522, "new": 47.5, "why": "slow_up", "c_est": 38.341, "ach": 38.341, "shield": [], "t": 1795383513.8422, "kind": "rate"}
+{"why": "collapse", "ach_dl": 32.54, "ach_ul": 1.61, "t": 1795383518.0715, "kind": "sent_alert"}
+{"n": 1, "t": 1795383518.5036, "kind": "voice_to_video"}
+{"dir": "dl", "old": 47.5, "new": 3.268, "why": "bloat_fast_down", "c_est": 10.47, "ach": 10.47, "shield": ["clip_r_min"], "t": 1795383518.5064, "kind": "rate"}
+{"dir": "dl", "old": 3.268, "new": 3.595, "why": "drain_refine", "c_est": 10.034, "ach": 9.281, "shield": ["clip_up_step"], "t": 1795383518.817, "kind": "rate"}
+{"n": 1, "t": 1795383519.2349, "kind": "video_to_voice"}
+{"dir": "dl", "old": 3.595, "new": 9.03, "why": "settle_at_margin", "c_est": 10.034, "ach": 2.021, "shield": [], "t": 1795383519.2371, "kind": "rate"}
+{"probes": 0, "ticks": 181, "ticks_full": 176, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 2, "probe_up": 1}, "cpu_main": 1.67, "cpu_slow": 0.22, "cpu_poll": 0.08, "slow_runs": 19, "slow_polls": 7, "ct_in_c": true, "t": 1795383521.101, "kind": "gov"}
+{"why": "probe_up", "ach_dl": 9.32, "ach_ul": 1.25, "t": 1795383524.9682, "kind": "sent_alert"}
+{"dir": "dl", "old": 9.03, "new": 9.423, "why": "slow_up", "c_est": 10.034, "ach": 9.12, "shield": [], "t": 1795383525.2794, "kind": "rate"}
+{"dir": "dl", "old": 9.423, "new": 9.8, "why": "slow_up", "c_est": 10.034, "ach": 9.375, "shield": [], "t": 1795383525.7938, "kind": "rate"}
+{"dir": "dl", "old": 9.8, "new": 11.07, "why": "slow_up", "c_est": 10.034, "ach": 9.959, "shield": [], "t": 1795383526.3139, "kind": "rate"}
+{"dir": "dl", "old": 11.07, "new": 6.987, "why": "bloat_fast_down", "c_est": 9.982, "ach": 10.046, "shield": [], "t": 1795383527.2481, "kind": "rate"}
+{"dir": "dl", "old": 6.987, "new": 8.944, "why": "settle_at_margin", "c_est": 9.938, "ach": 5.678, "shield": [], "t": 1795383527.8645, "kind": "rate"}
+{"probes": 0, "ticks": 260, "ticks_full": 254, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 2, "probe_up": 2}, "cpu_main": 1.9, "cpu_slow": 0.26, "cpu_poll": 0.1, "slow_runs": 21, "slow_polls": 9, "ct_in_c": true, "t": 1795383531.1936, "kind": "gov"}
+{"why": "probe_up", "ach_dl": 9.11, "ach_ul": 1.26, "t": 1795383539.3709, "kind": "sent_alert"}
+{"dir": "dl", "old": 8.944, "new": 8.984, "why": "slow_up", "c_est": 9.938, "ach": 9.065, "shield": [], "t": 1795383539.8977, "kind": "rate"}
+{"dir": "dl", "old": 8.984, "new": 9.343, "why": "slow_up", "c_est": 9.938, "ach": 8.822, "shield": [], "t": 1795383540.4197, "kind": "rate"}
+{"dir": "dl", "old": 9.343, "new": 10.554, "why": "slow_up", "c_est": 9.938, "ach": 9.1, "shield": [], "t": 1795383540.9353, "kind": "rate"}
+{"probes": 0, "ticks": 284, "ticks_full": 276, "bursts": 1, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 2, "probe_up": 3}, "cpu_main": 1.99, "cpu_slow": 0.3, "cpu_poll": 0.13, "slow_runs": 23, "slow_polls": 11, "ct_in_c": true, "t": 1795383541.2449, "kind": "gov"}
+{"dir": "dl", "old": 10.554, "new": 6.966, "why": "bloat_fast_down", "c_est": 9.951, "ach": 10.012, "shield": [], "t": 1795383541.8677, "kind": "rate"}
+{"dir": "dl", "old": 6.966, "new": 8.956, "why": "settle_at_margin", "c_est": 9.951, "ach": 5.597, "shield": [], "t": 1795383542.4951, "kind": "rate"}
+{"why": "probe_up", "ach_dl": 8.89, "ach_ul": 1.27, "t": 1795383554.2375, "kind": "sent_alert"}
+{"probes": 0, "ticks": 334, "ticks_full": 324, "bursts": 1, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 2, "probe_up": 4}, "cpu_main": 2.15, "cpu_slow": 0.35, "cpu_poll": 0.15, "slow_runs": 25, "slow_polls": 13, "ct_in_c": true, "t": 1795383554.2402, "kind": "gov"}
+{"dir": "dl", "old": 8.956, "new": 9.314, "why": "slow_up", "c_est": 9.951, "ach": 9.188, "shield": [], "t": 1795383554.5568, "kind": "rate"}
+{"dir": "dl", "old": 9.314, "new": 9.985, "why": "slow_up", "c_est": 9.951, "ach": 9.484, "shield": [], "t": 1795383555.0805, "kind": "rate"}
+{"dir": "dl", "old": 9.985, "new": 11.279, "why": "slow_up", "c_est": 9.966, "ach": 9.966, "shield": [], "t": 1795383555.6003, "kind": "rate"}
+{"dir": "dl", "old": 11.279, "new": 13.91, "why": "slow_up", "c_est": 11.493, "ach": 11.493, "shield": [], "t": 1795383556.132, "kind": "rate"}
+{"dir": "dl", "old": 13.91, "new": 19.751, "why": "slow_up", "c_est": 13.778, "ach": 13.778, "shield": [], "t": 1795383556.6531, "kind": "rate"}
+{"dir": "dl", "old": 19.751, "new": 29.627, "why": "slow_up", "c_est": 19.935, "ach": 19.935, "shield": ["clip_up_step"], "t": 1795383557.2113, "kind": "rate"}
+{"dir": "dl", "old": 29.627, "new": 44.441, "why": "slow_up", "c_est": 28.558, "ach": 28.558, "shield": ["clip_up_step"], "t": 1795383557.7711, "kind": "rate"}
+{"dir": "dl", "old": 44.441, "new": 46.219, "why": "slow_up", "c_est": 44.657, "ach": 44.657, "shield": [], "t": 1795383558.3909, "kind": "rate"}
+{"dir": "dl", "old": 46.219, "new": 47.5, "why": "slow_up", "c_est": 44.657, "ach": 44.369, "shield": [], "t": 1795383559.05, "kind": "rate"}
+{"probes": 0, "ticks": 408, "ticks_full": 396, "bursts": 1, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 2, "probe_up": 4}, "cpu_main": 2.57, "cpu_slow": 0.43, "cpu_poll": 0.2, "slow_runs": 28, "slow_polls": 16, "ct_in_c": true, "t": 1795383566.7752, "kind": "gov"}
+{"why": "collapse", "ach_dl": 6.22, "ach_ul": 0.61, "t": 1795383578.2641, "kind": "sent_alert"}
+{"probes": 0, "ticks": 411, "ticks_full": 397, "bursts": 1, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 3, "probe_up": 4}, "cpu_main": 2.61, "cpu_slow": 0.48, "cpu_poll": 0.22, "slow_runs": 30, "slow_polls": 18, "ct_in_c": true, "t": 1795383578.2661, "kind": "gov"}

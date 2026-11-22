@@ -1,0 +1,28 @@
+#!/bin/bash
+set -eu
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export HOME=/root
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+mount -t tmpfs tmpfs /run
+mount -t tmpfs -o mode=1777 tmpfs /tmp
+modprobe 9pnet_virtio
+modprobe 9p
+for module in veth bridge sch_cake sch_netem sch_htb nf_conntrack nf_tables act_ctinfo act_mirred ifb; do modprobe "$module" || exit 1; done
+mount -t 9p -o trans=virtio,version=9p2000.L,msize=262144 exchange /exchange
+mkdir -p /workspace/.halo-venv
+mount -t 9p -o trans=virtio,version=9p2000.L,msize=262144,nodev,ro deps /workspace/.halo-venv
+echo "HALO_GUEST_READY $(uname -r) $(nproc) CPUs"
+while true; do
+    if [[ -f /exchange/job && ! -f /exchange/running ]]; then
+        mv /exchange/job /exchange/running
+        set +e
+        bash /exchange/running
+        rc=$?
+        set -e
+        echo "$rc" > /exchange/status
+        rm /exchange/running
+    fi
+    sleep 1
+done

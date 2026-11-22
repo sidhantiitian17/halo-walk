@@ -1,0 +1,48 @@
++ uname -sr
+Linux 6.18.57
++ id
+uid=1000(agent) gid=1000(agent) groups=1000(agent)
++ awk '/^(Cap(Eff|Bnd)|Seccomp):/' /proc/self/status
+CapEff:	0000000000000000
+CapBnd:	0000000000000000
+Seccomp:	2
++ cat /proc/sys/user/max_user_namespaces
+2147483647
++ unshare --user --map-root-user true
+unshare: cannot open /proc/self/uid_map: Read-only file system
++ unshare --net true
+unshare: unshare failed: Operation not permitted
++ unshare --user --map-root-user --net true
+unshare: cannot open /proc/self/uid_map: Read-only file system
++ ip netns add halo-host-check
+mkdir /run/netns failed: Read-only file system
++ ip link add halo-host-v0 type veth peer name halo-host-v1
+RTNETLINK answers: Operation not permitted
++ command -v tc
+/usr/sbin/tc
++ tc -V
+tc utility, iproute2-6.15.0, libbpf 1.5.0
++ command -v modinfo
+++ uname -r
++ ls -ld /lib/modules/6.18.57 /dev/kvm
+ls: cannot access '/lib/modules/6.18.57': No such file or directory
+ls: cannot access '/dev/kvm': No such file or directory
++ command -v qemu-system-x86_64
++ LD_LIBRARY_PATH=/workspace/.halo-vm/host/usr/lib/x86_64-linux-gnu
++ host/usr/bin/qemu-system-x86_64 --version
+QEMU emulator version 10.0.13 (Debian 1:10.0.13+ds-0+deb13u1)
+Copyright (c) 2003-2025 Fabrice Bellard and the QEMU Project developers
+
+Additional unshare probes without a UID map
++ unshare --user true
++ printf 'exit=%s\n' 0
+exit=0
++ unshare --user --net sh -c 'id; cat /proc/self/uid_map; awk "/^Cap(Eff|Bnd):/" /proc/self/status; ip link add check0 type veth peer name check1; a=$?; printf "ip link add exit=%s\n" "$a"; exit "$a"'
+uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)
+CapEff:	0000000000000000
+CapBnd:	000001ffffffffff
+RTNETLINK answers: Operation not permitted
+ip link add exit=2
++ printf 'exit=%s\n' 2
+exit=2
++ set +x

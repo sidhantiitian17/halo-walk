@@ -47,6 +47,7 @@ Each experimental revision has a separate directory under [results/codex-cloud](
 | `candidate6` | `21ca28e044252507f7559f98a8359bc5ba5a8463` |
 | `candidate7` | `6247ae4e8ec1c81b22e1f46e14f5f40479ad5420` |
 | `candidate8` | `5c8bf0016999091f9949d08cbf652f848579d130` |
+| `three-vcpu-baseline` | `d7c24faa4bdb863b71914c518edc3008c54edd1d` (three-vCPU guest, dependencies staged on the guest filesystem) |
 | `three-vcpu-candidate8` | `5c8bf0016999091f9949d08cbf652f848579d130` (three-vCPU guest) |
 | `three-vcpu-candidate9` | `6f6005e04020053e47d8d10e79c45beacae1c2c7` (three-vCPU guest) |
 | `three-vcpu-candidate9-local-deps` | `6f6005e04020053e47d8d10e79c45beacae1c2c7` (three-vCPU guest, dependencies staged on the guest filesystem) |
@@ -60,3 +61,19 @@ The 22 tracked source and model files in each guest input bundle were byte-compa
 The three-vCPU diagnostic used `HALO_VM_VCPUS=3` with the same C8 source, kernel and workload. The first guest had exited before the diagnostic began. The three-vCPU evidence is scored separately. See [three-vCPU preflight](three-vcpu-preflight.txt).
 
 Both initial three-vCPU ML trials loaded the model after traffic began. The guest-local dependency stage was verified with the original harness and produced a ready controller before the measured traffic. The local-dependency campaign uses its own C1 reference runs and original repetitions.
+
+## Complete three-vCPU candidate campaign
+
+The guest-local campaign finished all nine runs. Controller telemetry began before traffic in every adaptive run. The scorer used both static-CAKE runs from the same guest.
+
+| Acceptance check | Measured median | Limit | Result |
+|---|---:|---:|---|
+| M12 heuristic CPU above static CAKE | 1.67% of one core | 2% | Pass |
+| M12 ML CPU above static CAKE | 1.80% of one core | 2% | Pass |
+| M4 adaptation | 2.10 s | 2.00 s | Fail |
+| M4 recovery | 10.1 s | 30 s | Pass |
+| M4 steady-state rate changes | 0.0/min | 6/min | Pass |
+
+The M4 adaptation repetitions were 2.10, 2.20 and 2.10 s. The CPU repetitions were 1.58% and 1.76% for the heuristic controller, and 1.53% and 2.07% for ML. The existing M12 rule uses the median for each configuration. See the [machine-readable score](../../../results/codex-cloud/three-vcpu-candidate9-local-deps/score.json), [raw runs](../../../results/codex-cloud/three-vcpu-candidate9-local-deps/results/raw), and [controller test output](controller-tests.txt).
+
+The original controller's matched three-vCPU M4 repetitions were all 2.20 s, with median recovery of 15.4 s and 0.0 rate changes per minute. The candidate improved median adaptation by 0.10 s and median recovery by about 5.3 s on that guest. Both versions missed the 2.00 s adaptation gate there. The archived 1.90 s result was measured on the earlier Ubuntu guest. See the [matched baseline score](../../../results/codex-cloud/three-vcpu-baseline/score.json) and [raw runs](../../../results/codex-cloud/three-vcpu-baseline/results/raw).

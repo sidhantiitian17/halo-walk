@@ -1,0 +1,165 @@
+{
+  "campaign_pass": null,
+  "run_counts": {
+    "S2/C3": {
+      "observed": 2,
+      "expected": 3
+    },
+    "CPU/C1": {
+      "observed": 2,
+      "expected": 2
+    },
+    "CPU/C3": {
+      "observed": 0,
+      "expected": 2
+    },
+    "CPU/C4": {
+      "observed": 0,
+      "expected": 2
+    }
+  },
+  "controller_not_ready": [],
+  "measurements": {
+    "4": {
+      "id": 4,
+      "name": "S2 capacity step: adaptation, recovery, stability",
+      "value": "C3 T_adapt 3.35 s, recovery 15.4 s, 0.0 changes/min (medians, N=2)",
+      "pass": false,
+      "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
+      "detail": {
+        "C3": {
+          "n": 2,
+          "runs": [
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.589,
+              "low_phase_added_p99_ms": 189.892,
+              "low_phase_added_p95_ms": 85.989,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 2.5,
+              "t_settle_strict_s": null,
+              "recovery_s": 15.429,
+              "telemetry_end_rel_s": 36.34,
+              "changes_pre_down": 0,
+              "changes_last15": 0,
+              "changes_per_min": 0.0
+            },
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.726,
+              "low_phase_added_p99_ms": 332.206,
+              "low_phase_added_p95_ms": 279.679,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 4.2,
+              "t_settle_strict_s": null,
+              "recovery_s": 15.378,
+              "telemetry_end_rel_s": 36.2,
+              "changes_pre_down": 0,
+              "changes_last15": 0,
+              "changes_per_min": 0.0
+            }
+          ],
+          "t_adapt_median_s": 3.35,
+          "recovery_median_s": 15.404,
+          "changes_per_min_median": 0.0,
+          "t_adapt_s": {
+            "n": 2,
+            "median": 3.35,
+            "ci95": [
+              2.5,
+              4.2
+            ],
+            "values": [
+              2.5,
+              4.2
+            ]
+          },
+          "recovery_s": {
+            "n": 2,
+            "median": 15.404,
+            "ci95": [
+              15.378,
+              15.429
+            ],
+            "values": [
+              15.429,
+              15.378
+            ]
+          },
+          "changes_per_min": {
+            "n": 2,
+            "median": 0.0,
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "values": [
+              0.0,
+              0.0
+            ]
+          },
+          "low_phase_added_p99_ms": {
+            "n": 2,
+            "median": 261.049,
+            "ci95": [
+              189.892,
+              332.206
+            ],
+            "values": [
+              189.892,
+              332.206
+            ]
+          },
+          "pass": false
+        },
+        "capacity_steps_mbps": [
+          [
+            10.0,
+            50.0
+          ]
+        ]
+      }
+    },
+    "12": {
+      "id": 12,
+      "name": "Controller CPU cost",
+      "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic) | pending: no C3/C4 runs",
+      "pass": null,
+      "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
+      "detail": {
+        "C1": {
+          "n": 2,
+          "median": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "values": [
+            0.0,
+            0.0
+          ]
+        },
+        "baseline_C1": 0.0,
+        "ncpu": [
+          2
+        ],
+        "softirq_pct": {
+          "C1": {
+            "n": 2,
+            "median": 52.309,
+            "ci95": [
+              51.762,
+              52.856
+            ],
+            "values": [
+              51.762,
+              52.856
+            ]
+          }
+        }
+      }
+    }
+  }
+}

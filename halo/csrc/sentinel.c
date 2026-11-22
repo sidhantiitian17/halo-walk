@@ -147,7 +147,7 @@ void *sentinel_thread(void *arg) {
         uint64_t rx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : 0, tx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : 0;
         double t_last = now, ach[2] = { p.ach[0], p.ach[1] }, peak[2] = { p.peak[0], p.peak[1] }, ld[2] = { p.last_delta[0], p.last_delta[1] };
         pthread_mutex_lock(&G.mu); G.last_live = G.live; G.last_live_t = now; pthread_mutex_unlock(&G.mu);
-        int alert = 0, parked = 0;
+        int alert = 0, parked = 0, abrupt_dl_drop = 0;
 
         for (;;) {
             pthread_mutex_lock(&G.mu);
@@ -296,9 +296,13 @@ void *sentinel_thread(void *arg) {
                     if (!drop[d] && p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= 0.9 * p.load_thresh * p.rate[d]
                             && now >= p.hold_until[d] - 0.5) alert = AL_PROBEUP;
                 }
-                /* A disappearing sender also causes an arrival drop. Ask the reflectors before
-                 * waking Python. The next tick or a delayed reply can still escalate immediately. */
-                if (!alert && (drop[0] || drop[1]) && now >= watch_until) {
+                /* Start the fast loop immediately when delivery has fallen by more than half.
+                 * It still requires delay votes before cutting. For smaller drops, corroborate in C. */
+                if (!alert && drop[0] && ach[0] < 0.5 * p.rate[0]) {
+                    dl_collapse_at = now;
+                    abrupt_dl_drop = 1;
+                    alert = AL_COLLAPSE;
+                } else if (!alert && (drop[0] || drop[1]) && now >= watch_until) {
                     dl_collapse_at = drop[0] ? now : 0;
                     confirm_until = watch_until = now + p.confirm_win;
                     confirm_bad[0] = confirm_bad[1] = 0;
@@ -315,7 +319,7 @@ void *sentinel_thread(void *arg) {
                 G.st.ach[0] = ach[0]; G.st.ach[1] = ach[1]; G.st.peak[0] = peak[0]; G.st.peak[1] = peak[1];
                 G.st.alert = alert; G.st.dl_collapse_at = dl_collapse_at; G.fast = 1; fs = G.fast_s;
                 pthread_mutex_unlock(&G.mu);
-                if (alert != AL_DELAY && alert != AL_COLLAPSE)
+                if ((alert != AL_DELAY && alert != AL_COLLAPSE) || abrupt_dl_drop)
                     for (int j = 0; j < G.nsock; j++) send_probe(j, &seqc, pend);
                 fast = 1; alert = 0; next_fprobe = now + fs;
                 uint64_t one = 1; if (write(G.efd, &one, 8) < 0) { }

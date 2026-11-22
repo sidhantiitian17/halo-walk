@@ -143,20 +143,19 @@ def test_short_noise_spike_never_cuts():
 
 
 def test_confirmed_spike_is_never_undone():
-    """a delay spike longer than `confirm` with a flat arrival rate is a confirmed episode: fast-down, then
-    settle_at_margin at margin * c_est (the evidence at onset) - false_alarm_restore no longer exists"""
+    """A queue that outlasts the full-delivery burst window is confirmed and then settled."""
     p = EstParams(r_max=100.0)
     e = DirEstimator(p, rate=100.0)
     link = Link(120.0)
     run(e, link, 3.0)
 
     def spike(t, l):
-        l.extra_ms = 60.0 if 3.0 <= t < 3.6 else 0.0
+        l.extra_ms = 60.0 if 3.0 <= t < 3.0 + p.confirm + p.burst_max + 0.3 else 0.0
     out = run(e, link, 5.0, t0=3.0, hook=spike)
-    acts = [o for o in out if o[3] and o[3] != "bloat_unconfirmed"]
+    acts = [o for o in out if o[3] and o[3] not in ("bloat_unconfirmed", "burst_at_capacity")]
     assert [o[3] for o in acts[:2]] == ["bloat_fast_down", "settle_at_margin"]
     assert "false_alarm_restore" not in [o[3] for o in out]
-    # evidence at onset: c = min(achieved=100, rate/margin) = 100 -> settle at 0.95 * 100
+    # The observed arrival rate at onset is 100 Mbit/s.
     assert acts[0][2] == pytest.approx(p.drain_factor * 100.0)
     assert acts[1][2] == pytest.approx(p.margin * 100.0)
     assert e.episodes == 1 and e.state == "STEADY"
@@ -430,10 +429,10 @@ def test_burst_at_capacity_never_cuts_but_real_drop_still_does():
         e.tick(t, 19.0)
         t += 0.1
     whys = []
-    for _ in range(15):                                  # 1.5 s of upstream burst queue, arrival = 20 = rate/margin
+    for _ in range(15):                                  # 1.5 s of upstream burst queue at the shaped rate
         for r in range(4):
             e.on_probe(r, 60.0, t)
-        whys.append(e.tick(t, 20.0)[1])
+        whys.append(e.tick(t, 19.0)[1])
         t += 0.1
     assert "bloat_fast_down" not in whys and "burst_at_capacity" in whys and e.rate == 19.0
     for _ in range(15):                                  # now the capacity really drops: arrival collapses to 10
@@ -456,10 +455,10 @@ def test_standing_queue_at_capacity_is_drained_after_burst_max():
         e.tick(t, 19.0)
         t += 0.1
     whys = []
-    for _ in range(40):                                  # 4 s of a 300 ms standing queue, arrival = rate/margin
+    for _ in range(40):                                  # 4 s of a 300 ms standing queue at the shaped rate
         for r in range(4):
             e.on_probe(r, 320.0, t)
-        whys.append((round(t, 1), e.tick(t, 20.0)[1]))
+        whys.append((round(t, 1), e.tick(t, 19.0)[1]))
         t += 0.1
     cut = [ts for ts, w in whys if w == "bloat_fast_down"]
     first = next(ts for ts, w in whys if w in ("burst_at_capacity", "bloat_unconfirmed"))

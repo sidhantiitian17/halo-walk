@@ -26,8 +26,7 @@ class EstParams:
     vote_k: int = 3
     sample_ttl: float = 1.0       # s, older votes are ignored
     drain_factor: float = 0.70
-    ref_margin: float = 0.95      # the shaper's usual operating point is ref_margin x capacity (r_max = 0.95 x plan):
-                                  # the burst_at_capacity test and the arrival cap are relative to it, not to the settle margin
+    ref_margin: float = 0.95      # upper bound on a capacity estimate inferred from the current shaped rate
     margin: float = 0.90          # settle below the evidence: the arrival measurement lags a drop, so it reads 3-10 % high
     refractory: float = 0.30      # s between decisions inside an episode
     up_factor: float = 1.04       # first probe step (+4 %) ...
@@ -56,7 +55,7 @@ class EstParams:
                                   # capacity loss (> 15 %) is taken at face value
     near_max_hold: float = 4.0    # probing hold multiplier when r_max is within 15 % of the settle point: little to gain
     burst_max: float = 1.5        # s: a queue that outlives this at full delivery is STANDING, not a burst -> drain
-    at_capacity: float = 0.97     # behind: arrival >= 0.97 x (rate/margin) means the link still delivers our point
+    at_capacity: float = 0.97     # behind: this fraction of the actual shaper rate still counts as full delivery
     start_ratio: float = 1.5      # flow-start signature: arrival grew >= 1.5x within start_win s with no action of ours since ...
     start_win: float = 1.5
     start_patience: float = 2.0   # ... a mild (< deep_delay) queue is then a slow-start burst for up to this long, not a capacity loss
@@ -191,8 +190,8 @@ class DirEstimator:
         elif self.t_bloat_on < 0:
             self.t_bloat_on, self.ach_onset = t, achieved
             if self.behind and 0 <= t - self.t_native_collapse <= p.sample_ttl and self._collapsed(t, achieved):
-                # The native watcher confirmed the arrival drop with a directional probe burst.
-                # Count the time spent confirming it, while retaining this estimator's delay vote.
+                # Count the interval since the native watcher detected the arrival drop,
+                # while retaining this estimator's independent delay vote.
                 self.t_bloat_on = self.t_native_collapse
         if bloat and (t - self.t_bloat_on < (p.confirm_fast if self._collapsed(t, achieved) else p.confirm)
                       or achieved > p.ramp_tol * max(self.ach_onset, 1e-3)
@@ -204,7 +203,7 @@ class DirEstimator:
             self.t_burst_on = -1.0
         elif self.t_burst_on < 0:
             self.t_burst_on = t
-        if (bloat and self.behind and achieved >= p.at_capacity * self.rate / p.ref_margin
+        if (bloat and self.behind and achieved >= p.at_capacity * self.rate
                 and t - self.t_burst_on < p.burst_max):
             # the link is still DELIVERING our full operating point: a sender burst (slow-start restart, ABR chunk)
             # queued briefly upstream, not a capacity loss -> no cut (a cut cannot drain an upstream burst any faster

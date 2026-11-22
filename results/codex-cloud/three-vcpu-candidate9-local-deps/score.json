@@ -1,0 +1,69 @@
+{
+  "campaign_pass": null,
+  "run_counts": {
+    "S2/C3": {
+      "observed": 0,
+      "expected": 3
+    },
+    "CPU/C1": {
+      "observed": 0,
+      "expected": 2
+    },
+    "CPU/C3": {
+      "observed": 0,
+      "expected": 2
+    },
+    "CPU/C4": {
+      "observed": 1,
+      "expected": 2
+    }
+  },
+  "controller_not_ready": [],
+  "measurements": {
+    "4": {
+      "id": 4,
+      "name": "S2 capacity step: adaptation, recovery, stability",
+      "value": "pending: no data",
+      "pass": null,
+      "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
+      "detail": {}
+    },
+    "12": {
+      "id": 12,
+      "name": "Controller CPU cost",
+      "value": "C4 1.53% [CI n/a, N<2], N=1 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
+      "pass": true,
+      "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
+      "detail": {
+        "C4": {
+          "n": 1,
+          "median": 1.53,
+          "ci95": [
+            null,
+            null
+          ],
+          "values": [
+            1.53
+          ]
+        },
+        "baseline_C1": 0.0,
+        "ncpu": [
+          3
+        ],
+        "softirq_pct": {
+          "C4": {
+            "n": 1,
+            "median": 51.656,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              51.656
+            ]
+          }
+        }
+      }
+    }
+  }
+}

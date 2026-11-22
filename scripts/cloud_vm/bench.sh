@@ -7,14 +7,23 @@ dest="/exchange/$label"
 mkdir -p "$dir" "$dest"
 tar -xf "/exchange/$label.tar" -C "$dir"
 cd "$dir"
-python=/workspace/.halo-venv/bin/python
-ml_imported=false
+shared_venv=/workspace/.halo-venv
+guest_venv=/opt/halo-venv
+python="$shared_venv/bin/python"
+if [[ -x "$guest_venv/bin/python" ]]; then
+    python="$guest_venv/bin/python"
+fi
 for spec in "$@"; do
     IFS=, read -r scenario config rep <<< "$spec"
-    if [[ "$config" == C4 && "$ml_imported" == false ]]; then
-        # A fresh guest can otherwise spend the controller's entire startup timeout on 9p reads.
-        "$python" -c 'import fastapi, numpy, sklearn, xgboost'
-        ml_imported=true
+    if [[ "$config" == C4 && "$python" == "$shared_venv/bin/python" ]]; then
+        # Stage the same pinned dependencies on the guest filesystem. Cold model startup over
+        # the 9p share can exceed the unchanged harness's readiness timeout.
+        mkdir -p /opt
+        staged_venv=$(mktemp -d /opt/halo-venv.XXXXXX)
+        cp -a "$shared_venv/." "$staged_venv/"
+        "$staged_venv/bin/python" -c 'import fastapi, numpy, sklearn, xgboost'
+        mv "$staged_venv" "$guest_venv"
+        python="$guest_venv/bin/python"
     fi
     echo "HALO_RUN $label $scenario $config $rep"
     set +e

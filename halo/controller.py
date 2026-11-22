@@ -977,6 +977,9 @@ class Ctl:
             nm = _sentinel.ALERTS.get(alert, alert)
             self.n_sent_alerts[nm] = self.n_sent_alerts.get(nm, 0) + 1
             self.event("sent_alert", why=nm, ach_dl=round(ach["dl"], 2), ach_ul=round(ach["ul"], 2))
+            if alert == _sentinel.AL_COLLAPSE and collapsed(ach["dl"], self.est["dl"].rate, peak["dl"],
+                                                            self.est["dl"].p.collapse):
+                self.est["dl"].t_native_collapse = st.t_counters
             if alert in (_sentinel.AL_COLLAPSE, _sentinel.AL_PROBEUP):
                 gov.force(now)
         return alert, (st.rx, st.tx), st.t_counters

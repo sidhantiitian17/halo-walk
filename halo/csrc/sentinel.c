@@ -279,7 +279,8 @@ void *sentinel_thread(void *arg) {
                 }
                 double probe_period = p.probe_s;
                 for (int d = 0; d < 2; d++) {
-                    if (peak[d] > 0.5 * p.rate[d] && ach[d] < p.collapse * p.rate[d] && ach[d] <= 0.8 * peak[d]) alert = AL_COLLAPSE;
+                    if (peak[d] > 0.5 * p.rate[d] && ach[d] >= 0.10 * p.rate[d]
+                            && ach[d] < p.collapse * p.rate[d] && ach[d] <= 0.8 * peak[d]) alert = AL_COLLAPSE;
                     else if (p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= 0.9 * p.load_thresh * p.rate[d] && now >= p.hold_until[d] - 0.5) alert = AL_PROBEUP;
                     if (p.sat_frac > 0 && ach[d] >= p.sat_frac * p.rate[d])
                         probe_period = fmin(probe_period, p.tick_s);  /* stay alert without running the Python rate loop */

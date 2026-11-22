@@ -46,6 +46,7 @@ class EstParams:
     collapse: float = 0.7         #    a sustained capacity loss, not a sender burst
     deep_delay: float = 100.0     # ms: a standing queue this deep is drained with deep_drain instead of drain_factor
     deep_drain: float = 0.30      # a >100 ms standing queue is drained at 0.3 x capacity (fast latency recovery)
+    deep_settle_margin: float = 0.875  # more headroom after a severe loss, before probing up again
     sample_window: float = 0.5    # s after the cut during which standing-queue arrival samples count as capacity evidence
     sample_q: float = 0.10        # ... its low (10th) percentile: the arrival rate can only be ABOVE the capacity while the
                                   # smoothed measurement still lags a drop (the minimum of a handful of samples)
@@ -90,6 +91,7 @@ class DirEstimator:
     last_ceiling: float = 0.0
     episodes: int = 0
     t_bloat_on: float = -1.0
+    t_native_collapse: float = float("-inf")
     t_burst_on: float = -1.0
     ach_onset: float = 0.0
     ach_hist: deque = field(default_factory=lambda: deque(maxlen=64))   # (t, achieved) for the 'has it fallen' test
@@ -178,7 +180,8 @@ class DirEstimator:
                 self.t_hold_until = t + self.hold * (p.near_max_hold if head <= 1.15 else 1.0)
                 self.c_lo, self.c_hi = 0.95 * self.c_est, 1.05 * self.c_est
                 self.t_last_action = t
-                return self._set(max(p.r_min, p.margin * self.c_est), "settle_at_margin")
+                margin = min(p.margin, p.deep_settle_margin) if self.behind and self.c_est < 0.5 * self.rate_before else p.margin
+                return self._set(max(p.r_min, margin * self.c_est), "settle_at_margin")
             return None, ""
         if bloat and achieved < 0.10 * self.rate:
             self.t_bloat_on = -1.0
@@ -187,10 +190,14 @@ class DirEstimator:
             self.t_bloat_on = -1.0
         elif self.t_bloat_on < 0:
             self.t_bloat_on, self.ach_onset = t, achieved
-            return None, "bloat_unconfirmed"
-        elif (t - self.t_bloat_on < (p.confirm_fast if self._collapsed(t, achieved) else p.confirm)
-              or achieved > p.ramp_tol * max(self.ach_onset, 1e-3)
-              or self._flow_start(t, achieved)):
+            if self.behind and 0 <= t - self.t_native_collapse <= p.sample_ttl and self._collapsed(t, achieved):
+                # The native watcher sampled the rate drop before waking Python. Credit the
+                # delay time already observed since that sample, but still require the normal vote.
+                self.t_bloat_on = min(ts for ts, delayed in self.votes if delayed and t - ts <= p.sample_ttl)
+                self.t_bloat_on = max(self.t_bloat_on, self.t_native_collapse)
+        if bloat and (t - self.t_bloat_on < (p.confirm_fast if self._collapsed(t, achieved) else p.confirm)
+                      or achieved > p.ramp_tol * max(self.ach_onset, 1e-3)
+                      or self._flow_start(t, achieved)):
             if achieved > p.ramp_tol * max(self.ach_onset, 1e-3):
                 self.t_bloat_on, self.ach_onset = t, achieved    # still ramping: restart confirmation
             return None, "bloat_unconfirmed"

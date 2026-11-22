@@ -1,0 +1,50 @@
+{
+ "scenario": "S5",
+ "config": "C4",
+ "rep": 1,
+ "seed": 1136,
+ "kernel": "6.8.0-149-generic",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795376663.83643,
+   "rel": 0.0
+  },
+  {
+   "flows": 16,
+   "name": "load_on",
+   "t": 1795376670.359437,
+   "rel": 6.523
+  },
+  {
+   "name": "override_post",
+   "t": 1795376684.9035769,
+   "rel": 21.067,
+   "client": "netns_helper"
+  },
+  {
+   "name": "override_returned",
+   "t": 1795376685.0718312,
+   "rel": 21.235,
+   "curl_roundtrip_s": 0.168,
+   "client": "netns_helper"
+  },
+  {
+   "name": "end",
+   "t": 1795376703.5725121,
+   "rel": 39.736
+  }
+ ],
+ "down": 20,
+ "up": 4,
+ "override_client": "netns_helper",
+ "override_resp": "{\"applied\":true,\"tin\":\"Voice\",\"expires_at\":1795376804.9707837,\"t_rx\":1795376684.9707837,\"apply_latency_s\":0.059}",
+ "voice_tin_pkts_before_after": [
+  3127,
+  3254
+ ],
+ "override_legacy_spawn_s": 0.764
+}

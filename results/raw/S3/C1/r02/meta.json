@@ -1,0 +1,29 @@
+{
+ "scenario": "S3",
+ "config": "C1",
+ "rep": 2,
+ "seed": 2134,
+ "kernel": "6.8.0-149-generic",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795374433.469661,
+   "rel": 0.0
+  },
+  {
+   "name": "load_on",
+   "t": 1795374439.4808483,
+   "rel": 6.011
+  },
+  {
+   "name": "end",
+   "t": 1795374477.077651,
+   "rel": 43.608
+  }
+ ],
+ "down": 20,
+ "up": 4
+}

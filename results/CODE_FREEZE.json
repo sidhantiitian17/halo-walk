@@ -1,0 +1,8 @@
+{
+ "C0": 1795370564.8809557,
+ "C1": 1795370564.8809557,
+ "C2": 1795370564.8809557,
+ "C3": 1795370564.8809557,
+ "C4": 1795370564.8809557,
+ "note": "v2 freeze (2026-11-22): round-1..3 fixes merged (est, ctl, lease, r2rate, r2cpu, r3c, int2); all matrix runs re-run with this code. v1 runs archived in results/raw_superseded/v1_final"
+}

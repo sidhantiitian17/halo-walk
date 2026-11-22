@@ -1,0 +1,2229 @@
+{
+ "platform": "Linux 6.8.0-149-generic, QEMU TCG 2 vCPU, EMULATED",
+ "matrix": {
+  "CPU": {
+   "C1": 2,
+   "C3": 2,
+   "C4": 2
+  },
+  "DATAGEN": {
+   "C2": 24
+  },
+  "EST10": {
+   "C2": 2
+  },
+  "EST100": {
+   "C2": 2
+  },
+  "EST20": {
+   "C2": 2
+  },
+  "EST50": {
+   "C2": 2
+  },
+  "S1": {
+   "C0": 6,
+   "C1": 6,
+   "C2": 6,
+   "C3": 6,
+   "C4": 6
+  },
+  "S1x32": {
+   "C1": 3,
+   "C3": 3
+  },
+  "S2": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3
+  },
+  "S3": {
+   "C0": 3,
+   "C1": 3,
+   "C3": 3,
+   "C4": 3
+  },
+  "S4": {
+   "C3": 3,
+   "C4": 3
+  },
+  "S5": {
+   "C3": 3,
+   "C4": 3
+  },
+  "S6": {
+   "C3": 3,
+   "C4": 3
+  },
+  "S7": {
+   "C1": 3,
+   "C3": 3
+  }
+ },
+ "measurements": [
+  {
+   "id": 1,
+   "name": "Rig fidelity (20/50/100 Mbit/s)",
+   "value": "20 Mbit/s: err -0.0%, p99 dev 3910 us (MTU 606 us) adopted PASS / strict FAIL; 50 Mbit/s: err -0.1%, p99 dev 2386 us (MTU 242 us) adopted PASS / strict FAIL; 100 Mbit/s: err -2.1%, p99 dev 1568 us (MTU 121 us) adopted PASS / strict FAIL",
+   "pass": true,
+   "criterion": "adopted: |rate error| <= 4% AND p99 inter-dequeue deviation <= 5 ms at 20, 50 and 100 Mbit/s (strict Mininet-HiFi: p99 deviation <= 1 MTU serialisation time, reported separately)",
+   "detail": {
+    "per_rate": {
+     "20": {
+      "n_files": 1,
+      "rate_err_pct": -0.006,
+      "dev_p95_us": 574.9,
+      "dev_p99_us": 3910.2,
+      "mtu_time_us": 605.6,
+      "cpu_idle_pct": 38.7,
+      "strict_pass": false,
+      "adopted_pass": true
+     },
+     "50": {
+      "n_files": 1,
+      "rate_err_pct": -0.076,
+      "dev_p95_us": 286.2,
+      "dev_p99_us": 2386.2,
+      "mtu_time_us": 242.2,
+      "cpu_idle_pct": 42.0,
+      "strict_pass": false,
+      "adopted_pass": true
+     },
+     "100": {
+      "n_files": 1,
+      "rate_err_pct": -2.077,
+      "dev_p95_us": 253.5,
+      "dev_p99_us": 1567.6,
+      "mtu_time_us": 121.1,
+      "cpu_idle_pct": 40.2,
+      "strict_pass": false,
+      "adopted_pass": true
+     }
+    },
+    "strict_pass_all": false,
+    "thresholds": {
+     "rate_err_pct": 4.0,
+     "dev_p99_us": 5000.0
+    }
+   }
+  },
+  {
+   "id": 2,
+   "name": "S1 call latency under ISO download (C0..C4)",
+   "value": "call p99 added delay: C0 600.1 ms [95% CI 600.0, 600.7], N=6; C1 6.2 ms [95% CI 5.0, 7.0], N=6; C2 7.2 ms [95% CI 5.6, 8.2], N=6; C3 7.7 ms [95% CI 6.3, 9.9], N=6; C4 7.6 ms [95% CI 6.7, 9.7], N=6; C3-C0 = -592.4 ms [CI -593.8, -590.2], Holm p=0.0043; C3-C1 = 1.5 ms [CI -0.1, 3.9], Holm p=0.3247; C3-C2 = 0.5 ms [CI -1.3, 3.1], Holm p=0.7879",
+   "pass": true,
+   "criterion": "C3 call p99 added delay <= 15 ms AND C3 < C0 (Mann-Whitney U, Holm-corrected p < 0.05)",
+   "detail": {
+    "C0": {
+     "p99_added_ms": {
+      "n": 6,
+      "median": 600.132,
+      "ci95": [
+       600.038,
+       600.68
+      ],
+      "values": [
+       600.198,
+       600.192,
+       600.054,
+       601.161,
+       600.073,
+       600.021
+      ]
+     },
+     "jitter_ms": {
+      "n": 6,
+      "median": 1.265,
+      "ci95": [
+       1.233,
+       1.404
+      ],
+      "values": [
+       1.227,
+       1.264,
+       1.265,
+       1.375,
+       1.433,
+       1.24
+      ]
+     },
+     "loss_pct": {
+      "n": 6,
+      "median": 0.891,
+      "ci95": [
+       0.832,
+       0.995
+      ],
+      "values": [
+       0.862,
+       1.04,
+       0.921,
+       0.832,
+       0.951,
+       0.832
+      ]
+     }
+    },
+    "C1": {
+     "p99_added_ms": {
+      "n": 6,
+      "median": 6.188,
+      "ci95": [
+       4.964,
+       7.027
+      ],
+      "values": [
+       7.373,
+       6.681,
+       5.673,
+       4.254,
+       6.015,
+       6.361
+      ]
+     },
+     "jitter_ms": {
+      "n": 6,
+      "median": 0.843,
+      "ci95": [
+       0.752,
+       0.881
+      ],
+      "values": [
+       0.878,
+       0.833,
+       0.853,
+       0.711,
+       0.792,
+       0.884
+      ]
+     },
+     "loss_pct": {
+      "n": 6,
+      "median": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "values": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "C2": {
+     "p99_added_ms": {
+      "n": 6,
+      "median": 7.208,
+      "ci95": [
+       5.578,
+       8.153
+      ],
+      "values": [
+       6.637,
+       5.909,
+       7.779,
+       8.126,
+       5.246,
+       8.18
+      ]
+     },
+     "jitter_ms": {
+      "n": 6,
+      "median": 1.041,
+      "ci95": [
+       0.876,
+       1.095
+      ],
+      "values": [
+       1.015,
+       0.885,
+       1.119,
+       1.066,
+       0.867,
+       1.072
+      ]
+     },
+     "loss_pct": {
+      "n": 6,
+      "median": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "values": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "C3": {
+     "p99_added_ms": {
+      "n": 6,
+      "median": 7.713,
+      "ci95": [
+       6.288,
+       9.947
+      ],
+      "values": [
+       11.697,
+       8.198,
+       8.133,
+       7.292,
+       5.86,
+       6.716
+      ]
+     },
+     "jitter_ms": {
+      "n": 6,
+      "median": 1.068,
+      "ci95": [
+       0.907,
+       1.227
+      ],
+      "values": [
+       1.283,
+       1.093,
+       1.171,
+       1.043,
+       0.828,
+       0.987
+      ]
+     },
+     "loss_pct": {
+      "n": 6,
+      "median": 0.0,
+      "ci95": [
+       0.0,
+       0.015
+      ],
+      "values": [
+       0.03,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "C4": {
+     "p99_added_ms": {
+      "n": 6,
+      "median": 7.624,
+      "ci95": [
+       6.714,
+       9.738
+      ],
+      "values": [
+       9.159,
+       8.04,
+       7.207,
+       6.336,
+       7.092,
+       10.316
+      ]
+     },
+     "jitter_ms": {
+      "n": 6,
+      "median": 1.112,
+      "ci95": [
+       0.959,
+       1.238
+      ],
+      "values": [
+       1.2,
+       1.196,
+       1.028,
+       0.909,
+       1.009,
+       1.275
+      ]
+     },
+     "loss_pct": {
+      "n": 6,
+      "median": 0.0,
+      "ci95": [
+       0.0,
+       0.03
+      ],
+      "values": [
+       0.03,
+       0.0,
+       0.03,
+       0.0,
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "comparisons": {
+     "C3-C0": {
+      "diff_median_ms": -592.42,
+      "ci95": [
+       -593.848,
+       -590.158
+      ],
+      "p": 0.0022,
+      "p_holm": 0.0043,
+      "cliffs_delta": -1.0,
+      "holm_family_size": 2
+     },
+     "C3-C1": {
+      "diff_median_ms": 1.525,
+      "ci95": [
+       -0.06,
+       3.931
+      ],
+      "p": 0.0649,
+      "p_holm": 0.3247,
+      "cliffs_delta": 0.667,
+      "holm_family_size": 5
+     },
+     "C3-C2": {
+      "diff_median_ms": 0.505,
+      "ci95": [
+       -1.264,
+       3.106
+      ],
+      "p": 0.3939,
+      "p_holm": 0.7879,
+      "cliffs_delta": 0.333,
+      "holm_family_size": 2
+     }
+    }
+   }
+  },
+  {
+   "id": 3,
+   "name": "S1x32 call latency with 32 bulk flows",
+   "value": "call p99 added delay: C1 13.0 ms [95% CI 8.3, 20.6], N=3; C3 7.0 ms [95% CI 6.9, 10.7], N=3",
+   "pass": true,
+   "criterion": "C3 median-over-reps call p99 added delay <= 10 ms (S1x32, 32 bulk flows)",
+   "detail": {
+    "C0": {
+     "n": 0
+    },
+    "C1": {
+     "n": 3,
+     "median": 13.025,
+     "ci95": [
+      8.297,
+      20.564
+     ],
+     "values": [
+      8.297,
+      20.564,
+      13.025
+     ]
+    },
+    "C2": {
+     "n": 0
+    },
+    "C3": {
+     "n": 3,
+     "median": 6.981,
+     "ci95": [
+      6.853,
+      10.73
+     ],
+     "values": [
+      10.73,
+      6.853,
+      6.981
+     ]
+    },
+    "C4": {
+     "n": 0
+    }
+   }
+  },
+  {
+   "id": 4,
+   "name": "S2 capacity step: adaptation, recovery, stability",
+   "value": "C1 T_adapt never, low-phase p99 added 1199.8 ms [95% CI 1199.6, 1201.4], N=3; C2 T_adapt 1.80 s, recovery 14.9 s, 0.0 changes/min (medians, N=3) [PASS]; C3 T_adapt 1.90 s, recovery 14.0 s, 0.0 changes/min (medians, N=3)",
+   "pass": true,
+   "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
+   "detail": {
+    "C1": {
+     "n": 3,
+     "runs": [
+      {
+       "cap_down": 10.0,
+       "cap_up": 50.0,
+       "pre_median_ms": 10.546,
+       "low_phase_added_p99_ms": 1199.763,
+       "low_phase_added_p95_ms": 1198.554,
+       "rate_source": null,
+       "t_adapt_s": null,
+       "t_adapt_note": "never (no adaptive shaper)"
+      },
+      {
+       "cap_down": 10.0,
+       "cap_up": 50.0,
+       "pre_median_ms": 10.534,
+       "low_phase_added_p99_ms": 1201.409,
+       "low_phase_added_p95_ms": 1199.218,
+       "rate_source": null,
+       "t_adapt_s": null,
+       "t_adapt_note": "never (no adaptive shaper)"
+      },
+      {
+       "cap_down": 10.0,
+       "cap_up": 50.0,
+       "pre_median_ms": 10.539,
+       "low_phase_added_p99_ms": 1199.58,
+       "low_phase_added_p95_ms": 1198.07,
+       "rate_source": null,
+       "t_adapt_s": null,
+       "t_adapt_note": "never (no adaptive shaper)"
+      }
+     ],
+     "t_adapt": "never (no adaptive shaper)",
+     "low_phase_added_p99_ms": {
+      "n": 3,
+      "median": 1199.763,
+      "ci95": [
+       1199.58,
+       1201.409
+      ],
+      "values": [
+       1199.763,
+       1201.409,
+       1199.58
+      ]
+     }
+    },
+    "C2": {
+     "n": 3,
+     "runs": [
+      {
+       "cap_down": 10.0,
+       "cap_up": 50.0,
+       "pre_median_ms": 10.567,
+       "low_phase_added_p99_ms": 182.681,
+       "low_phase_added_p95_ms": 66.255,
+       "rate_source": "telemetry r_dl",
+       "t_adapt_s": 2.0,
+       "t_settle_strict_s": null,
+       "recovery_s": 14.9,
+       "telemetry_end_rel_s": 34.943,
+       "changes_pre_down": 0,
+       "changes_last15": 0,
+       "changes_per_min": 0.0
+      },
+      {
+       "cap_down": 10.0,
+       "cap_up": 50.0,
+       "pre_median_ms": 10.608,
+       "low_phase_added_p99_ms": 96.937,
+       "low_phase_added_p95_ms": 53.741,
+       "rate_source": "telemetry r_dl",
+       "t_adapt_s": 1.5,
+       "t_settle_strict_s": 18.0,
+       "recovery_s": 7.678,
+       "telemetry_end_rel_s": 35.088,
+       "changes_pre_down": 0,
+       "changes_last15": 0,
+       "changes_per_min": 0.0
+      },
+      {
+       "cap_down": 10.0,
+       "cap_up": 50.0,
+       "pre_median_ms": 10.603,
+       "low_phase_added_p99_ms": 165.918,
+       "low_phase_added_p95_ms": 63.826,
+       "rate_source": "telemetry r_dl",
+       "t_adapt_s": 1.8,
+       "t_settle_strict_s": 24.6,
+       "recovery_s": 15.841,
+       "telemetry_end_rel_s": 38.978,
+       "changes_pre_down": 1,
+       "changes_last15": 0,
+       "changes_per_min": 1.714
+      }
+     ],
+     "t_adapt_median_s": 1.8,
+     "recovery_median_s": 14.9,
+     "changes_per_min_median": 0.0,
+     "t_adapt_s": {
+      "n": 3,
+      "median": 1.8,
+      "ci95": [
+       1.5,
+       2.0
+      ],
+      "values": [
+       2.0,
+       1.5,
+       1.8
+      ]
+     },
+     "recovery_s": {
+      "n": 3,
+      "median": 14.9,
+      "ci95": [
+       7.678,
+       15.841
+      ],
+      "values": [
+       14.9,
+       7.678,
+       15.841
+      ]
+     },
+     "changes_per_min": {
+      "n": 3,
+      "median": 0.0,
+      "ci95": [
+       0.0,
+       1.714
+      ],
+      "values": [
+       0.0,
+       0.0,
+       1.714
+      ]
+     },
+     "low_phase_added_p99_ms": {
+      "n": 3,
+      "median": 165.918,
+      "ci95": [
+       96.937,
+       182.681
+      ],
+      "values": [
+       182.681,
+       96.937,
+       165.918
+      ]
+     },
+     "pass": true
+    },
+    "C3": {
+     "n": 3,
+     "runs": [
+      {
+       "cap_down": 10.0,
+       "cap_up": 50.0,
+       "pre_median_ms": 10.612,
+       "low_phase_added_p99_ms": 157.424,
+       "low_phase_added_p95_ms": 64.201,
+       "rate_source": "telemetry r_dl",
+       "t_adapt_s": 2.3,
+       "t_settle_strict_s": 25.1,
+       "recovery_s": 15.817,
+       "telemetry_end_rel_s": 38.988,
+       "changes_pre_down": 0,
+       "changes_last15": 0,
+       "changes_per_min": 0.0
+      },
+      {
+       "cap_down": 10.0,
+       "cap_up": 50.0,
+       "pre_median_ms": 10.684,
+       "low_phase_added_p99_ms": 163.741,
+       "low_phase_added_p95_ms": 61.677,
+       "rate_source": "telemetry r_dl",
+       "t_adapt_s": 1.8,
+       "t_settle_strict_s": null,
+       "recovery_s": 14.03,
+       "telemetry_end_rel_s": 38.591,
+       "changes_pre_down": 0,
+       "changes_last15": 0,
+       "changes_per_min": 0.0
+      },
+      {
+       "cap_down": 10.0,
+       "cap_up": 50.0,
+       "pre_median_ms": 10.625,
+       "low_phase_added_p99_ms": 149.664,
+       "low_phase_added_p95_ms": 60.525,
+       "rate_source": "telemetry r_dl",
+       "t_adapt_s": 1.9,
+       "t_settle_strict_s": 24.6,
+       "recovery_s": 13.958,
+       "telemetry_end_rel_s": 39.177,
+       "changes_pre_down": 0,
+       "changes_last15": 0,
+       "changes_per_min": 0.0
+      }
+     ],
+     "t_adapt_median_s": 1.9,
+     "recovery_median_s": 14.03,
+     "changes_per_min_median": 0.0,
+     "t_adapt_s": {
+      "n": 3,
+      "median": 1.9,
+      "ci95": [
+       1.8,
+       2.3
+      ],
+      "values": [
+       2.3,
+       1.8,
+       1.9
+      ]
+     },
+     "recovery_s": {
+      "n": 3,
+      "median": 14.03,
+      "ci95": [
+       13.958,
+       15.817
+      ],
+      "values": [
+       15.817,
+       14.03,
+       13.958
+      ]
+     },
+     "changes_per_min": {
+      "n": 3,
+      "median": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "values": [
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "low_phase_added_p99_ms": {
+      "n": 3,
+      "median": 157.424,
+      "ci95": [
+       149.664,
+       163.741
+      ],
+      "values": [
+       157.424,
+       163.741,
+       149.664
+      ]
+     },
+     "pass": true
+    },
+    "capacity_steps_mbps": [
+     [
+      10.0,
+      50.0
+     ]
+    ]
+   }
+  },
+  {
+   "id": 5,
+   "name": "Estimator accuracy",
+   "value": "10 Mbit/s: err 0.6% [95% CI 0.5, 0.7], N=2; 20 Mbit/s: err 0.6% [95% CI 0.5, 0.6], N=2; 50 Mbit/s: err 0.5% [95% CI 0.2, 0.8], N=2; 100 Mbit/s: err 5.2% [95% CI 5.0, 5.3], N=2",
+   "pass": true,
+   "criterion": "estimator |c_est - true| / true <= 10% at 10, 20, 50 and 100 Mbit/s",
+   "detail": {
+    "10": {
+     "true_mbps": 10.0,
+     "err": {
+      "n": 2,
+      "median": 0.006,
+      "ci95": [
+       0.005,
+       0.007
+      ],
+      "values": [
+       0.005,
+       0.007
+      ]
+     },
+     "c_est": {
+      "n": 2,
+      "median": 9.936,
+      "ci95": [
+       9.925,
+       9.947
+      ],
+      "values": [
+       9.947,
+       9.925
+      ]
+     },
+     "configs": {
+      "C2": 2
+     },
+     "pass": true
+    },
+    "20": {
+     "true_mbps": 20.0,
+     "err": {
+      "n": 2,
+      "median": 0.006,
+      "ci95": [
+       0.005,
+       0.006
+      ],
+      "values": [
+       0.005,
+       0.006
+      ]
+     },
+     "c_est": {
+      "n": 2,
+      "median": 19.889,
+      "ci95": [
+       19.882,
+       19.897
+      ],
+      "values": [
+       19.897,
+       19.882
+      ]
+     },
+     "configs": {
+      "C2": 2
+     },
+     "pass": true
+    },
+    "50": {
+     "true_mbps": 50.0,
+     "err": {
+      "n": 2,
+      "median": 0.005,
+      "ci95": [
+       0.002,
+       0.008
+      ],
+      "values": [
+       0.002,
+       0.008
+      ]
+     },
+     "c_est": {
+      "n": 2,
+      "median": 49.753,
+      "ci95": [
+       49.599,
+       49.907
+      ],
+      "values": [
+       49.907,
+       49.599
+      ]
+     },
+     "configs": {
+      "C2": 2
+     },
+     "pass": true
+    },
+    "100": {
+     "true_mbps": 100.0,
+     "err": {
+      "n": 2,
+      "median": 0.052,
+      "ci95": [
+       0.05,
+       0.053
+      ],
+      "values": [
+       0.053,
+       0.05
+      ]
+     },
+     "c_est": {
+      "n": 2,
+      "median": 94.844,
+      "ci95": [
+       94.735,
+       94.954
+      ],
+      "values": [
+       94.735,
+       94.954
+      ]
+     },
+     "configs": {
+      "C2": 2
+     },
+     "pass": true
+    }
+   }
+  },
+  {
+   "id": 6,
+   "name": "S3 gaming latency + TV fairness",
+   "value": "C0 game p99 added 599.4 ms [95% CI 578.1, 599.6], N=3, Jain 0.953 [95% CI 0.893, 1.000], N=3; C1 game p99 added 6.6 ms [95% CI 5.1, 8.3], N=3, Jain 0.966 [95% CI 0.955, 0.994], N=3; C3 game p99 added 10.1 ms [95% CI 7.6, 14.3], N=3, Jain 0.947 [95% CI 0.938, 0.983], N=3; C4 game p99 added 11.4 ms [95% CI 10.5, 11.9], N=3, Jain 0.955 [95% CI 0.949, 0.988], N=3",
+   "pass": true,
+   "criterion": "C3: gaming p99 added delay <= 15 ms AND demand-normalised Jain index over 3 TVs >= 0.9",
+   "detail": {
+    "C0": {
+     "game_p99_added_ms": {
+      "n": 3,
+      "median": 599.381,
+      "ci95": [
+       578.111,
+       599.553
+      ],
+      "values": [
+       599.553,
+       599.381,
+       578.111
+      ]
+     },
+     "jain": {
+      "n": 3,
+      "median": 0.953,
+      "ci95": [
+       0.893,
+       1.0
+      ],
+      "values": [
+       0.893,
+       0.953,
+       1.0
+      ]
+     },
+     "runs": [
+      {
+       "R": 20.0,
+       "R_src": "C0 no shaper: physical link rate meta.down",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.644,
+        6.644,
+        6.644
+       ],
+       "x": [
+        1.035,
+        0.564,
+        0.489
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 6.875,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 6.875
+        },
+        "tv2": {
+         "goodput_mbps": 3.75,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.75
+        },
+        "tv3": {
+         "goodput_mbps": 3.25,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.25
+        }
+       }
+      },
+      {
+       "R": 20.0,
+       "R_src": "C0 no shaper: physical link rate meta.down",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.644,
+        6.644,
+        6.644
+       ],
+       "x": [
+        0.64,
+        1.007,
+        0.649
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 4.25,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 4.25
+        },
+        "tv2": {
+         "goodput_mbps": 6.688,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 6.688
+        },
+        "tv3": {
+         "goodput_mbps": 4.312,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 4.312
+        }
+       }
+      },
+      {
+       "R": 20.0,
+       "R_src": "C0 no shaper: physical link rate meta.down",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.644,
+        6.644,
+        6.644
+       ],
+       "x": [
+        0.753,
+        0.753,
+        0.753
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        },
+        "tv2": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        },
+        "tv3": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        }
+       }
+      }
+     ]
+    },
+    "C1": {
+     "game_p99_added_ms": {
+      "n": 3,
+      "median": 6.646,
+      "ci95": [
+       5.104,
+       8.258
+      ],
+      "values": [
+       8.258,
+       6.646,
+       5.104
+      ]
+     },
+     "jain": {
+      "n": 3,
+      "median": 0.966,
+      "ci95": [
+       0.955,
+       0.994
+      ],
+      "values": [
+       0.955,
+       0.994,
+       0.966
+      ]
+     },
+     "runs": [
+      {
+       "R": 19.0,
+       "R_src": "0.95 * meta.down (default shaper rate)",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.311,
+        6.311,
+        6.311
+       ],
+       "x": [
+        0.792,
+        0.792,
+        0.475
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        },
+        "tv2": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        },
+        "tv3": {
+         "goodput_mbps": 3.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.0
+        }
+       }
+      },
+      {
+       "R": 19.0,
+       "R_src": "0.95 * meta.down (default shaper rate)",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.311,
+        6.311,
+        6.311
+       ],
+       "x": [
+        0.574,
+        0.555,
+        0.475
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 3.625,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.625
+        },
+        "tv2": {
+         "goodput_mbps": 3.5,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.5
+        },
+        "tv3": {
+         "goodput_mbps": 3.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.0
+        }
+       }
+      },
+      {
+       "R": 19.0,
+       "R_src": "0.95 * meta.down (default shaper rate)",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.311,
+        6.311,
+        6.311
+       ],
+       "x": [
+        0.475,
+        0.475,
+        0.693
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 3.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.0
+        },
+        "tv2": {
+         "goodput_mbps": 3.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.0
+        },
+        "tv3": {
+         "goodput_mbps": 4.375,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 4.375
+        }
+       }
+      }
+     ]
+    },
+    "C3": {
+     "game_p99_added_ms": {
+      "n": 3,
+      "median": 10.107,
+      "ci95": [
+       7.608,
+       14.292
+      ],
+      "values": [
+       10.107,
+       7.608,
+       14.292
+      ]
+     },
+     "jain": {
+      "n": 3,
+      "median": 0.947,
+      "ci95": [
+       0.938,
+       0.983
+      ],
+      "values": [
+       0.983,
+       0.938,
+       0.947
+      ]
+     },
+     "runs": [
+      {
+       "R": 19.0,
+       "R_src": "median telemetry r_dl in window",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.311,
+        6.311,
+        6.311
+       ],
+       "x": [
+        0.555,
+        0.753,
+        0.733
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 3.5,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.5
+        },
+        "tv2": {
+         "goodput_mbps": 4.75,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 4.75
+        },
+        "tv3": {
+         "goodput_mbps": 4.625,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 4.625
+        }
+       }
+      },
+      {
+       "R": 19.0,
+       "R_src": "median telemetry r_dl in window",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.311,
+        6.311,
+        6.311
+       ],
+       "x": [
+        0.475,
+        0.792,
+        0.475
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 3.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.0
+        },
+        "tv2": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        },
+        "tv3": {
+         "goodput_mbps": 3.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.0
+        }
+       }
+      },
+      {
+       "R": 19.0,
+       "R_src": "median telemetry r_dl in window",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.311,
+        6.311,
+        6.311
+       ],
+       "x": [
+        0.792,
+        0.495,
+        0.495
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        },
+        "tv2": {
+         "goodput_mbps": 3.125,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.125
+        },
+        "tv3": {
+         "goodput_mbps": 3.125,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.125
+        }
+       }
+      }
+     ]
+    },
+    "C4": {
+     "game_p99_added_ms": {
+      "n": 3,
+      "median": 11.386,
+      "ci95": [
+       10.517,
+       11.941
+      ],
+      "values": [
+       11.941,
+       11.386,
+       10.517
+      ]
+     },
+     "jain": {
+      "n": 3,
+      "median": 0.955,
+      "ci95": [
+       0.949,
+       0.988
+      ],
+      "values": [
+       0.949,
+       0.955,
+       0.988
+      ]
+     },
+     "runs": [
+      {
+       "R": 19.0,
+       "R_src": "median telemetry r_dl in window",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.311,
+        6.311,
+        6.311
+       ],
+       "x": [
+        0.822,
+        0.822,
+        0.475
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 5.188,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 1.0,
+         "mean_rung": 5.188
+        },
+        "tv2": {
+         "goodput_mbps": 5.188,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 1.0,
+         "mean_rung": 5.188
+        },
+        "tv3": {
+         "goodput_mbps": 3.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.0
+        }
+       }
+      },
+      {
+       "R": 19.0,
+       "R_src": "median telemetry r_dl in window",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.311,
+        6.311,
+        6.311
+       ],
+       "x": [
+        0.475,
+        0.792,
+        0.792
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 3.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.0
+        },
+        "tv2": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        },
+        "tv3": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        }
+       }
+      },
+      {
+       "R": 19.0,
+       "R_src": "median telemetry r_dl in window",
+       "threshold_at_0.95_down_mbps": null,
+       "share": [
+        6.311,
+        6.311,
+        6.311
+       ],
+       "x": [
+        0.614,
+        0.772,
+        0.792
+       ],
+       "tv": {
+        "tv1": {
+         "goodput_mbps": 3.875,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 3.875
+        },
+        "tv2": {
+         "goodput_mbps": 4.875,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 4.875
+        },
+        "tv3": {
+         "goodput_mbps": 5.0,
+         "seg_s": 2.0,
+         "n_chunks": 16.0,
+         "stalls": 0.0,
+         "mean_rung": 5.0
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": 7,
+   "name": "S4 lease abuse / starvation / expiry",
+   "value": "S4/C3/r01: min 1-s bulk 3.14 Mbit/s vs 0.81 needed; lease expired 15.51 s after grant (TTL 16.0); S4/C3/r02: min 1-s bulk 3.14 Mbit/s vs 0.85 needed; lease expired 16.01 s after grant (TTL 16.0); S4/C3/r03: min 1-s bulk 2.10 Mbit/s vs 0.74 needed; lease expired 15.65 s after grant (TTL 16.0); S4/C4/r01: min 1-s bulk 4.16 Mbit/s vs 0.95 needed; lease expired 15.49 s after grant (TTL 16.0); S4/C4/r02: min 1-s bulk 1.05 Mbit/s vs 0.87 needed; lease expired 15.19 s after grant (TTL 16.0); S4/C4/r03: min 1-s bulk 3.15 Mbit/s vs 0.95 needed; lease expired 15.59 s after grant (TTL 16.0) (pass requires every C3/C4 rep to meet both)",
+   "pass": true,
+   "criterion": "min 1-s bulk goodput in lease window >= 0.8 * R/16 AND kernel lease expiry <= TTL + 1 s (controller killed)",
+   "detail": {
+    "C3": [
+     {
+      "run": "S4/C3/r01",
+      "min_1s_mbps": 3.136,
+      "threshold_mbps": 0.807,
+      "R": 16.15,
+      "R_src": "median telemetry r_dl in window",
+      "threshold_at_0.95_down_mbps": 0.95,
+      "after_grant_s": 15.509,
+      "ttl": 16.0,
+      "goodput_ok": true,
+      "expiry_ok": true,
+      "pass": true,
+      "abuse_mean_mbps": 4.717,
+      "note": null
+     },
+     {
+      "run": "S4/C3/r02",
+      "min_1s_mbps": 3.142,
+      "threshold_mbps": 0.846,
+      "R": 16.914,
+      "R_src": "median telemetry r_dl in window",
+      "threshold_at_0.95_down_mbps": 0.95,
+      "after_grant_s": 16.006,
+      "ttl": 16.0,
+      "goodput_ok": true,
+      "expiry_ok": true,
+      "pass": true,
+      "abuse_mean_mbps": 5.176,
+      "note": null
+     },
+     {
+      "run": "S4/C3/r03",
+      "min_1s_mbps": 2.096,
+      "threshold_mbps": 0.74,
+      "R": 14.808,
+      "R_src": "median telemetry r_dl in window",
+      "threshold_at_0.95_down_mbps": 0.95,
+      "after_grant_s": 15.65,
+      "ttl": 16.0,
+      "goodput_ok": true,
+      "expiry_ok": true,
+      "pass": true,
+      "abuse_mean_mbps": 3.996,
+      "note": null
+     }
+    ],
+    "C4": [
+     {
+      "run": "S4/C4/r01",
+      "min_1s_mbps": 4.156,
+      "threshold_mbps": 0.95,
+      "R": 19.0,
+      "R_src": "median telemetry r_dl in window",
+      "threshold_at_0.95_down_mbps": 0.95,
+      "after_grant_s": 15.488,
+      "ttl": 16.0,
+      "goodput_ok": true,
+      "expiry_ok": true,
+      "pass": true,
+      "abuse_mean_mbps": 5.633,
+      "note": null
+     },
+     {
+      "run": "S4/C4/r02",
+      "min_1s_mbps": 1.049,
+      "threshold_mbps": 0.872,
+      "R": 17.44,
+      "R_src": "median telemetry r_dl in window",
+      "threshold_at_0.95_down_mbps": 0.95,
+      "after_grant_s": 15.188,
+      "ttl": 16.0,
+      "goodput_ok": true,
+      "expiry_ok": true,
+      "pass": true,
+      "abuse_mean_mbps": 4.783,
+      "note": null
+     },
+     {
+      "run": "S4/C4/r03",
+      "min_1s_mbps": 3.15,
+      "threshold_mbps": 0.95,
+      "R": 19.0,
+      "R_src": "median telemetry r_dl in window",
+      "threshold_at_0.95_down_mbps": 0.95,
+      "after_grant_s": 15.592,
+      "ttl": 16.0,
+      "goodput_ok": true,
+      "expiry_ok": true,
+      "pass": true,
+      "abuse_mean_mbps": 5.111,
+      "note": null
+     }
+    ]
+   }
+  },
+  {
+   "id": 8,
+   "name": "Classifier accuracy + calibration",
+   "value": "macro-F1 no-TTL 0.933 vs heuristic 0.480 (with TTL 0.933); ECE chosen 0.029 (raw 0.035); split=leave-batches-out GroupKFold, k=5 (group = DATAGEN batch/session); calibration = 25% of training batches, group-disjoint, inside each training fold, n_flows=628",
+   "pass": true,
+   "criterion": "ECE(chosen calibration) <= 0.05 AND macro-F1 without TTL > macro-F1 of heuristic",
+   "detail": {
+    "macro_f1_with_ttl": 0.9333003913649074,
+    "macro_f1_no_ttl": 0.9333003913649074,
+    "macro_f1_heuristic": 0.4797695864711322,
+    "ece_raw": 0.03539006839132609,
+    "ece_isotonic": 0.04132337882450433,
+    "ece_temperature": 0.02882583904418214,
+    "ece_chosen": 0.02882583904418214,
+    "split": "leave-batches-out GroupKFold, k=5 (group = DATAGEN batch/session); calibration = 25% of training batches, group-disjoint, inside each training fold",
+    "n_flows": 628,
+    "per_class": {
+     "no_ttl": {
+      "call": {
+       "precision": 0.9888888888888889,
+       "recall": 0.9270833333333334,
+       "f1": 0.956989247311828,
+       "support": 96
+      },
+      "gaming": {
+       "precision": 0.9313725490196079,
+       "recall": 0.9895833333333334,
+       "f1": 0.9595959595959596,
+       "support": 96
+      },
+      "streaming": {
+       "precision": 0.8048780487804879,
+       "recall": 0.9166666666666666,
+       "f1": 0.8571428571428571,
+       "support": 72
+      },
+      "bulk": {
+       "precision": 0.9333333333333333,
+       "recall": 0.9130434782608695,
+       "f1": 0.9230769230769231,
+       "support": 46
+      },
+      "other": {
+       "precision": 0.9838187702265372,
+       "recall": 0.9559748427672956,
+       "f1": 0.9696969696969697,
+       "support": 318
+      }
+     },
+     "with_ttl": {
+      "call": {
+       "precision": 0.9888888888888889,
+       "recall": 0.9270833333333334,
+       "f1": 0.956989247311828,
+       "support": 96
+      },
+      "gaming": {
+       "precision": 0.9313725490196079,
+       "recall": 0.9895833333333334,
+       "f1": 0.9595959595959596,
+       "support": 96
+      },
+      "streaming": {
+       "precision": 0.8048780487804879,
+       "recall": 0.9166666666666666,
+       "f1": 0.8571428571428571,
+       "support": 72
+      },
+      "bulk": {
+       "precision": 0.9333333333333333,
+       "recall": 0.9130434782608695,
+       "f1": 0.9230769230769231,
+       "support": 46
+      },
+      "other": {
+       "precision": 0.9838187702265372,
+       "recall": 0.9559748427672956,
+       "f1": 0.9696969696969697,
+       "support": 318
+      }
+     },
+     "heuristic": {
+      "call": {
+       "precision": 1.0,
+       "recall": 0.5625,
+       "f1": 0.72,
+       "support": 96
+      },
+      "gaming": {
+       "precision": 1.0,
+       "recall": 0.40625,
+       "f1": 0.5777777777777777,
+       "support": 96
+      },
+      "streaming": {
+       "precision": 0.0,
+       "recall": 0.0,
+       "f1": 0.0,
+       "support": 72
+      },
+      "bulk": {
+       "precision": 0.8333333333333334,
+       "recall": 0.21739130434782608,
+       "f1": 0.3448275862068966,
+       "support": 46
+      },
+      "other": {
+       "precision": 0.6080305927342257,
+       "recall": 1.0,
+       "f1": 0.7562425683709869,
+       "support": 318
+      }
+     }
+    },
+    "confusion": {
+     "labels": [
+      "call",
+      "gaming",
+      "streaming",
+      "bulk",
+      "other"
+     ],
+     "layout": "rows = true class, cols = predicted",
+     "no_ttl": [
+      [
+       89,
+       7,
+       0,
+       0,
+       0
+      ],
+      [
+       1,
+       95,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       66,
+       2,
+       4
+      ],
+      [
+       0,
+       0,
+       3,
+       42,
+       1
+      ],
+      [
+       0,
+       0,
+       13,
+       1,
+       304
+      ]
+     ],
+     "with_ttl": [
+      [
+       89,
+       7,
+       0,
+       0,
+       0
+      ],
+      [
+       1,
+       95,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       66,
+       2,
+       4
+      ],
+      [
+       0,
+       0,
+       3,
+       42,
+       1
+      ],
+      [
+       0,
+       0,
+       13,
+       1,
+       304
+      ]
+     ],
+     "heuristic": [
+      [
+       54,
+       0,
+       0,
+       0,
+       42
+      ],
+      [
+       0,
+       39,
+       0,
+       0,
+       57
+      ],
+      [
+       0,
+       0,
+       0,
+       2,
+       70
+      ],
+      [
+       0,
+       0,
+       0,
+       10,
+       36
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       318
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "id": 9,
+   "name": "AI gate C4 (ML) vs C3 (heuristic)",
+   "value": "gate outcome: deterministic heuristic ships; S1 C4\u2212C3 = -0.1 ms [CI -2.3, 2.3] (N=6/6); S3 C4\u2212C3 = 1.3 ms [CI -3.8, 4.3] (N=3/3); S5 C4\u2212C3 = 1.3 ms [CI -4.6, 1.4] (N=3/3)",
+   "pass": true,
+   "criterion": "gate evaluated validly: C3 and C4 each >= 3 reps in S1, S3, S5 (outcome reported in value)",
+   "detail": {
+    "per_scenario": {
+     "S1": {
+      "n_c3": 6,
+      "n_c4": 6,
+      "median_c3": 7.713,
+      "median_c4": 7.624,
+      "diff_c4_minus_c3_ms": -0.089,
+      "ci95": [
+       -2.349,
+       2.313
+      ],
+      "metric": "call p99 added delay"
+     },
+     "S3": {
+      "n_c3": 3,
+      "n_c4": 3,
+      "median_c3": 10.107,
+      "median_c4": 11.386,
+      "diff_c4_minus_c3_ms": 1.279,
+      "ci95": [
+       -3.774,
+       4.333
+      ],
+      "metric": "game p99 added delay"
+     },
+     "S5": {
+      "n_c3": 3,
+      "n_c4": 3,
+      "median_c3": 8.5,
+      "median_c4": 9.753,
+      "diff_c4_minus_c3_ms": 1.253,
+      "ci95": [
+       -4.624,
+       1.419
+      ],
+      "metric": "call p99 added delay"
+     }
+    },
+    "n_reps(C3,C4)": {
+     "S1": [
+      6,
+      6
+     ],
+     "S3": [
+      3,
+      3
+     ],
+     "S5": [
+      3,
+      3
+     ]
+    },
+    "outcome": "deterministic heuristic ships"
+   }
+  },
+  {
+   "id": 10,
+   "name": "S5 misclassification override latency",
+   "value": "override latency 0.18 s [95% CI 0.16, 0.20], N=6 (source: kernel: Voice-tin packets increased by POST return)",
+   "pass": true,
+   "criterion": "override correction latency (POST -> flow re-marked into Voice tin) <= 1 s",
+   "detail": {
+    "runs": [
+     {
+      "run": "S5/C3/r01",
+      "latency_s": 0.159,
+      "source": "kernel: Voice-tin packets increased by POST return",
+      "evidence": [
+       [
+        "kernel: Voice-tin packets increased by POST return",
+        0.159
+       ],
+       [
+        "ctl/events.jsonl: classify (tin 4)",
+        0.154
+       ]
+      ],
+      "api_roundtrip_s": 0.159,
+      "voice_tin_pkts_before_after": [
+       0,
+       103
+      ],
+      "qoe_recovered_s": 1.1
+     },
+     {
+      "run": "S5/C3/r02",
+      "latency_s": 0.223,
+      "source": "kernel: Voice-tin packets increased by POST return",
+      "evidence": [
+       [
+        "kernel: Voice-tin packets increased by POST return",
+        0.223
+       ],
+       [
+        "ctl/events.jsonl: classify (tin 4)",
+        0.223
+       ]
+      ],
+      "api_roundtrip_s": 0.223,
+      "voice_tin_pkts_before_after": [
+       1,
+       159
+      ],
+      "qoe_recovered_s": 1.1
+     },
+     {
+      "run": "S5/C3/r03",
+      "latency_s": 0.183,
+      "source": "kernel: Voice-tin packets increased by POST return",
+      "evidence": [
+       [
+        "kernel: Voice-tin packets increased by POST return",
+        0.183
+       ],
+       [
+        "ctl/events.jsonl: classify (tin 4)",
+        0.19
+       ]
+      ],
+      "api_roundtrip_s": 0.183,
+      "voice_tin_pkts_before_after": [
+       0,
+       118
+      ],
+      "qoe_recovered_s": 1.1
+     },
+     {
+      "run": "S5/C4/r01",
+      "latency_s": 0.168,
+      "source": "kernel: Voice-tin packets increased by POST return",
+      "evidence": [
+       [
+        "kernel: Voice-tin packets increased by POST return",
+        0.168
+       ]
+      ],
+      "api_roundtrip_s": 0.168,
+      "voice_tin_pkts_before_after": [
+       3127,
+       3254
+      ],
+      "qoe_recovered_s": 1.1
+     },
+     {
+      "run": "S5/C4/r02",
+      "latency_s": 0.172,
+      "source": "kernel: Voice-tin packets increased by POST return",
+      "evidence": [
+       [
+        "kernel: Voice-tin packets increased by POST return",
+        0.172
+       ]
+      ],
+      "api_roundtrip_s": 0.172,
+      "voice_tin_pkts_before_after": [
+       3136,
+       3284
+      ],
+      "qoe_recovered_s": 1.1
+     },
+     {
+      "run": "S5/C4/r03",
+      "latency_s": 0.184,
+      "source": "kernel: Voice-tin packets increased by POST return",
+      "evidence": [
+       [
+        "kernel: Voice-tin packets increased by POST return",
+        0.184
+       ]
+      ],
+      "api_roundtrip_s": 0.184,
+      "voice_tin_pkts_before_after": [
+       3150,
+       3308
+      ],
+      "qoe_recovered_s": 1.1
+     }
+    ],
+    "latency_s": {
+     "n": 6,
+     "median": 0.177,
+     "ci95": [
+      0.164,
+      0.204
+     ],
+     "values": [
+      0.159,
+      0.223,
+      0.183,
+      0.168,
+      0.172,
+      0.184
+     ]
+    }
+   }
+  },
+  {
+   "id": 11,
+   "name": "S6 rollback + watchdog SAFE",
+   "value": "restore after REGRESSED verdict 0.01 s [95% CI 0.01, 0.01], N=6 (detection/health window 1.90 s [95% CI 1.82, 1.95], N=6, not judged); SAFE after kill -9 2.01 s [95% CI 1.98, 2.02], N=6 (worst-case rep must meet threshold)",
+   "pass": true,
+   "criterion": "rollback: restore <= 1 s after the REGRESSED verdict (rollback_s; detection = health window, reported separately) AND SAFE <= 3 s after kill -9",
+   "detail": {
+    "runs": [
+     {
+      "run": "S6/C3/r01",
+      "shield_rejected_in_api": true,
+      "bad_policy_resp": "{\"accepted\":true,\"transaction\":\"prepare -> shadow-check -> apply -> read-back -> health window -> commit|rollback\"}",
+      "txn_rejected_events": 0,
+      "restore_s": 0.006,
+      "detect_s": 1.834,
+      "rollback_ok": true,
+      "rollback_total_s": 1.844,
+      "safe_s": 2.007,
+      "detect_after_kill_s": 1.977,
+      "hb_age_s": 2.053
+     },
+     {
+      "run": "S6/C3/r02",
+      "shield_rejected_in_api": true,
+      "bad_policy_resp": "{\"accepted\":true,\"transaction\":\"prepare -> shadow-check -> apply -> read-back -> health window -> commit|rollback\"}",
+      "txn_rejected_events": 0,
+      "restore_s": 0.009,
+      "detect_s": 1.917,
+      "rollback_ok": true,
+      "rollback_total_s": 1.929,
+      "safe_s": 2.022,
+      "detect_after_kill_s": 1.97,
+      "hb_age_s": 2.064
+     },
+     {
+      "run": "S6/C3/r03",
+      "shield_rejected_in_api": true,
+      "bad_policy_resp": "{\"accepted\":true,\"transaction\":\"prepare -> shadow-check -> apply -> read-back -> health window -> commit|rollback\"}",
+      "txn_rejected_events": 0,
+      "restore_s": 0.006,
+      "detect_s": 1.976,
+      "rollback_ok": true,
+      "rollback_total_s": 1.988,
+      "safe_s": 1.999,
+      "detect_after_kill_s": 1.945,
+      "hb_age_s": 2.016
+     },
+     {
+      "run": "S6/C4/r01",
+      "shield_rejected_in_api": true,
+      "bad_policy_resp": "{\"accepted\":true,\"transaction\":\"prepare -> shadow-check -> apply -> read-back -> health window -> commit|rollback\"}",
+      "txn_rejected_events": 0,
+      "restore_s": 0.008,
+      "detect_s": 1.878,
+      "rollback_ok": true,
+      "rollback_total_s": 1.888,
+      "safe_s": 2.025,
+      "detect_after_kill_s": 1.994,
+      "hb_age_s": 2.004
+     },
+     {
+      "run": "S6/C4/r02",
+      "shield_rejected_in_api": true,
+      "bad_policy_resp": "{\"accepted\":true,\"transaction\":\"prepare -> shadow-check -> apply -> read-back -> health window -> commit|rollback\"}",
+      "txn_rejected_events": 0,
+      "restore_s": 0.006,
+      "detect_s": 1.802,
+      "rollback_ok": true,
+      "rollback_total_s": 1.811,
+      "safe_s": 2.024,
+      "detect_after_kill_s": 1.987,
+      "hb_age_s": 2.007
+     },
+     {
+      "run": "S6/C4/r03",
+      "shield_rejected_in_api": true,
+      "bad_policy_resp": "{\"accepted\":true,\"transaction\":\"prepare -> shadow-check -> apply -> read-back -> health window -> commit|rollback\"}",
+      "txn_rejected_events": 0,
+      "restore_s": 0.006,
+      "detect_s": 1.918,
+      "rollback_ok": true,
+      "rollback_total_s": 1.928,
+      "safe_s": 1.965,
+      "detect_after_kill_s": 1.934,
+      "hb_age_s": 2.032
+     }
+    ],
+    "restore_s": {
+     "n": 6,
+     "median": 0.006,
+     "ci95": [
+      0.006,
+      0.009
+     ],
+     "values": [
+      0.006,
+      0.009,
+      0.006,
+      0.008,
+      0.006,
+      0.006
+     ]
+    },
+    "detect_s_health_window": {
+     "n": 6,
+     "median": 1.897,
+     "ci95": [
+      1.818,
+      1.947
+     ],
+     "values": [
+      1.834,
+      1.917,
+      1.976,
+      1.878,
+      1.802,
+      1.918
+     ]
+    },
+    "safe_s": {
+     "n": 6,
+     "median": 2.015,
+     "ci95": [
+      1.982,
+      2.025
+     ],
+     "values": [
+      2.007,
+      2.022,
+      1.999,
+      2.025,
+      2.024,
+      1.965
+     ]
+    },
+    "definitions": {
+     "restore_s": "rollback event rollback_s: REGRESSED verdict -> LKG re-applied and read back (criterion)",
+     "detect_s": "rollback event detect_s: bad policy applied -> REGRESSED verdict (health window; bounded below by the controller's 1.5 s early check; not part of the criterion)"
+    },
+    "rollback_pass": true,
+    "safe_pass": true
+   }
+  },
+  {
+   "id": 12,
+   "name": "Controller CPU cost",
+   "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core; C3 9.07% [95% CI 8.63, 9.51], N=2 of a core; C4 9.10% [95% CI 9.08, 9.12], N=2 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
+   "pass": false,
+   "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
+   "detail": {
+    "C1": {
+     "n": 2,
+     "median": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "values": [
+      0.0,
+      0.0
+     ]
+    },
+    "C3": {
+     "n": 2,
+     "median": 9.068,
+     "ci95": [
+      8.629,
+      9.507
+     ],
+     "values": [
+      8.629,
+      9.507
+     ]
+    },
+    "C4": {
+     "n": 2,
+     "median": 9.099,
+     "ci95": [
+      9.083,
+      9.115
+     ],
+     "values": [
+      9.115,
+      9.083
+     ]
+    },
+    "baseline_C1": 0.0,
+    "ncpu": [
+     2
+    ],
+    "softirq_pct": {
+     "C1": {
+      "n": 2,
+      "median": 51.87,
+      "ci95": [
+       49.528,
+       54.212
+      ],
+      "values": [
+       49.528,
+       54.212
+      ]
+     },
+     "C3": {
+      "n": 2,
+      "median": 54.158,
+      "ci95": [
+       52.603,
+       55.713
+      ],
+      "values": [
+       55.713,
+       52.603
+      ]
+     },
+     "C4": {
+      "n": 2,
+      "median": 59.503,
+      "ci95": [
+       58.349,
+       60.658
+      ],
+      "values": [
+       60.658,
+       58.349
+      ]
+     }
+    }
+   }
+  }
+ ],
+ "headline": {
+  "verdicts": "11 PASS / 1 FAIL / 0 PENDING of 12",
+  "runs_analysed": "119 complete runs: CPU[C1\u00d72,C3\u00d72,C4\u00d72], DATAGEN[C2\u00d724], EST10[C2\u00d72], EST100[C2\u00d72], EST20[C2\u00d72], EST50[C2\u00d72], S1[C0\u00d76,C1\u00d76,C2\u00d76,C3\u00d76,C4\u00d76], S1x32[C1\u00d73,C3\u00d73], S2[C1\u00d73,C2\u00d73,C3\u00d73], S3[C0\u00d73,C1\u00d73,C3\u00d73,C4\u00d73], S4[C3\u00d73,C4\u00d73], S5[C3\u00d73,C4\u00d73], S6[C3\u00d73,C4\u00d73], S7[C1\u00d73,C3\u00d73]",
+  "M2": "PASS \u2014 call p99 added delay: C0 600.1 ms [95% CI 600.0, 600.7], N=6; C1 6.2 ms [95% CI 5.0, 7.0], N=6; C2 7.2 ms [95% CI 5.6, 8.2], N=6; C3 7.7 ms [95% CI 6.3, 9.9], N",
+  "M4": "PASS \u2014 C1 T_adapt never, low-phase p99 added 1199.8 ms [95% CI 1199.6, 1201.4], N=3; C2 T_adapt 1.80 s, recovery 14.9 s, 0.0 changes/min (medians, N=3) [PASS]; C3 T_ad",
+  "M9": "PASS \u2014 gate outcome: deterministic heuristic ships; S1 C4\u2212C3 = -0.1 ms [CI -2.3, 2.3] (N=6/6); S3 C4\u2212C3 = 1.3 ms [CI -3.8, 4.3] (N=3/3); S5 C4\u2212C3 = 1.3 ms [CI -4.6, 1.",
+  "M11": "PASS \u2014 restore after REGRESSED verdict 0.01 s [95% CI 0.01, 0.01], N=6 (detection/health window 1.90 s [95% CI 1.82, 1.95], N=6, not judged); SAFE after kill -9 2.01 s"
+ },
+ "notes": [
+  "All values computed by analysis/analyze.py from files under results/; nothing hard-coded. pass=null means pending.",
+  "Platform is software-emulated (QEMU TCG): absolute latencies and CPU costs are pessimistic vs. real hardware.",
+  "Bootstrap: 10000 percentile resamples, seed 20261117; statistical criteria require >= 3 reps per group."
+ ]
+}

@@ -1,0 +1,11 @@
+{"mode": {"plan_dl": 20.0, "plan_ul": 4.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 8.0, "safe_ul": 1.6, "autorate": 1, "classifier": "ml", "model": "/home/claude/halo-walk/halo/model.pkl", "collect": false, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "quiet_probe_hz": 2.0, "quiet_tick": 0.25, "sentinel": 1, "sentinel_lib": "", "health_s": 5.0, "out": "/home/claude/halo-walk/results/raw/S3/C4/r03/ctl", "nice": 10}, "t": 1795376956.0837, "kind": "start"}
+{"lkg": "ff0d12b5abd4b21c", "why": "initial", "t": 1795376956.6327, "kind": "commit"}
+{"msg": "C calm-mode thread loaded", "t": 1795376956.6817, "kind": "sentinel"}
+{"key": ["udp", "10.0.0.11", 42636, "10.9.0.2", 27015], "cls": "gaming", "p": 0.953, "abstain": false, "tin": 4, "stage": 1, "age": 1.02, "t": 1795376960.9132, "kind": "classify"}
+{"why": "collapse", "ach_dl": 1.31, "ach_ul": 0.1, "t": 1795376967.6007, "kind": "sent_alert"}
+{"probes": 0, "ticks": 44, "ticks_full": 42, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 1}, "cpu_main": 22.79, "cpu_slow": 0.53, "cpu_poll": 0.13, "slow_runs": 11, "slow_polls": 9, "ct_in_c": true, "t": 1795376967.604, "kind": "gov"}
+{"why": "probe_up", "ach_dl": 17.34, "ach_ul": 0.69, "t": 1795376968.9263, "kind": "sent_alert"}
+{"probes": 0, "ticks": 137, "ticks_full": 134, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 1, "probe_up": 1}, "cpu_main": 23.22, "cpu_slow": 0.81, "cpu_poll": 0.23, "slow_runs": 19, "slow_polls": 17, "ct_in_c": true, "t": 1795376977.6876, "kind": "gov"}
+{"why": "collapse", "ach_dl": 5.0, "ach_ul": 0.16, "t": 1795376978.2639, "kind": "sent_alert"}
+{"probes": 0, "ticks": 230, "ticks_full": 226, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 2, "probe_up": 1}, "cpu_main": 23.63, "cpu_slow": 0.85, "cpu_poll": 0.25, "slow_runs": 21, "slow_polls": 19, "ct_in_c": true, "t": 1795376987.7184, "kind": "gov"}
+{"probes": 0, "ticks": 325, "ticks_full": 321, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 2, "probe_up": 1}, "cpu_main": 24.0, "cpu_slow": 0.91, "cpu_poll": 0.28, "slow_runs": 23, "slow_polls": 21, "ct_in_c": true, "t": 1795376997.7351, "kind": "gov"}

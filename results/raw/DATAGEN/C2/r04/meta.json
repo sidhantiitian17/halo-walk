@@ -1,0 +1,25 @@
+{
+ "scenario": "DATAGEN",
+ "config": "C2",
+ "rep": 4,
+ "seed": 4500,
+ "kernel": "6.8.0-149-generic",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "still_running": 0,
+   "name": "generators_done",
+   "t": 1794865274.213912,
+   "rel": 24.928
+  },
+  {
+   "name": "end",
+   "t": 1794865288.745988,
+   "rel": 39.46
+  }
+ ],
+ "down": 50,
+ "up": 10
+}

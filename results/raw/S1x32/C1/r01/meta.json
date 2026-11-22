@@ -1,0 +1,30 @@
+{
+ "scenario": "S1x32",
+ "config": "C1",
+ "rep": 1,
+ "seed": 1353,
+ "kernel": "6.8.0-149-generic",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795374239.242365,
+   "rel": 0.0
+  },
+  {
+   "flows": 32,
+   "name": "load_on",
+   "t": 1795374245.2595437,
+   "rel": 6.017
+  },
+  {
+   "name": "end",
+   "t": 1795374271.790243,
+   "rel": 32.548
+  }
+ ],
+ "down": 20,
+ "up": 4
+}

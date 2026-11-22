@@ -1,0 +1,44 @@
+{
+ "scenario": "S4",
+ "config": "C3",
+ "rep": 1,
+ "seed": 1135,
+ "kernel": "6.8.0-149-generic",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795373907.2368267,
+   "rel": 0.0
+  },
+  {
+   "resp": "{\"admitted\":true,\"lease_id\":\"72:7c:fb:91:0d:d5\",\"device\":\"10.0.0.10\",\"ips\":[\"10.0.0.10\",\"fd00::10\"],\"cls\":\"call\",\"owner\":\"alice\",\"reason\":\"work call\",\"granted_at\":1795373915.8715177,\"expires_at\":1795373931.8715177}",
+   "ttl": 16,
+   "name": "lease_granted",
+   "t": 1795373916.1524916,
+   "rel": 8.916
+  },
+  {
+   "name": "controller_killed",
+   "t": 1795373924.2529242,
+   "rel": 17.016
+  },
+  {
+   "after_grant_s": 15.509,
+   "ttl": 16,
+   "name": "lease_expired_in_kernel",
+   "t": 1795373931.6622825,
+   "rel": 24.425
+  },
+  {
+   "name": "end",
+   "t": 1795373943.7379134,
+   "rel": 36.501
+  }
+ ],
+ "down": 20,
+ "up": 4,
+ "lease_reject": "{\"admitted\":false,\"reasons\":[\"ttl_out_of_bounds(1..7200)\"]}"
+}

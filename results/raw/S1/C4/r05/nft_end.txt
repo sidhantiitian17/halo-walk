@@ -1,0 +1,65 @@
+table inet halo {
+	map flow4 {
+		type inet_proto . ipv4_addr . inet_service . ipv4_addr . inet_service : mark
+		size 65535
+		flags timeout
+		elements = { udp . 10.0.0.10 . 52864 . 10.9.0.2 . 3478 timeout 30s expires 21s252ms : 0x00000004 }
+	}
+
+	map flow6 {
+		type inet_proto . ipv6_addr . inet_service . ipv6_addr . inet_service : mark
+		size 65535
+		flags timeout
+	}
+
+	map dev4 {
+		type ipv4_addr : mark
+		size 1024
+		flags timeout
+	}
+
+	map dev6 {
+		type ipv6_addr : mark
+		size 1024
+		flags timeout
+	}
+
+	set intent_mac {
+		type ether_addr
+		size 64
+		flags timeout
+	}
+
+	set intent_v4 {
+		type ipv4_addr
+		size 256
+		flags timeout
+	}
+
+	set intent_v6 {
+		type ipv6_addr
+		size 256
+		flags timeout
+	}
+
+	chain halo_forward {
+		type filter hook forward priority mangle; policy accept;
+		meta mark set 0x00000002
+		iifname "lan0" meta mark set meta l4proto . ip saddr . th sport . ip daddr . th dport map @flow4
+		iifname "lan0" meta mark set meta l4proto . ip6 saddr . th sport . ip6 daddr . th dport map @flow6
+		oifname "lan0" meta mark set meta l4proto . ip daddr . th dport . ip saddr . th sport map @flow4
+		oifname "lan0" meta mark set meta l4proto . ip6 daddr . th dport . ip6 saddr . th sport map @flow6
+		iifname "lan0" meta mark set ip saddr map @dev4
+		iifname "lan0" meta mark set ip6 saddr map @dev6
+		oifname "lan0" meta mark set ip daddr map @dev4
+		oifname "lan0" meta mark set ip6 daddr map @dev6
+		iifname "lan0" ether saddr @intent_mac meta l4proto udp meter lease_ul_u size 65535 { ether saddr timeout 2m limit rate 250 kbytes/second burst 25 kbytes } meta mark set 0x00000004
+		iifname "lan0" ether saddr @intent_mac meta l4proto != udp meter lease_ul_o size 65535 { ether saddr timeout 2m limit rate 60 kbytes/second burst 25 kbytes } meta mark set 0x00000004
+		oifname "lan0" ip daddr @intent_v4 meta l4proto udp meter lease_dl4_u size 65535 { ip daddr timeout 2m limit rate 500 kbytes/second burst 25 kbytes } meta mark set 0x00000004
+		oifname "lan0" ip daddr @intent_v4 meta l4proto != udp meter lease_dl4_o size 65535 { ip daddr timeout 2m limit rate 125 kbytes/second burst 25 kbytes } meta mark set 0x00000004
+		oifname "lan0" ip6 daddr @intent_v6 meta l4proto udp meter lease_dl6_u size 65535 { ip6 daddr timeout 2m limit rate 500 kbytes/second burst 25 kbytes } meta mark set 0x00000004
+		oifname "lan0" ip6 daddr @intent_v6 meta l4proto != udp meter lease_dl6_o size 65535 { ip6 daddr timeout 2m limit rate 125 kbytes/second burst 25 kbytes } meta mark set 0x00000004
+		ct mark set meta mark
+		ct packets < 17 meta mark set meta mark | 0x00000100
+	}
+}

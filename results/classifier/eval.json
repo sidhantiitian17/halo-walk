@@ -1,0 +1,1887 @@
+{
+ "macro_f1_no_ttl": 0.9333003913649074,
+ "macro_f1_with_ttl": 0.9333003913649074,
+ "macro_f1_heuristic": 0.4797695864711322,
+ "accuracy_no_ttl": 0.9490445859872612,
+ "accuracy_with_ttl": 0.9490445859872612,
+ "accuracy_heuristic": 0.6703821656050956,
+ "ece_raw": 0.03539006839132609,
+ "ece_temperature": 0.02882583904418214,
+ "ece_isotonic": 0.04132337882450433,
+ "ece_chosen": 0.02882583904418214,
+ "chosen_calibration": "temperature",
+ "ece_scope": "stage-2 model at h=2, pooled out-of-fold test predictions, 15 bins, top-1 (halo.classifier.ece)",
+ "ece_stage2_all_h": {
+  "raw": 0.02894467081607948,
+  "temperature": 0.02106885655309869,
+  "isotonic": 0.04208071378847116
+ },
+ "ece_stage1": {
+  "raw": 0.05605170410719642,
+  "temperature": 0.043348611872287335,
+  "isotonic": 0.06832049374177955
+ },
+ "chosen_calibration_stage1": "temperature",
+ "ece_with_ttl": {
+  "raw": 0.03539006839132609,
+  "temperature": 0.02882583904418214,
+  "isotonic": 0.04132337882450433
+ },
+ "chosen_calibration_with_ttl": "temperature",
+ "split": "leave-batches-out GroupKFold, k=5 (group = DATAGEN batch/session); calibration = 25% of training batches, group-disjoint, inside each training fold",
+ "folds": [
+  {
+   "fold": 0,
+   "test_batches": [
+    "r04",
+    "r09",
+    "r14",
+    "r19",
+    "r24"
+   ],
+   "cal_batches": [
+    "r01",
+    "r03",
+    "r12",
+    "r13",
+    "r23"
+   ],
+   "fit_batches": [
+    "r02",
+    "r05",
+    "r06",
+    "r07",
+    "r08",
+    "r10",
+    "r11",
+    "r15",
+    "r16",
+    "r17",
+    "r18",
+    "r20",
+    "r21",
+    "r22"
+   ],
+   "stats": {
+    "s1": {
+     "T": 1.1653,
+     "n_cal_rows": 128,
+     "n_fit_rows": 367,
+     "n_test_rows": 133
+    },
+    "s2": {
+     "T": 1.1869,
+     "n_cal_rows": 298,
+     "n_fit_rows": 822,
+     "n_test_rows": 291
+    },
+    "ttl": {
+     "T": 1.1869,
+     "n_cal_rows": 298,
+     "n_fit_rows": 822,
+     "n_test_rows": 291
+    }
+   }
+  },
+  {
+   "fold": 1,
+   "test_batches": [
+    "r03",
+    "r08",
+    "r13",
+    "r18",
+    "r23"
+   ],
+   "cal_batches": [
+    "r04",
+    "r09",
+    "r10",
+    "r14",
+    "r17"
+   ],
+   "fit_batches": [
+    "r01",
+    "r02",
+    "r05",
+    "r06",
+    "r07",
+    "r11",
+    "r12",
+    "r15",
+    "r16",
+    "r19",
+    "r20",
+    "r21",
+    "r22",
+    "r24"
+   ],
+   "stats": {
+    "s1": {
+     "T": 1.0507,
+     "n_cal_rows": 135,
+     "n_fit_rows": 362,
+     "n_test_rows": 131
+    },
+    "s2": {
+     "T": 1.2399,
+     "n_cal_rows": 302,
+     "n_fit_rows": 811,
+     "n_test_rows": 298
+    },
+    "ttl": {
+     "T": 1.2399,
+     "n_cal_rows": 302,
+     "n_fit_rows": 811,
+     "n_test_rows": 298
+    }
+   }
+  },
+  {
+   "fold": 2,
+   "test_batches": [
+    "r02",
+    "r07",
+    "r12",
+    "r17",
+    "r22"
+   ],
+   "cal_batches": [
+    "r04",
+    "r08",
+    "r10",
+    "r15",
+    "r19"
+   ],
+   "fit_batches": [
+    "r01",
+    "r03",
+    "r05",
+    "r06",
+    "r09",
+    "r11",
+    "r13",
+    "r14",
+    "r16",
+    "r18",
+    "r20",
+    "r21",
+    "r23",
+    "r24"
+   ],
+   "stats": {
+    "s1": {
+     "T": 1.1321,
+     "n_cal_rows": 133,
+     "n_fit_rows": 368,
+     "n_test_rows": 127
+    },
+    "s2": {
+     "T": 1.0999,
+     "n_cal_rows": 300,
+     "n_fit_rows": 820,
+     "n_test_rows": 291
+    },
+    "ttl": {
+     "T": 1.0999,
+     "n_cal_rows": 300,
+     "n_fit_rows": 820,
+     "n_test_rows": 291
+    }
+   }
+  },
+  {
+   "fold": 3,
+   "test_batches": [
+    "r01",
+    "r06",
+    "r11",
+    "r16",
+    "r21"
+   ],
+   "cal_batches": [
+    "r03",
+    "r07",
+    "r18",
+    "r20",
+    "r22"
+   ],
+   "fit_batches": [
+    "r02",
+    "r04",
+    "r05",
+    "r08",
+    "r09",
+    "r10",
+    "r12",
+    "r13",
+    "r14",
+    "r15",
+    "r17",
+    "r19",
+    "r23",
+    "r24"
+   ],
+   "stats": {
+    "s1": {
+     "T": 1.048,
+     "n_cal_rows": 139,
+     "n_fit_rows": 360,
+     "n_test_rows": 129
+    },
+    "s2": {
+     "T": 1.0305,
+     "n_cal_rows": 296,
+     "n_fit_rows": 822,
+     "n_test_rows": 293
+    },
+    "ttl": {
+     "T": 1.0305,
+     "n_cal_rows": 296,
+     "n_fit_rows": 822,
+     "n_test_rows": 293
+    }
+   }
+  },
+  {
+   "fold": 4,
+   "test_batches": [
+    "r05",
+    "r10",
+    "r15",
+    "r20"
+   ],
+   "cal_batches": [
+    "r02",
+    "r03",
+    "r07",
+    "r17",
+    "r24"
+   ],
+   "fit_batches": [
+    "r01",
+    "r04",
+    "r06",
+    "r08",
+    "r09",
+    "r11",
+    "r12",
+    "r13",
+    "r14",
+    "r16",
+    "r18",
+    "r19",
+    "r21",
+    "r22",
+    "r23"
+   ],
+   "stats": {
+    "s1": {
+     "T": 1.0458,
+     "n_cal_rows": 133,
+     "n_fit_rows": 387,
+     "n_test_rows": 108
+    },
+    "s2": {
+     "T": 1.2981,
+     "n_cal_rows": 294,
+     "n_fit_rows": 879,
+     "n_test_rows": 238
+    },
+    "ttl": {
+     "T": 1.2981,
+     "n_cal_rows": 294,
+     "n_fit_rows": 879,
+     "n_test_rows": 238
+    }
+   }
+  }
+ ],
+ "n_flows": 628,
+ "n_batches": 24,
+ "batches": [
+  "r01",
+  "r02",
+  "r03",
+  "r04",
+  "r05",
+  "r06",
+  "r07",
+  "r08",
+  "r09",
+  "r10",
+  "r11",
+  "r12",
+  "r13",
+  "r14",
+  "r15",
+  "r16",
+  "r17",
+  "r18",
+  "r19",
+  "r20",
+  "r21",
+  "r22",
+  "r23",
+  "r24"
+ ],
+ "n_eval_flows_h2": 628,
+ "flows_per_class": {
+  "other": 318,
+  "call": 96,
+  "gaming": 96,
+  "streaming": 72,
+  "bulk": 46
+ },
+ "per_batch": [
+  {
+   "batch": "r01",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 25,
+   "n_labels": 25,
+   "joined": 25,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 11,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 3
+   }
+  },
+  {
+   "batch": "r02",
+   "link": [
+    10,
+    2
+   ],
+   "n_raw": 26,
+   "n_labels": 26,
+   "joined": 26,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 12,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 3
+   }
+  },
+  {
+   "batch": "r03",
+   "link": [
+    50,
+    10
+   ],
+   "n_raw": 30,
+   "n_labels": 30,
+   "joined": 30,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 17,
+    "gaming": 4,
+    "call": 4,
+    "streaming": 3,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r04",
+   "link": [
+    50,
+    10
+   ],
+   "n_raw": 30,
+   "n_labels": 30,
+   "joined": 30,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 18,
+    "streaming": 3,
+    "call": 4,
+    "gaming": 4,
+    "bulk": 1
+   }
+  },
+  {
+   "batch": "r05",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 24,
+   "n_labels": 24,
+   "joined": 24,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 10,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 3
+   }
+  },
+  {
+   "batch": "r06",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 27,
+   "n_labels": 27,
+   "joined": 27,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 15,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 1
+   }
+  },
+  {
+   "batch": "r07",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 26,
+   "n_labels": 26,
+   "joined": 26,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 13,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r08",
+   "link": [
+    10,
+    2
+   ],
+   "n_raw": 23,
+   "n_labels": 23,
+   "joined": 23,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 11,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 1
+   }
+  },
+  {
+   "batch": "r09",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 27,
+   "n_labels": 27,
+   "joined": 27,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 15,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 1
+   }
+  },
+  {
+   "batch": "r10",
+   "link": [
+    10,
+    2
+   ],
+   "n_raw": 25,
+   "n_labels": 25,
+   "joined": 25,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 11,
+    "gaming": 4,
+    "call": 4,
+    "streaming": 3,
+    "bulk": 3
+   }
+  },
+  {
+   "batch": "r11",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 25,
+   "n_labels": 25,
+   "joined": 25,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 13,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 1
+   }
+  },
+  {
+   "batch": "r12",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 24,
+   "n_labels": 24,
+   "joined": 24,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 11,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r13",
+   "link": [
+    50,
+    10
+   ],
+   "n_raw": 30,
+   "n_labels": 30,
+   "joined": 30,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 17,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r14",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 26,
+   "n_labels": 26,
+   "joined": 26,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 13,
+    "streaming": 3,
+    "gaming": 4,
+    "call": 4,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r15",
+   "link": [
+    50,
+    10
+   ],
+   "n_raw": 29,
+   "n_labels": 29,
+   "joined": 29,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 16,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r16",
+   "link": [
+    10,
+    2
+   ],
+   "n_raw": 25,
+   "n_labels": 25,
+   "joined": 25,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 12,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r17",
+   "link": [
+    50,
+    10
+   ],
+   "n_raw": 27,
+   "n_labels": 27,
+   "joined": 27,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 14,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r18",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 29,
+   "n_labels": 29,
+   "joined": 29,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "call": 4,
+    "other": 15,
+    "streaming": 3,
+    "gaming": 4,
+    "bulk": 3
+   }
+  },
+  {
+   "batch": "r19",
+   "link": [
+    10,
+    2
+   ],
+   "n_raw": 26,
+   "n_labels": 26,
+   "joined": 26,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 14,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 1
+   }
+  },
+  {
+   "batch": "r20",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 30,
+   "n_labels": 30,
+   "joined": 30,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 18,
+    "streaming": 3,
+    "call": 4,
+    "gaming": 4,
+    "bulk": 1
+   }
+  },
+  {
+   "batch": "r21",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 27,
+   "n_labels": 27,
+   "joined": 27,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 14,
+    "gaming": 4,
+    "call": 4,
+    "streaming": 3,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r22",
+   "link": [
+    10,
+    2
+   ],
+   "n_raw": 24,
+   "n_labels": 24,
+   "joined": 24,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 11,
+    "call": 4,
+    "streaming": 3,
+    "gaming": 4,
+    "bulk": 2
+   }
+  },
+  {
+   "batch": "r23",
+   "link": [
+    10,
+    2
+   ],
+   "n_raw": 19,
+   "n_labels": 19,
+   "joined": 19,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "gaming": 4,
+    "call": 4,
+    "streaming": 3,
+    "other": 5,
+    "bulk": 3
+   }
+  },
+  {
+   "batch": "r24",
+   "link": [
+    20,
+    4
+   ],
+   "n_raw": 24,
+   "n_labels": 24,
+   "joined": 24,
+   "unjoinable_flows": 0,
+   "ambiguous": 0,
+   "labels_without_flow": 0,
+   "labels_without_flow_by": {},
+   "label_lines_other_batch": 0,
+   "per_class": {
+    "other": 12,
+    "call": 4,
+    "gaming": 4,
+    "streaming": 3,
+    "bulk": 1
+   }
+  }
+ ],
+ "skipped_batches": [],
+ "per_class": {
+  "no_ttl": {
+   "call": {
+    "precision": 0.9888888888888889,
+    "recall": 0.9270833333333334,
+    "f1": 0.956989247311828,
+    "support": 96
+   },
+   "gaming": {
+    "precision": 0.9313725490196079,
+    "recall": 0.9895833333333334,
+    "f1": 0.9595959595959596,
+    "support": 96
+   },
+   "streaming": {
+    "precision": 0.8048780487804879,
+    "recall": 0.9166666666666666,
+    "f1": 0.8571428571428571,
+    "support": 72
+   },
+   "bulk": {
+    "precision": 0.9333333333333333,
+    "recall": 0.9130434782608695,
+    "f1": 0.9230769230769231,
+    "support": 46
+   },
+   "other": {
+    "precision": 0.9838187702265372,
+    "recall": 0.9559748427672956,
+    "f1": 0.9696969696969697,
+    "support": 318
+   }
+  },
+  "with_ttl": {
+   "call": {
+    "precision": 0.9888888888888889,
+    "recall": 0.9270833333333334,
+    "f1": 0.956989247311828,
+    "support": 96
+   },
+   "gaming": {
+    "precision": 0.9313725490196079,
+    "recall": 0.9895833333333334,
+    "f1": 0.9595959595959596,
+    "support": 96
+   },
+   "streaming": {
+    "precision": 0.8048780487804879,
+    "recall": 0.9166666666666666,
+    "f1": 0.8571428571428571,
+    "support": 72
+   },
+   "bulk": {
+    "precision": 0.9333333333333333,
+    "recall": 0.9130434782608695,
+    "f1": 0.9230769230769231,
+    "support": 46
+   },
+   "other": {
+    "precision": 0.9838187702265372,
+    "recall": 0.9559748427672956,
+    "f1": 0.9696969696969697,
+    "support": 318
+   }
+  },
+  "heuristic": {
+   "call": {
+    "precision": 1.0,
+    "recall": 0.5625,
+    "f1": 0.72,
+    "support": 96
+   },
+   "gaming": {
+    "precision": 1.0,
+    "recall": 0.40625,
+    "f1": 0.5777777777777777,
+    "support": 96
+   },
+   "streaming": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 72
+   },
+   "bulk": {
+    "precision": 0.8333333333333334,
+    "recall": 0.21739130434782608,
+    "f1": 0.3448275862068966,
+    "support": 46
+   },
+   "other": {
+    "precision": 0.6080305927342257,
+    "recall": 1.0,
+    "f1": 0.7562425683709869,
+    "support": 318
+   }
+  }
+ },
+ "confusion": {
+  "labels": [
+   "call",
+   "gaming",
+   "streaming",
+   "bulk",
+   "other"
+  ],
+  "layout": "rows = true class, cols = predicted",
+  "no_ttl": [
+   [
+    89,
+    7,
+    0,
+    0,
+    0
+   ],
+   [
+    1,
+    95,
+    0,
+    0,
+    0
+   ],
+   [
+    0,
+    0,
+    66,
+    2,
+    4
+   ],
+   [
+    0,
+    0,
+    3,
+    42,
+    1
+   ],
+   [
+    0,
+    0,
+    13,
+    1,
+    304
+   ]
+  ],
+  "with_ttl": [
+   [
+    89,
+    7,
+    0,
+    0,
+    0
+   ],
+   [
+    1,
+    95,
+    0,
+    0,
+    0
+   ],
+   [
+    0,
+    0,
+    66,
+    2,
+    4
+   ],
+   [
+    0,
+    0,
+    3,
+    42,
+    1
+   ],
+   [
+    0,
+    0,
+    13,
+    1,
+    304
+   ]
+  ],
+  "heuristic": [
+   [
+    54,
+    0,
+    0,
+    0,
+    42
+   ],
+   [
+    0,
+    39,
+    0,
+    0,
+    57
+   ],
+   [
+    0,
+    0,
+    0,
+    2,
+    70
+   ],
+   [
+    0,
+    0,
+    0,
+    10,
+    36
+   ],
+   [
+    0,
+    0,
+    0,
+    0,
+    318
+   ]
+  ]
+ },
+ "reliability": {
+  "method": "temperature",
+  "bins": [
+   {
+    "lo": 0.0,
+    "hi": 0.0667,
+    "count": 0,
+    "conf": null,
+    "acc": null
+   },
+   {
+    "lo": 0.0667,
+    "hi": 0.1333,
+    "count": 0,
+    "conf": null,
+    "acc": null
+   },
+   {
+    "lo": 0.1333,
+    "hi": 0.2,
+    "count": 0,
+    "conf": null,
+    "acc": null
+   },
+   {
+    "lo": 0.2,
+    "hi": 0.2667,
+    "count": 0,
+    "conf": null,
+    "acc": null
+   },
+   {
+    "lo": 0.2667,
+    "hi": 0.3333,
+    "count": 1,
+    "conf": 0.33054623007774353,
+    "acc": 1.0
+   },
+   {
+    "lo": 0.3333,
+    "hi": 0.4,
+    "count": 2,
+    "conf": 0.36114227771759033,
+    "acc": 1.0
+   },
+   {
+    "lo": 0.4,
+    "hi": 0.4667,
+    "count": 2,
+    "conf": 0.4374023973941803,
+    "acc": 0.5
+   },
+   {
+    "lo": 0.4667,
+    "hi": 0.5333,
+    "count": 3,
+    "conf": 0.5116566320260366,
+    "acc": 0.3333333333333333
+   },
+   {
+    "lo": 0.5333,
+    "hi": 0.6,
+    "count": 7,
+    "conf": 0.5541484526225499,
+    "acc": 0.42857142857142855
+   },
+   {
+    "lo": 0.6,
+    "hi": 0.6667,
+    "count": 9,
+    "conf": 0.6323111785782708,
+    "acc": 0.7777777777777778
+   },
+   {
+    "lo": 0.6667,
+    "hi": 0.7333,
+    "count": 9,
+    "conf": 0.6999495956632826,
+    "acc": 0.5555555555555556
+   },
+   {
+    "lo": 0.7333,
+    "hi": 0.8,
+    "count": 15,
+    "conf": 0.7746459364891052,
+    "acc": 1.0
+   },
+   {
+    "lo": 0.8,
+    "hi": 0.8667,
+    "count": 12,
+    "conf": 0.8273952454328537,
+    "acc": 0.6666666666666666
+   },
+   {
+    "lo": 0.8667,
+    "hi": 0.9333,
+    "count": 29,
+    "conf": 0.9018609400453239,
+    "acc": 0.6896551724137931
+   },
+   {
+    "lo": 0.9333,
+    "hi": 1.0,
+    "count": 539,
+    "conf": 0.9898784536598786,
+    "acc": 0.9888682745825603
+   }
+  ]
+ },
+ "reliability_raw": [
+  {
+   "lo": 0.0,
+   "hi": 0.0667,
+   "count": 0,
+   "conf": null,
+   "acc": null
+  },
+  {
+   "lo": 0.0667,
+   "hi": 0.1333,
+   "count": 0,
+   "conf": null,
+   "acc": null
+  },
+  {
+   "lo": 0.1333,
+   "hi": 0.2,
+   "count": 0,
+   "conf": null,
+   "acc": null
+  },
+  {
+   "lo": 0.2,
+   "hi": 0.2667,
+   "count": 0,
+   "conf": null,
+   "acc": null
+  },
+  {
+   "lo": 0.2667,
+   "hi": 0.3333,
+   "count": 0,
+   "conf": null,
+   "acc": null
+  },
+  {
+   "lo": 0.3333,
+   "hi": 0.4,
+   "count": 3,
+   "conf": 0.3616788387298584,
+   "acc": 1.0
+  },
+  {
+   "lo": 0.4,
+   "hi": 0.4667,
+   "count": 1,
+   "conf": 0.4633481204509735,
+   "acc": 1.0
+  },
+  {
+   "lo": 0.4667,
+   "hi": 0.5333,
+   "count": 2,
+   "conf": 0.4846297949552536,
+   "acc": 0.0
+  },
+  {
+   "lo": 0.5333,
+   "hi": 0.6,
+   "count": 8,
+   "conf": 0.5657014474272728,
+   "acc": 0.375
+  },
+  {
+   "lo": 0.6,
+   "hi": 0.6667,
+   "count": 5,
+   "conf": 0.6385768413543701,
+   "acc": 0.8
+  },
+  {
+   "lo": 0.6667,
+   "hi": 0.7333,
+   "count": 10,
+   "conf": 0.7155999541282654,
+   "acc": 0.7
+  },
+  {
+   "lo": 0.7333,
+   "hi": 0.8,
+   "count": 9,
+   "conf": 0.7681131561597189,
+   "acc": 0.7777777777777778
+  },
+  {
+   "lo": 0.8,
+   "hi": 0.8667,
+   "count": 14,
+   "conf": 0.8377818082060132,
+   "acc": 1.0
+  },
+  {
+   "lo": 0.8667,
+   "hi": 0.9333,
+   "count": 19,
+   "conf": 0.9024567572694076,
+   "acc": 0.42105263157894735
+  },
+  {
+   "lo": 0.9333,
+   "hi": 1.0,
+   "count": 557,
+   "conf": 0.994274051013926,
+   "acc": 0.9856373429084381
+  }
+ ],
+ "wrongful_promotion": {
+  "ml": 0.0,
+  "heuristic": 0.0,
+  "ml_with_ttl": 0.0,
+  "ml_uncalibrated": 0.0
+ },
+ "interactive_recall_promote": {
+  "ml": 0.890625,
+  "heuristic": 0.484375,
+  "ml_with_ttl": 0.890625,
+  "ml_uncalibrated": 0.9166666666666666
+ },
+ "promote_counts": {
+  "ml": {
+   "wrongful_promotion": 0.0,
+   "n_non_interactive": 436,
+   "n_wrongly_promoted": 0,
+   "interactive_recall_promote": 0.890625,
+   "n_interactive": 192,
+   "n_interactive_promoted": 171,
+   "wrongful_promotion_ci95": [
+    0.0,
+    0.00842504142309919
+   ],
+   "interactive_recall_promote_ci95": [
+    0.8376767224069737,
+    0.9310075506090494
+   ]
+  },
+  "heuristic": {
+   "wrongful_promotion": 0.0,
+   "n_non_interactive": 436,
+   "n_wrongly_promoted": 0,
+   "interactive_recall_promote": 0.484375,
+   "n_interactive": 192,
+   "n_interactive_promoted": 93,
+   "wrongful_promotion_ci95": [
+    0.0,
+    0.00842504142309919
+   ],
+   "interactive_recall_promote_ci95": [
+    0.4118087215905785,
+    0.5574311465965417
+   ]
+  }
+ },
+ "runtime_emulation_ml": {
+  "wrongful_promotion_ever": 0.0,
+  "wrongful_promotion_final": 0.0,
+  "interactive_recall_ever": 0.9322916666666666,
+  "interactive_recall_final": 0.8854166666666666,
+  "final_decision_macro_f1": 0.9269757581367765,
+  "n_wrong_ever": 0,
+  "n_non_interactive": 436,
+  "n_interactive": 192
+ },
+ "per_horizon_macro_f1": {
+  "h2": 0.9333003913649074,
+  "h4": 0.9253336867763272,
+  "h6": 0.9061836928976994,
+  "stage1": 0.8752651495269465
+ },
+ "ablation_request_size_masked": {
+  "macro_f1": 0.8500683619621,
+  "accuracy": 0.910828025477707,
+  "per_class": {
+   "call": {
+    "precision": 0.9888888888888889,
+    "recall": 0.9270833333333334,
+    "f1": 0.956989247311828,
+    "support": 96
+   },
+   "gaming": {
+    "precision": 0.9313725490196079,
+    "recall": 0.9895833333333334,
+    "f1": 0.9595959595959596,
+    "support": 96
+   },
+   "streaming": {
+    "precision": 0.717948717948718,
+    "recall": 0.7777777777777778,
+    "f1": 0.7466666666666667,
+    "support": 72
+   },
+   "bulk": {
+    "precision": 0.6170212765957447,
+    "recall": 0.6304347826086957,
+    "f1": 0.6236559139784946,
+    "support": 46
+   },
+   "other": {
+    "precision": 0.9742765273311897,
+    "recall": 0.9528301886792453,
+    "f1": 0.9634340222575517,
+    "support": 318
+   }
+  },
+  "confusion": [
+   [
+    89,
+    7,
+    0,
+    0,
+    0
+   ],
+   [
+    1,
+    95,
+    0,
+    0,
+    0
+   ],
+   [
+    0,
+    0,
+    56,
+    12,
+    4
+   ],
+   [
+    0,
+    0,
+    13,
+    29,
+    4
+   ],
+   [
+    0,
+    0,
+    9,
+    6,
+    303
+   ]
+  ],
+  "what": "first upstream TCP payload packet (gen.py request line) set to a constant size in train+cal+test; stage-2 h=2, same folds"
+ },
+ "per_horizon_n": {
+  "h2": 628,
+  "h4": 444,
+  "h6": 339,
+  "stage1": 628
+ },
+ "per_horizon_per_class": {
+  "h2": {
+   "call": {
+    "precision": 0.9888888888888889,
+    "recall": 0.9270833333333334,
+    "f1": 0.956989247311828,
+    "support": 96
+   },
+   "gaming": {
+    "precision": 0.9313725490196079,
+    "recall": 0.9895833333333334,
+    "f1": 0.9595959595959596,
+    "support": 96
+   },
+   "streaming": {
+    "precision": 0.8048780487804879,
+    "recall": 0.9166666666666666,
+    "f1": 0.8571428571428571,
+    "support": 72
+   },
+   "bulk": {
+    "precision": 0.9333333333333333,
+    "recall": 0.9130434782608695,
+    "f1": 0.9230769230769231,
+    "support": 46
+   },
+   "other": {
+    "precision": 0.9838187702265372,
+    "recall": 0.9559748427672956,
+    "f1": 0.9696969696969697,
+    "support": 318
+   }
+  },
+  "h4": {
+   "call": {
+    "precision": 0.9887640449438202,
+    "recall": 0.9166666666666666,
+    "f1": 0.9513513513513514,
+    "support": 96
+   },
+   "gaming": {
+    "precision": 0.9223300970873787,
+    "recall": 0.9895833333333334,
+    "f1": 0.9547738693467337,
+    "support": 96
+   },
+   "streaming": {
+    "precision": 0.8421052631578947,
+    "recall": 0.9014084507042254,
+    "f1": 0.8707482993197279,
+    "support": 71
+   },
+   "bulk": {
+    "precision": 0.8913043478260869,
+    "recall": 0.8913043478260869,
+    "f1": 0.8913043478260869,
+    "support": 46
+   },
+   "other": {
+    "precision": 0.9769230769230769,
+    "recall": 0.9407407407407408,
+    "f1": 0.9584905660377359,
+    "support": 135
+   }
+  },
+  "h6": {
+   "call": {
+    "precision": 0.9883720930232558,
+    "recall": 0.9239130434782609,
+    "f1": 0.9550561797752809,
+    "support": 92
+   },
+   "gaming": {
+    "precision": 0.9306930693069307,
+    "recall": 0.9894736842105263,
+    "f1": 0.9591836734693877,
+    "support": 95
+   },
+   "streaming": {
+    "precision": 0.863013698630137,
+    "recall": 0.8873239436619719,
+    "f1": 0.875,
+    "support": 71
+   },
+   "bulk": {
+    "precision": 0.9111111111111111,
+    "recall": 0.8913043478260869,
+    "f1": 0.9010989010989011,
+    "support": 46
+   },
+   "other": {
+    "precision": 0.8529411764705882,
+    "recall": 0.8285714285714286,
+    "f1": 0.8405797101449275,
+    "support": 35
+   }
+  },
+  "stage1": {
+   "call": {
+    "precision": 0.9042553191489362,
+    "recall": 0.8854166666666666,
+    "f1": 0.8947368421052632,
+    "support": 96
+   },
+   "gaming": {
+    "precision": 0.8865979381443299,
+    "recall": 0.8958333333333334,
+    "f1": 0.8911917098445595,
+    "support": 96
+   },
+   "streaming": {
+    "precision": 0.7058823529411765,
+    "recall": 0.6666666666666666,
+    "f1": 0.6857142857142857,
+    "support": 72
+   },
+   "bulk": {
+    "precision": 1.0,
+    "recall": 0.9565217391304348,
+    "f1": 0.9777777777777777,
+    "support": 46
+   },
+   "other": {
+    "precision": 0.916923076923077,
+    "recall": 0.9371069182389937,
+    "f1": 0.926905132192846,
+    "support": 318
+   }
+  }
+ },
+ "heuristic_tot_first2bins": {
+  "macro_f1": 0.4627403541638788,
+  "per_class": {
+   "call": {
+    "precision": 1.0,
+    "recall": 0.5625,
+    "f1": 0.72,
+    "support": 96
+   },
+   "gaming": {
+    "precision": 1.0,
+    "recall": 0.40625,
+    "f1": 0.5777777777777777,
+    "support": 96
+   },
+   "streaming": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 72
+   },
+   "bulk": {
+    "precision": 1.0,
+    "recall": 0.15217391304347827,
+    "f1": 0.2641509433962264,
+    "support": 46
+   },
+   "other": {
+    "precision": 0.6022727272727273,
+    "recall": 1.0,
+    "f1": 0.75177304964539,
+    "support": 318
+   }
+  }
+ },
+ "bootstrap": {
+  "n_boot": 1000,
+  "unit": "batch (cluster bootstrap, paired)",
+  "macro_f1_no_ttl_ci95": [
+   0.9093927066124559,
+   0.9551380112676979
+  ],
+  "macro_f1_heuristic_ci95": [
+   0.4321519157009681,
+   0.5250408900315554
+  ],
+  "diff_ml_minus_heuristic_ci95": [
+   0.40178135021015227,
+   0.5037897528961963
+  ],
+  "p_ml_le_heuristic": 0.0,
+  "diff_ttl_minus_no_ttl_ci95": [
+   0.0,
+   0.0
+  ]
+ },
+ "inference_us_per_flow": 367.49699984284234,
+ "inference_us_per_flow_stage1": 361.82800022288575,
+ "inference_note": "median wall time of one Model.predict2(flow, 2) call (features + XGBoost + calibration), single flow, this machine (2 CPUs)",
+ "feature_names": {
+  "stage1": [
+   "proto_udp",
+   "n_pkts",
+   "size0",
+   "size1",
+   "size2",
+   "size3",
+   "size4",
+   "size5",
+   "size6",
+   "size7",
+   "iat0",
+   "iat1",
+   "iat2",
+   "iat3",
+   "iat4",
+   "iat5",
+   "iat6",
+   "iat7"
+  ],
+  "stage2": [
+   "proto_udp",
+   "n_pkts",
+   "size0",
+   "size1",
+   "size2",
+   "size3",
+   "size4",
+   "size5",
+   "size6",
+   "size7",
+   "iat0",
+   "iat1",
+   "iat2",
+   "iat3",
+   "iat4",
+   "iat5",
+   "iat6",
+   "iat7",
+   "h",
+   "dn_mean",
+   "dn_max",
+   "dn_min",
+   "dn_idle_frac",
+   "dn_cv",
+   "up_mean",
+   "log_ratio",
+   "dn_pktsize",
+   "up_pktsize",
+   "dn_pps",
+   "up_pps"
+  ],
+  "with_ttl_ablation": [
+   "proto_udp",
+   "n_pkts",
+   "size0",
+   "size1",
+   "size2",
+   "size3",
+   "size4",
+   "size5",
+   "size6",
+   "size7",
+   "iat0",
+   "iat1",
+   "iat2",
+   "iat3",
+   "iat4",
+   "iat5",
+   "iat6",
+   "iat7",
+   "h",
+   "dn_mean",
+   "dn_max",
+   "dn_min",
+   "dn_idle_frac",
+   "dn_cv",
+   "up_mean",
+   "log_ratio",
+   "dn_pktsize",
+   "up_pktsize",
+   "dn_pps",
+   "up_pps",
+   "ttl0",
+   "ttl1",
+   "ttl2",
+   "ttl3",
+   "ttl4",
+   "ttl5",
+   "ttl6",
+   "ttl7"
+  ]
+ },
+ "model": {
+  "path": "halo/model.pkl",
+  "version": "m2-dad9225964df",
+  "xgb_params": {
+   "n_estimators": 150,
+   "max_depth": 4,
+   "learning_rate": 0.1,
+   "subsample": 1.0,
+   "colsample_bytree": 1.0,
+   "min_child_weight": 1.0,
+   "reg_lambda": 1.0,
+   "tree_method": "hist",
+   "n_jobs": 1,
+   "random_state": 20261116,
+   "objective": "multi:softprob",
+   "eval_metric": "mlogloss"
+  },
+  "fit_batches": [
+   "r01",
+   "r02",
+   "r03",
+   "r04",
+   "r05",
+   "r07",
+   "r08",
+   "r09",
+   "r13",
+   "r14",
+   "r16",
+   "r17",
+   "r18",
+   "r19",
+   "r20",
+   "r21",
+   "r22",
+   "r24"
+  ],
+  "cal_batches": [
+   "r06",
+   "r10",
+   "r11",
+   "r12",
+   "r15",
+   "r23"
+  ],
+  "cal1": {
+   "kind": "temperature",
+   "T": 1.2937339371588683
+  },
+  "cal2": {
+   "kind": "temperature",
+   "T": 1.0730777668498186
+  },
+  "n_rows": {
+   "n_fit_rows1": 479,
+   "n_cal_rows1": 149,
+   "n_fit_rows2": 1056,
+   "n_cal_rows2": 355
+  },
+  "data_sha256": "61b077621e6fab4810f3f22fb03bd8b339d6d2d90b42597a660b83054c456665",
+  "verify": {
+   "loaded_version": "m2-dad9225964df",
+   "max_abs_diff_vectorised_vs_Model_cal": 1.6179264794580206e-07,
+   "examples": [
+    {
+     "key": [
+      "tcp",
+      "fd00::15",
+      41160,
+      "fd00:9::2",
+      443
+     ],
+     "true": "other",
+     "pred": "other",
+     "p": 0.998
+    },
+    {
+     "key": [
+      "tcp",
+      "10.0.0.10",
+      49818,
+      "10.9.0.2",
+      443
+     ],
+     "true": "other",
+     "pred": "other",
+     "p": 0.997
+    },
+    {
+     "key": [
+      "tcp",
+      "fd00::15",
+      46018,
+      "fd00:9::2",
+      443
+     ],
+     "true": "other",
+     "pred": "other",
+     "p": 0.998
+    },
+    {
+     "key": [
+      "tcp",
+      "10.0.0.10",
+      56346,
+      "10.9.0.2",
+      443
+     ],
+     "true": "other",
+     "pred": "other",
+     "p": 0.962
+    },
+    {
+     "key": [
+      "tcp",
+      "fd00::11",
+      36512,
+      "fd00:9::2",
+      80
+     ],
+     "true": "other",
+     "pred": "other",
+     "p": 0.996
+    },
+    {
+     "key": [
+      "udp",
+      "fd00::11",
+      20103,
+      "fd00:9::2",
+      4500
+     ],
+     "true": "gaming",
+     "pred": "gaming",
+     "p": 0.999
+    }
+   ],
+   "inference_us_per_flow_stage1_median": 361.82800022288575,
+   "inference_us_per_flow_stage2_median": 367.49699984284234,
+   "n_timed": 200
+  }
+ },
+ "notes": [
+  "Split unit = batch (one DATAGEN session: own link rate, ports, sizes, v4/v6). No flow of a test batch is used for fitting or calibration; calibration batches are disjoint from fit batches inside every training fold.",
+  "Classification metrics use argmax of the CHOSEN-calibrated probabilities (what the controller deploys); ML 'decision' carries no abstain, the promote metrics apply policy.tin_for with p >= 0.90.",
+  "Deployed decision = stage 2 at h=2 conntrack bins (bins are poll deltas, not exactly 1 s). Stage-2 model is ONE model over h in (2, 4, 6) (h is a feature); per-horizon rows exist only for flows with len(bins) >= h.",
+  "Heuristic: abstain -> 'other'. `tot` (elephant rule) is not in raw_flows.jsonl; it is reconstructed as the sum of recorded conntrack deltas (all recorded bins, <= 8): a lower bound of the runtime counter. A stricter variant using only the first 2 bins gives macro-F1 0.463.",
+  "Calibration choice is made on pooled out-of-fold TEST ECE (as specified); with only two candidates this is a mild selection effect on the reported chosen ECE.",
+  "Joined flows: 628; label lines without a collected flow: 0 (of which call/gaming UDP over IPv6: 0); collected flows without a label (dropped): 0.",
+  "Not modelled in the promote metrics: the controller's demote-on-behaviour guard and the Voice-share shield (policy.admit_voice), both of which can only remove promotions.",
+  "Stage-1 is evaluated on the first 8 recorded packets; at runtime predict1 may fire at age > 1 s with fewer packets (only for slow flows).",
+  "Distribution of recorded bins per flow: {2: 123, 3: 61, 4: 24, 5: 81, 6: 339}.",
+  "Synthetic generators (halo/gen.py) only: results describe separability of these generators under this rig, not real applications.",
+  "Zero wrongful ML promotions out of 436 non-interactive flows: 95% upper bound 0.008 (Clopper-Pearson, ignoring batch clustering) - absence of errors in this sample, not proof of zero risk.",
+  "TTL/hop-limit values observed in the data: [61, 63]. If TTL is constant per direction in this rig, the ablation cannot show a leak here (direction is already in the signed size); real homes with mixed OSes (TTL 64/128/255) could still leak device identity.",
+  "Deployed stage-2 temperature T=1.073 (fit on r06,r10,r11,r12,r15,r23); CV-fold temperatures ranged 1.030-1.298, so the deployed calibration is not identical to the evaluated ones.",
+  "TTL ablation: macro-F1 with TTL 0.933 vs without 0.933 (gap +0.000).",
+  "Generator-artefact probe: the first upstream TCP payload packet is gen.py's request line, whose length differs by client (bulk always requests 2**40 bytes -> constant length). With that one size masked, macro-F1 is 0.850 (bulk F1 0.624) vs 0.933 unmasked (bulk F1 0.923). Call vs gaming are separated mainly by the generators' non-overlapping packet-size ranges in scenarios/run.py."
+ ],
+ "generated": "2026-11-16 22:12:17"
+}

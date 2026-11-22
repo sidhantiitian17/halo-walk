@@ -1,0 +1,51 @@
+{
+ "scenario": "S2",
+ "config": "C1",
+ "rep": 1,
+ "seed": 1133,
+ "kernel": "6.8.0-149-generic",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795372200.9947877,
+   "rel": 0.0
+  },
+  {
+   "down": 10,
+   "up": 2,
+   "name": "rate_down",
+   "t": 1795372220.7617161,
+   "rel": 19.767
+  },
+  {
+   "down": 50,
+   "up": 10,
+   "name": "rate_up",
+   "t": 1795372246.1323113,
+   "rel": 45.138
+  },
+  {
+   "name": "end",
+   "t": 1795372284.63376,
+   "rel": 83.639
+  }
+ ],
+ "down": 50,
+ "up": 10,
+ "steps": [
+  [
+   18,
+   10,
+   2
+  ],
+  [
+   42,
+   50,
+   10
+  ]
+ ],
+ "scaled_from": "100->20->100"
+}

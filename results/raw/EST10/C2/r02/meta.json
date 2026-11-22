@@ -1,0 +1,25 @@
+{
+ "scenario": "EST10",
+ "config": "C2",
+ "rep": 2,
+ "seed": 2333,
+ "kernel": "6.8.0-149-generic",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795373407.5813675,
+   "rel": 0.0
+  },
+  {
+   "name": "end",
+   "t": 1795373441.0956662,
+   "rel": 33.514
+  }
+ ],
+ "down": 10.0,
+ "up": 2.0,
+ "plan_dl": 13.0
+}

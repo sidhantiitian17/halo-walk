@@ -1,0 +1,34 @@
+{"mode": {"plan_dl": 50.0, "plan_ul": 10.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 20.0, "safe_ul": 4.0, "autorate": 1, "classifier": "none", "model": "/home/claude/halo-walk/halo/model.pkl", "collect": false, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "quiet_probe_hz": 2.0, "quiet_tick": 0.25, "sentinel": 1, "sentinel_lib": "", "health_s": 5.0, "out": "/home/claude/halo-walk/results/raw/S2/C2/r01/ctl", "nice": 10}, "t": 1795372310.8556, "kind": "start"}
+{"lkg": "08622e7c6c2fe6e5", "why": "initial", "t": 1795372311.3476, "kind": "commit"}
+{"msg": "C calm-mode thread loaded", "t": 1795372311.3846, "kind": "sentinel"}
+{"why": "probe_up", "ach_dl": 43.41, "ach_ul": 2.51, "t": 1795372320.6231, "kind": "sent_alert"}
+{"probes": 0, "ticks": 52, "ticks_full": 50, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"probe_up": 1}, "cpu_main": 1.57, "cpu_slow": 0.0, "cpu_poll": 0.0, "slow_runs": 0, "slow_polls": 0, "ct_in_c": true, "t": 1795372321.4334, "kind": "gov"}
+{"probes": 0, "ticks": 143, "ticks_full": 141, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"probe_up": 1}, "cpu_main": 1.95, "cpu_slow": 0.0, "cpu_poll": 0.0, "slow_runs": 0, "slow_polls": 0, "ct_in_c": true, "t": 1795372331.5363, "kind": "gov"}
+{"dir": "dl", "old": 47.5, "new": 3.063, "why": "bloat_fast_down", "c_est": 10.211, "ach": 10.211, "shield": [], "t": 1795372337.0895, "kind": "rate"}
+{"dir": "dl", "old": 3.063, "new": 3.369, "why": "drain_refine", "c_est": 9.972, "ach": 8.258, "shield": ["clip_up_step"], "t": 1795372337.4027, "kind": "rate"}
+{"dir": "dl", "old": 3.369, "new": 8.975, "why": "settle_at_margin", "c_est": 9.972, "ach": 1.753, "shield": [], "t": 1795372337.8208, "kind": "rate"}
+{"probes": 0, "ticks": 236, "ticks_full": 234, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"probe_up": 1}, "cpu_main": 2.34, "cpu_slow": 0.0, "cpu_poll": 0.0, "slow_runs": 0, "slow_polls": 0, "ct_in_c": true, "t": 1795372341.6146, "kind": "gov"}
+{"dir": "dl", "old": 8.975, "new": 9.19, "why": "slow_up", "c_est": 9.972, "ach": 8.64, "shield": [], "t": 1795372343.8569, "kind": "rate"}
+{"dir": "dl", "old": 9.19, "new": 9.558, "why": "slow_up", "c_est": 9.972, "ach": 9.113, "shield": [], "t": 1795372344.3855, "kind": "rate"}
+{"dir": "dl", "old": 9.558, "new": 10.797, "why": "slow_up", "c_est": 9.972, "ach": 9.563, "shield": [], "t": 1795372344.9202, "kind": "rate"}
+{"dir": "dl", "old": 10.797, "new": 6.979, "why": "bloat_fast_down", "c_est": 9.97, "ach": 10.007, "shield": [], "t": 1795372345.8799, "kind": "rate"}
+{"dir": "dl", "old": 6.979, "new": 8.973, "why": "settle_at_margin", "c_est": 9.97, "ach": 5.852, "shield": [], "t": 1795372346.5215, "kind": "rate"}
+{"probes": 0, "ticks": 331, "ticks_full": 329, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"probe_up": 1}, "cpu_main": 2.75, "cpu_slow": 0.0, "cpu_poll": 0.0, "slow_runs": 0, "slow_polls": 0, "ct_in_c": true, "t": 1795372351.6899, "kind": "gov"}
+{"dir": "dl", "old": 8.973, "new": 9.332, "why": "slow_up", "c_est": 9.97, "ach": 8.865, "shield": [], "t": 1795372358.6245, "kind": "rate"}
+{"dir": "dl", "old": 9.332, "new": 10.004, "why": "slow_up", "c_est": 9.97, "ach": 9.454, "shield": [], "t": 1795372359.1517, "kind": "rate"}
+{"dir": "dl", "old": 10.004, "new": 11.301, "why": "slow_up", "c_est": 10.283, "ach": 10.283, "shield": [], "t": 1795372359.6779, "kind": "rate"}
+{"dir": "dl", "old": 11.301, "new": 6.982, "why": "bloat_fast_down", "c_est": 9.974, "ach": 9.994, "shield": [], "t": 1795372360.6357, "kind": "rate"}
+{"dir": "dl", "old": 6.982, "new": 8.977, "why": "settle_at_margin", "c_est": 9.974, "ach": 5.85, "shield": [], "t": 1795372361.2756, "kind": "rate"}
+{"probes": 0, "ticks": 426, "ticks_full": 424, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"probe_up": 1}, "cpu_main": 3.14, "cpu_slow": 0.0, "cpu_poll": 0.0, "slow_runs": 0, "slow_polls": 0, "ct_in_c": true, "t": 1795372361.7117, "kind": "gov"}
+{"probes": 0, "ticks": 522, "ticks_full": 520, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"probe_up": 1}, "cpu_main": 3.49, "cpu_slow": 0.0, "cpu_poll": 0.0, "slow_runs": 0, "slow_polls": 0, "ct_in_c": true, "t": 1795372371.7802, "kind": "gov"}
+{"dir": "dl", "old": 8.977, "new": 9.336, "why": "slow_up", "c_est": 9.974, "ach": 8.861, "shield": [], "t": 1795372373.3656, "kind": "rate"}
+{"dir": "dl", "old": 9.336, "new": 10.008, "why": "slow_up", "c_est": 9.974, "ach": 9.221, "shield": [], "t": 1795372373.9069, "kind": "rate"}
+{"dir": "dl", "old": 10.008, "new": 11.305, "why": "slow_up", "c_est": 10.049, "ach": 10.049, "shield": [], "t": 1795372374.4406, "kind": "rate"}
+{"dir": "dl", "old": 11.305, "new": 13.942, "why": "slow_up", "c_est": 11.621, "ach": 11.621, "shield": [], "t": 1795372374.9937, "kind": "rate"}
+{"dir": "dl", "old": 13.942, "new": 19.796, "why": "slow_up", "c_est": 13.698, "ach": 13.698, "shield": [], "t": 1795372375.5439, "kind": "rate"}
+{"dir": "dl", "old": 19.796, "new": 29.694, "why": "slow_up", "c_est": 19.774, "ach": 19.774, "shield": [], "t": 1795372376.091, "kind": "rate"}
+{"dir": "dl", "old": 29.694, "new": 44.541, "why": "slow_up", "c_est": 29.39, "ach": 29.39, "shield": [], "t": 1795372376.6375, "kind": "rate"}
+{"dir": "dl", "old": 44.541, "new": 46.323, "why": "slow_up", "c_est": 44.278, "ach": 44.278, "shield": [], "t": 1795372377.2102, "kind": "rate"}
+{"dir": "dl", "old": 46.323, "new": 47.5, "why": "slow_up", "c_est": 45.397, "ach": 45.397, "shield": [], "t": 1795372377.7923, "kind": "rate"}
+{"probes": 0, "ticks": 613, "ticks_full": 611, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"probe_up": 1}, "cpu_main": 3.92, "cpu_slow": 0.0, "cpu_poll": 0.0, "slow_runs": 0, "slow_polls": 0, "ct_in_c": true, "t": 1795372381.8518, "kind": "gov"}
+{"probes": 0, "ticks": 703, "ticks_full": 701, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"probe_up": 1}, "cpu_main": 4.34, "cpu_slow": 0.0, "cpu_poll": 0.0, "slow_runs": 0, "slow_polls": 0, "ct_in_c": true, "t": 1795372391.9514, "kind": "gov"}

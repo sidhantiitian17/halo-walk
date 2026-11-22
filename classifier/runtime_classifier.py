@@ -1,0 +1,326 @@
+"""
+Real-time flow classification and multi-protocol packet sniffer.
+Loads trained XGBoost model and extracts NetMatrix features (IPv4 + IPv6).
+Payloads are never inspected or decrypted (Constraint C1).
+"""
+import os
+import sys
+import time
+import pickle
+import threading
+import pandas as pd
+import numpy as np
+
+# Add parent directory to path if needed
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from flow_table import FlowTable
+
+class FlowClassifier:
+    """Loads trained XGBoost model and performs inference on packet feature sets."""
+    def __init__(self, model_path=None):
+        if model_path is None:
+            # Look in same directory as this file or current working directory
+            cur_dir = os.path.dirname(os.path.abspath(__file__))
+            candidates = [
+                os.path.join(cur_dir, "xgb_model.pkl"),
+                os.path.join(os.getcwd(), "classifier", "xgb_model.pkl"),
+                os.path.join(os.getcwd(), "xgb_model.pkl")
+            ]
+            for c in candidates:
+                if os.path.exists(c):
+                    model_path = c
+                    break
+
+        if not model_path or not os.path.exists(model_path):
+            raise FileNotFoundError(f"XGBoost model file not found in candidates: {candidates}")
+
+        with open(model_path, "rb") as f:
+            data = pickle.load(f)
+            self.model = data["model"]
+            self.label_encoder = data["label_encoder"]
+            self.classes = list(self.label_encoder.classes_)
+
+    def predict_sample(self, total_length: float, ttl: int, inter_arrival_ms: float) -> dict:
+        """
+        Predict traffic class for a single feature tuple.
+        Returns: {
+            'class': str,
+            'confidence': float,
+            'probabilities': dict,
+            'needs_confirmation': bool
+        }
+        """
+        df = pd.DataFrame([{
+            "total_length": float(total_length),
+            "ttl": int(ttl),
+            "inter_arrival_ms": float(inter_arrival_ms)
+        }])
+
+        probs = self.model.predict_proba(df)[0]
+        max_idx = int(np.argmax(probs))
+        pred_class = self.classes[max_idx]
+        confidence = float(probs[max_idx])
+
+        prob_dict = {cls: float(p) for cls, p in zip(self.classes, probs)}
+        return {
+            "class": pred_class,
+            "confidence": round(confidence, 4),
+            "probabilities": prob_dict,
+            "needs_confirmation": confidence < 0.70
+        }
+
+    def predict_flow_history(self, history: list) -> dict:
+        """
+        Aggregates recent packet history for a flow to produce a stable prediction.
+        Uses median/mean of features to smooth jitter.
+        """
+        if not history:
+            return {
+                "class": "unclassified",
+                "confidence": 0.0,
+                "probabilities": {},
+                "needs_confirmation": True
+            }
+
+        # Take median of packet lengths, modal TTL, and 75th percentile of inter-arrival
+        lengths = [p["total_length"] for p in history]
+        ttls = [p["ttl"] for p in history]
+        arrivals = [p["inter_arrival_ms"] for p in history if p["inter_arrival_ms"] > 0]
+        if not arrivals:
+            arrivals = [0.1]
+
+        agg_len = float(np.median(lengths))
+        agg_ttl = int(np.median(ttls))
+        agg_arr = float(np.median(arrivals))
+
+        return self.predict_sample(agg_len, agg_ttl, agg_arr)
+
+
+class LiveFlowSniffer:
+    """
+    Live packet sniffer capturing headers from specified interfaces.
+    Inspects only IP/IPv6 length, TTL/hop limit, and arrival timing.
+    Payloads are completely ignored (Constraint C1).
+    """
+    def __init__(self, ifaces=None, flow_table=None, classifier=None, namespace=None):
+        self.flow_table = flow_table or FlowTable()
+        self.classifier = classifier or FlowClassifier()
+        self.namespace = namespace
+        self._stop_event = threading.Event()
+        self._thread = None
+        self._subproc = None
+        self.status = "stopped"
+        self.last_error = None
+        self.packet_count = 0
+
+        # Intelligent interface selection:
+        if ifaces is not None:
+            self.ifaces = [ifaces] if isinstance(ifaces, str) else list(ifaces)
+        else:
+            self.ifaces = self._detect_interfaces()
+
+    @staticmethod
+    def _detect_interfaces() -> list:
+        """Detect available interfaces; prefer veth pairs if present, else fallback to lo."""
+        available = []
+        try:
+            available = os.listdir("/sys/class/net")
+        except Exception:
+            pass
+
+        preferred = [i for i in ["veth-lan1-gw", "veth-lan2-gw", "veth-gw-wan"] if i in available]
+        if preferred:
+            return preferred
+        if "lo" in available:
+            return ["lo"]
+        return available if available else ["lo"]
+
+    def _record_raw_packet(self, flow_id: str, total_len: int, ttl: int, now: float):
+        self.packet_count += 1
+        inter_arrival_ms, history = self.flow_table.record_packet(flow_id, total_len, ttl, now)
+        count = len(history)
+        if count >= 3 and (count == 3 or count % 5 == 0):
+            res = self.classifier.predict_flow_history(history)
+            self.flow_table.update_classification(
+                flow_id,
+                res["class"],
+                res["confidence"],
+                res["probabilities"]
+            )
+
+    def _packet_handler(self, pkt):
+        try:
+            from scapy.layers.inet import IP, TCP, UDP
+            from scapy.layers.inet6 import IPv6
+        except ImportError:
+            return
+
+        is_ipv4 = IP in pkt
+        is_ipv6 = IPv6 in pkt
+
+        if not is_ipv4 and not is_ipv6:
+            return
+
+        now = time.time()
+        if is_ipv4:
+            src_ip = pkt[IP].src
+            dst_ip = pkt[IP].dst
+            total_len = pkt[IP].len
+            ttl = pkt[IP].ttl
+            proto = pkt[IP].proto
+        else:
+            src_ip = pkt[IPv6].src
+            dst_ip = pkt[IPv6].dst
+            total_len = pkt[IPv6].plen + 40
+            ttl = pkt[IPv6].hlim
+            proto = pkt[IPv6].nh
+
+        if TCP in pkt:
+            sport = pkt[TCP].sport
+            dport = pkt[TCP].dport
+            proto_str = "tcp"
+        elif UDP in pkt:
+            sport = pkt[UDP].sport
+            dport = pkt[UDP].dport
+            proto_str = "udp"
+        else:
+            sport = 0
+            dport = 0
+            proto_str = f"proto{proto}"
+
+        # Standard 5-tuple flow key
+        flow_id = f"{src_ip}:{sport}->{dst_ip}:{dport}/{proto_str}"
+        self._record_raw_packet(flow_id, total_len, ttl, now)
+
+    def start(self):
+        """Start asynchronous sniffing on configured interfaces."""
+        self._stop_event.clear()
+        self.status = "starting"
+        self.last_error = None
+
+        def _worker():
+            try:
+                in_netns = False
+                if self.namespace and os.path.exists(f"/var/run/netns/{self.namespace}"):
+                    try:
+                        import ctypes
+                        libc = ctypes.CDLL("libc.so.6", use_errno=True)
+                        fd = os.open(f"/var/run/netns/{self.namespace}", os.O_RDONLY)
+                        ret = libc.setns(fd, 0x40000000)
+                        os.close(fd)
+                        if ret == 0:
+                            in_netns = True
+                    except Exception:
+                        pass
+
+                if not in_netns and self.namespace:
+                    import subprocess, sys
+                    cmd = [
+                        "sudo", "-n", "ip", "netns", "exec", self.namespace,
+                        sys.executable, "-u", "-c",
+                        "from scapy.all import sniff\n"
+                        "from scapy.layers.inet import IP, TCP, UDP\n"
+                        "from scapy.layers.inet6 import IPv6\n"
+                        "import sys, time\n"
+                        "def h(pkt):\n"
+                        "    now = time.time()\n"
+                        "    if IP in pkt:\n"
+                        "        src, dst = pkt[IP].src, pkt[IP].dst\n"
+                        "        tl, ttl = pkt[IP].len, pkt[IP].ttl\n"
+                        "        proto = 'tcp' if TCP in pkt else ('udp' if UDP in pkt else 'other')\n"
+                        "        sp = pkt[TCP].sport if TCP in pkt else (pkt[UDP].sport if UDP in pkt else 0)\n"
+                        "        dp = pkt[TCP].dport if TCP in pkt else (pkt[UDP].dport if UDP in pkt else 0)\n"
+                        "        sys.stdout.write(f'{src}:{sp}->{dst}:{dp}/{proto},{tl},{ttl},{now}\\n')\n"
+                        "        sys.stdout.flush()\n"
+                        "    elif IPv6 in pkt:\n"
+                        "        src, dst = pkt[IPv6].src, pkt[IPv6].dst\n"
+                        "        tl, ttl = pkt[IPv6].plen + 40, pkt[IPv6].hlim\n"
+                        "        proto = 'tcp' if TCP in pkt else ('udp' if UDP in pkt else 'other')\n"
+                        "        sp = pkt[TCP].sport if TCP in pkt else (pkt[UDP].sport if UDP in pkt else 0)\n"
+                        "        dp = pkt[TCP].dport if TCP in pkt else (pkt[UDP].dport if UDP in pkt else 0)\n"
+                        "        sys.stdout.write(f'{src}:{sp}->{dst}:{dp}/{proto},{tl},{ttl},{now}\\n')\n"
+                        "        sys.stdout.flush()\n"
+                        f"sniff(iface={repr(self.ifaces)}, prn=h, store=False)\n"
+                    ]
+                    self._subproc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                    self.status = "running"
+                    while not self._stop_event.is_set() and self._subproc.poll() is None:
+                        line = self._subproc.stdout.readline()
+                        if line:
+                            parts = line.strip().split(",")
+                            if len(parts) == 4:
+                                fid, tl, ttl, ts = parts[0], int(parts[1]), int(parts[2]), float(parts[3])
+                                self._record_raw_packet(fid, tl, ttl, ts)
+                        else:
+                            time.sleep(0.01)
+                    if self._subproc.poll() is not None and self._subproc.returncode != 0:
+                        err = self._subproc.stderr.read().strip()
+                        self.status = "unavailable"
+                        self.last_error = err or f"Subprocess exited with code {self._subproc.returncode}"
+                    else:
+                        self.status = "stopped"
+                    return
+
+                from scapy.all import sniff
+                self.status = "running"
+                sniff(
+                    iface=self.ifaces,
+                    prn=self._packet_handler,
+                    stop_filter=lambda x: self._stop_event.is_set(),
+                    store=False
+                )
+                if self.status == "running":
+                    self.status = "stopped"
+            except Exception as e:
+                self.status = "unavailable"
+                self.last_error = str(e)
+
+        self._thread = threading.Thread(target=_worker, daemon=True)
+        self._thread.start()
+        time.sleep(0.05)
+
+    def stop(self):
+        self._stop_event.set()
+        if self._subproc and self._subproc.poll() is None:
+            try:
+                self._subproc.terminate()
+                self._subproc.wait(timeout=1.0)
+            except Exception:
+                pass
+        if self._thread and self._thread.is_alive():
+            self._thread.join(timeout=2.0)
+        if self.status != "unavailable":
+            self.status = "stopped"
+
+    def get_status(self) -> dict:
+        return {
+            "status": self.status,
+            "interfaces": self.ifaces,
+            "packet_count": self.packet_count,
+            "last_error": self.last_error,
+            "active_flows": len(self.flow_table.get_active_flows(10))
+        }
+
+
+def test_sniffer(duration=5, iface="veth-lan1-gw"):
+    """Standalone test function for Step 1.1 verification."""
+    print(f"=== Testing packet sniffer on {iface} for {duration}s ===")
+    ft = FlowTable()
+    clf = FlowClassifier()
+    sniffer = LiveFlowSniffer(ifaces=[iface], flow_table=ft, classifier=clf)
+    sniffer.start()
+    time.sleep(duration)
+    sniffer.stop()
+    flows = ft.get_active_flows(active_within_sec=10)
+    print(f"Captured {len(flows)} active flows.")
+    for f in flows:
+        print(f"  [{f['flow_id']}] -> Class: {f['class']} (conf: {f['confidence']}) Pkts: {f['packet_count']}")
+    return len(flows)
+
+
+if __name__ == "__main__":
+    clf = FlowClassifier()
+    print("Testing single-sample prediction:")
+    for test_len, test_ttl, test_arr in [(200, 64, 0.4), (1450, 64, 2.0), (60, 64, 0.1)]:
+        res = clf.predict_sample(test_len, test_ttl, test_arr)
+        print(f"  len={test_len}, ttl={test_ttl}, arr={test_arr}ms -> {res['class']} (conf: {res['confidence']})")

@@ -1,0 +1,10 @@
+{"mode": {"plan_dl": 10.0, "plan_ul": 2.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 4.0, "safe_ul": 0.8, "autorate": 1, "classifier": "none", "model": "/home/claude/halo-walk/halo/model.pkl", "collect": true, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "health_s": 5.0, "out": "/home/claude/halo-walk/results/raw/DATAGEN/C2/r23/ctl"}, "t": 1794866965.5059, "kind": "start"}
+{"lkg": "96bf1fcbfb068fb7", "why": "initial", "t": 1794866966.1515, "kind": "commit"}
+{"dir": "dl", "old": 9.5, "new": 3.087, "why": "bloat_fast_down", "c_est": 4.41, "ach": 4.41, "shield": [], "t": 1794866990.4425, "kind": "rate"}
+{"dir": "dl", "old": 3.087, "new": 4.19, "why": "settle_at_margin", "c_est": 4.41, "ach": 6.03, "shield": [], "t": 1794866992.5053, "kind": "rate"}
+{"dir": "dl", "old": 4.19, "new": 4.358, "why": "slow_up", "c_est": 4.587, "ach": 3.929, "shield": [], "t": 1794867000.9926, "kind": "rate"}
+{"dir": "dl", "old": 4.358, "new": 4.532, "why": "slow_up", "c_est": 4.771, "ach": 3.676, "shield": [], "t": 1794867001.6236, "kind": "rate"}
+{"dir": "dl", "old": 4.532, "new": 4.804, "why": "slow_up", "c_est": 5.057, "ach": 3.574, "shield": [], "t": 1794867002.1679, "kind": "rate"}
+{"dir": "dl", "old": 4.804, "new": 5.188, "why": "slow_up", "c_est": 5.461, "ach": 3.691, "shield": [], "t": 1794867002.6846, "kind": "rate"}
+{"dir": "dl", "old": 5.188, "new": 5.707, "why": "slow_up", "c_est": 6.007, "ach": 4.659, "shield": ["clip_up_step"], "t": 1794867003.1776, "kind": "rate"}
+{"dir": "dl", "old": 5.707, "new": 5.935, "why": "slow_up", "c_est": 6.248, "ach": 5.436, "shield": [], "t": 1794867003.7865, "kind": "rate"}

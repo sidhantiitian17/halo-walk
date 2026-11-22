@@ -1,0 +1,41 @@
+{
+ "scenario": "S6",
+ "config": "C4",
+ "rep": 3,
+ "seed": 3137,
+ "kernel": "6.8.0-149-generic",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795377771.792291,
+   "rel": 0.0
+  },
+  {
+   "req": {
+    "rate_dl": 2.0,
+    "autorate": 0,
+    "note": "bad policy: 2 Mbit/s clamp"
+   },
+   "name": "bad_policy",
+   "t": 1795377785.0096436,
+   "rel": 13.217
+  },
+  {
+   "name": "kill9",
+   "t": 1795377799.8702993,
+   "rel": 28.078
+  },
+  {
+   "name": "end",
+   "t": 1795377814.0275388,
+   "rel": 42.235
+  }
+ ],
+ "down": 20,
+ "up": 4,
+ "shield_reject": "{\"accepted\":false,\"reasons\":[\"rate_dl_out_of_bounds[2.0,100.0]\"]}",
+ "bad_policy_resp": "{\"accepted\":true,\"transaction\":\"prepare -> shadow-check -> apply -> read-back -> health window -> commit|rollback\"}"
+}

@@ -1,0 +1,4 @@
+{"mode": {"plan_dl": 10.0, "plan_ul": 2.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 4.0, "safe_ul": 0.8, "autorate": 1, "classifier": "none", "model": "/home/claude/halo-walk/halo/model.pkl", "collect": true, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "health_s": 5.0, "out": "/home/claude/halo-walk/results/raw/DATAGEN/C2/r08/ctl"}, "t": 1794865590.5376, "kind": "start"}
+{"lkg": "96bf1fcbfb068fb7", "why": "initial", "t": 1794865591.1849, "kind": "commit"}
+{"dir": "dl", "old": 9.5, "new": 4.127, "why": "bloat_fast_down", "c_est": 9.171, "ach": 9.171, "shield": [], "t": 1794865629.3995, "kind": "rate"}
+{"dir": "dl", "old": 4.127, "new": 8.68, "why": "settle_at_margin", "c_est": 9.137, "ach": 9.137, "shield": [], "t": 1794865630.4484, "kind": "rate"}

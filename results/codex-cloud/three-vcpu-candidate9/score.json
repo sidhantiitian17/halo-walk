@@ -18,7 +18,9 @@
       "expected": 2
     }
   },
-  "controller_not_ready": [],
+  "controller_not_ready": [
+    "CPU/C4/r01"
+  ],
   "measurements": {
     "4": {
       "id": 4,

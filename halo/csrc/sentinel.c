@@ -115,6 +115,12 @@ static void confirm_burst(double now, uint32_t *seqc, pend_t *pend) {
     for (int j = 0; j < G.nsock; j++) send_probe(j, seqc, pend);
 }
 
+static double probe_deadline(const hs_params *p, int ri, double ordinary, int drop_check) {
+    if (!drop_check || !p->has_base_ul[ri] || !p->has_base_dl[ri]) return ordinary;
+    double baseline_rtt = (p->base_ul[ri] + p->base_dl[ri]) / 1000;
+    return fmin(ordinary, fmax(0.08, baseline_rtt + 0.06));
+}
+
 /* Two modes while armed. CALM: counters and telemetry every tick_s, gated heartbeats,
  * probes at probe_s, and confirmation bursts when conditions change.
  * FAST: full-rate probing (fast_s) only; samples, late and lost probes are queued for Python, which runs the control loop
@@ -142,7 +148,7 @@ void *sentinel_thread(void *arg) {
         { uint64_t x; if (read(G.cefd, &x, 8) < 0) { } }
         double now = rt(), next_tick = now + p.tick_s, last_probe = now - p.probe_s, next_fprobe = now;
         double confirm_until = 0, watch_until = 0, dl_delay_since = 0, dl_collapse_at = 0;
-        double next_heartbeat = now;
+        double next_heartbeat = now, drop_check_until = 0;
         int confirm_bad[2] = {0, 0};
         uint64_t rx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : 0, tx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : 0;
         double t_last = now, ach[2] = { p.ach[0], p.ach[1] }, peak[2] = { p.peak[0], p.peak[1] }, ld[2] = { p.last_delta[0], p.last_delta[1] };
@@ -164,11 +170,13 @@ void *sentinel_thread(void *arg) {
                 next_fprobe += fs; if (next_fprobe < now) next_fprobe = now + fs;
             }
             double tmo = fast ? next_fprobe - now : next_tick - now;
+            int drop_check = now < drop_check_until;
             int pending_by_socket[MAXR] = {0};
             for (int i = 0; i < MAXPEND; i++) {
                 if (!pend[i].used) continue;
                 pending_by_socket[pend[i].ri]++;
-                double d = pend[i].ts + (pend[i].late ? 1.0 : late_s) - now;
+                double deadline = probe_deadline(&p, pend[i].ri, late_s, drop_check);
+                double d = pend[i].ts + (pend[i].late ? 1.0 : deadline) - now;
                 if (!(fast == 0 && pend[i].late) && d < tmo) tmo = d;
             }
             if (tmo < 0) tmo = 0;
@@ -253,8 +261,10 @@ void *sentinel_thread(void *arg) {
             for (int i = 0; i < MAXPEND; i++) {
                 if (!pend[i].used) continue;
                 double age = now - pend[i].ts;
-                if (!pend[i].late && age > late_s) {
-                    pend[i].late = 1; push(EV_LATE, now, age * 1e3, 0, pend[i].ri);
+                double deadline = probe_deadline(&p, pend[i].ri, late_s, drop_check);
+                if (!pend[i].late && age > deadline) {
+                    pend[i].late = 1;
+                    push(EV_LATE, now, age * 1e3, deadline < late_s, pend[i].ri);
                     if (!fast) alert = AL_LATE;
                 } else if (pend[i].late && fast && age > 1.0) {
                     push(EV_LOST, now, age * 1e3, 0, pend[i].ri); pend[i].used = 0;
@@ -301,6 +311,7 @@ void *sentinel_thread(void *arg) {
                 if (!alert && drop[0] && ach[0] < 0.5 * p.rate[0]) {
                     dl_collapse_at = now;
                     abrupt_dl_drop = 1;
+                    drop_check_until = now + p.confirm_win;
                     alert = AL_COLLAPSE;
                 } else if (!alert && (drop[0] || drop[1]) && now >= watch_until) {
                     dl_collapse_at = drop[0] ? now : 0;

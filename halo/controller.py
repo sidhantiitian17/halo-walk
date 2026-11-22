@@ -958,7 +958,7 @@ class Ctl:
                 self.est["ul"].ach_hist.append((t, b))
                 self.ach_hist.append((t, a))
             elif kind == _sentinel.EV_LATE:
-                d = "dl" if self.est["dl"].last_delta >= self.est["ul"].last_delta else "ul"
+                d = "dl" if b or self.est["dl"].last_delta >= self.est["ul"].last_delta else "ul"
                 self.est[d].on_late(t, a)
                 gov.late(t)
             elif kind == _sentinel.EV_BURST:
@@ -1074,7 +1074,11 @@ class Ctl:
                         sent = None
                 n_tick += 1
             else:
-                self.kick.wait(gov.tick_period(time.time()))
+                now = time.time()
+                period = gov.tick_period(now)
+                if 0 <= now - self.est["dl"].t_native_collapse < CONFIRM_WIN:
+                    period = min(period, 0.05)
+                self.kick.wait(period)
                 if self.kick.is_set():
                     self.kick.clear()
                     if time.time() - last_t < 0.05:

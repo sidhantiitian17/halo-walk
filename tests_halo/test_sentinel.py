@@ -167,6 +167,26 @@ def test_fast_mode_probes_at_full_rate_and_queues_samples(refl, tmp_path):
         sent.stop()
 
 
+def test_abrupt_downlink_drop_uses_baseline_relative_probe_deadlines(refl, tmp_path):
+    sent = _load(refl, tmp_path)
+    try:
+        p = _params()
+        p.rate[0] = p.rmax[0] = 10.0
+        p.peak[0] = p.ach[0] = 8.0
+        for i in range(4):
+            p.base_ul[i] = p.base_dl[i] = 10.0
+            p.has_base_ul[i] = p.has_base_dl[i] = 1
+        refl.drop = True
+        sent.set_fast(0.05)
+        sent.arm(p)
+        assert _wait_alert(sent) == S.AL_COLLAPSE
+        time.sleep(0.2)
+        early = [e for e in sent.drain() if e[0] == S.EV_LATE and e[3]]
+        assert {e[4] for e in early if 79 <= e[2] < 400} == set(range(4))
+    finally:
+        sent.stop()
+
+
 def _wait_alert(sent, secs=2.0):
     import select
     r = select.select([sent.efd], [], [], secs)[0]
@@ -311,7 +331,8 @@ def test_controller_hands_calm_mode_to_the_c_thread_and_python_sleeps(tmp_path, 
         time.sleep(2.0)
         assert c.n_tick - n_py <= 3, c.n_tick - n_py                # Python main loop: heavy pass every HEAVY_S, not 10 Hz
         hb = os.path.join(state_dir, "heartbeat")
-        assert time.time() - os.path.getmtime(hb) < 0.5             # the C thread keeps the heartbeat
+        # The native heartbeat uses a 0.5 s deadline serviced on the counter tick.
+        assert time.time() - os.path.getmtime(hb) < 0.5 + 2 * c.gov.quiet_tick
         assert refl.n >= 4                                          # probes went out from C
         c.tel.flush()
         rows = open(os.path.join(c.a.out, "telemetry.csv")).read().splitlines()

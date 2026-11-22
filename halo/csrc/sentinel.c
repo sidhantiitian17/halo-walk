@@ -46,7 +46,7 @@ typedef struct {                                                           /* mi
     double tick_s, probe_s, thresh_ms, late_s, confirm_win, base_alpha, peak_tau, gate_s;
     double ewma_alpha_ref, ewma_dt_ref;
     double rate[2], rmax[2], c_est[2], hold_until[2], ach[2], peak[2], last_delta[2];
-    double load_thresh, collapse, sat_frac;
+    double load_thresh, collapse, sat_frac, burst_max;
     double base_ul[MAXR], base_dl[MAXR];
     int32_t has_base_ul[MAXR], has_base_dl[MAXR];
     int32_t confirm_n, rr;
@@ -135,7 +135,8 @@ void *sentinel_thread(void *arg) {
         memset(pend, 0, sizeof pend);
         { uint64_t x; if (read(G.cefd, &x, 8) < 0) { } }
         double now = rt(), next_tick = now + p.tick_s, last_probe = now - p.probe_s, next_fprobe = now;
-        double confirm_until = 0, watch_until = 0; int confirm_bad = 0;
+        double confirm_until = 0, watch_until = 0, dl_delay_since = 0;
+        int confirm_bad[2] = {0, 0};
         uint64_t rx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : 0, tx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : 0;
         double t_last = now, ach[2] = { p.ach[0], p.ach[1] }, peak[2] = { p.peak[0], p.peak[1] }, ld[2] = { p.last_delta[0], p.last_delta[1] };
         pthread_mutex_lock(&G.mu); G.last_live = G.live; G.last_live_t = now; pthread_mutex_unlock(&G.mu);
@@ -156,8 +157,10 @@ void *sentinel_thread(void *arg) {
                 next_fprobe += fs; if (next_fprobe < now) next_fprobe = now + fs;
             }
             double tmo = fast ? next_fprobe - now : next_tick - now;
+            int pending_by_socket[MAXR] = {0};
             for (int i = 0; i < MAXPEND; i++) {
                 if (!pend[i].used) continue;
+                pending_by_socket[pend[i].ri]++;
                 double d = pend[i].ts + (pend[i].late ? 1.0 : late_s) - now;
                 if (!(fast == 0 && pend[i].late) && d < tmo) tmo = d;
             }
@@ -168,9 +171,11 @@ void *sentinel_thread(void *arg) {
             struct pollfd pf[MAXR + 1];
             int watch = fast || now < watch_until, nf = 1;
             pf[0] = (struct pollfd){ G.cefd, POLLIN, 0 };
-            if (watch) for (int i = 0; i < G.nsock; i++) pf[nf++] = (struct pollfd){ G.socks[i], POLLIN, 0 };
+            if (watch) for (int i = 0; i < G.nsock; i++)
+                pf[nf++] = (struct pollfd){ pending_by_socket[i] ? G.socks[i] : -1, POLLIN, 0 };
             if (!fast && watch && watch_until - now < tmo) tmo = watch_until - now;
-            struct timespec to = { (time_t)tmo, (long)((tmo - (time_t)tmo) * 1e9) + 100000 };   /* +0.1 ms: never wake early */
+            tmo += 0.0001;  /* avoid early timer wakes */
+            struct timespec to = { (time_t)tmo, (long)((tmo - (time_t)tmo) * 1e9) };
             int rc = ppoll(pf, nf, &to, NULL);
             if (rc < 0 && errno != EINTR) { alert = AL_ERROR; break; }
             if (rc > 0 && (pf[0].revents & POLLIN)) { uint64_t x; if (read(G.cefd, &x, 8) < 0) { } continue; }
@@ -178,7 +183,7 @@ void *sentinel_thread(void *arg) {
             int collect = fast || watch || rt() >= next_tick - 0.002;
             for (int i = 0; i < MAXPEND && !collect; i++) if (pend[i].used && !pend[i].late && rt() - pend[i].ts > late_s - 0.05) collect = 1;
             for (int i = 0; i < G.nsock && collect; i++) {
-                for (;;) {
+                while (pending_by_socket[i] > 0) {
                     unsigned char d[64], cb[128]; struct iovec iv = { d, sizeof d };
                     struct msghdr mh = { .msg_iov = &iv, .msg_iovlen = 1, .msg_control = cb, .msg_controllen = sizeof cb };
                     ssize_t n = recvmsg(G.socks[i], &mh, MSG_DONTWAIT);
@@ -197,6 +202,7 @@ void *sentinel_thread(void *arg) {
                     for (int j = 0; j < MAXPEND; j++) if (pend[j].used && pend[j].seq == sq) { k = j; break; }
                     if (k < 0) continue;
                     pend[k].used = 0;
+                    pending_by_socket[i]--;
                     int ri = i;
                     double up = (tref - ts) * 1e3, dn = (tr - tref) * 1e3;
                     push(EV_PROBE, tr, up, dn, ri);
@@ -207,12 +213,27 @@ void *sentinel_thread(void *arg) {
                     if (!p.has_base_dl[ri] || dn < p.base_dl[ri]) { p.base_dl[ri] = dn; p.has_base_dl[ri] = 1; } else p.base_dl[ri] += p.base_alpha * (dn - p.base_dl[ri]);
                     du = up - p.base_ul[ri]; dd = dn - p.base_dl[ri];
                     ld[1] = du; ld[0] = dd;
-                    double tn = rt();
-                    if ((du > dd ? du : dd) > p.thresh_ms) {
+                    int dl_delayed = dd > p.thresh_ms;
+                    int ul_delayed = du > p.thresh_ms;
+                    if (!dl_delayed) dl_delay_since = 0;
+                    else if (!dl_delay_since) dl_delay_since = tr;
+                    /* The downlink still delivers the shaped rate. Give a brief queue the estimator's
+                     * burst window to drain. A delivery collapse is checked separately on every tick. */
+                    if (p.sat_frac > 0 && ach[0] >= p.sat_frac * p.rate[0] && tr - dl_delay_since < p.burst_max)
+                        dl_delayed = 0;
+                    if (dl_delayed || ul_delayed) {
+                        double tn = rt();
                         if (tr < confirm_until) {
-                            if (++confirm_bad >= p.confirm_n) { push(EV_FAST, tn, 0, 0, 0); alert = AL_DELAY; }
+                            confirm_bad[0] += dl_delayed;
+                            confirm_bad[1] += ul_delayed;
+                            if (!alert && (confirm_bad[0] >= p.confirm_n || confirm_bad[1] >= p.confirm_n)) {
+                                push(EV_FAST, tn, 0, 0, 0);
+                                alert = AL_DELAY;
+                            }
                         } else {
-                            confirm_until = tr + p.confirm_win; confirm_bad = 0; watch_until = tn + p.confirm_win;
+                            confirm_until = tr + p.confirm_win;
+                            confirm_bad[0] = confirm_bad[1] = 0;
+                            watch_until = tn + p.confirm_win;
                             push(EV_BURST, tn, 0, 0, 0);
                             for (int j = 0; j < G.nsock; j++) send_probe(j, &seqc, pend);
                         }

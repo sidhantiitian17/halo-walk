@@ -900,6 +900,7 @@ class Ctl:
         p.gate_s, p.ewma_alpha_ref, p.ewma_dt_ref = _sentinel.GATE_S, 0.6, 0.1
         p.load_thresh, p.collapse, p.rr = e1.p.load_thresh, e1.p.collapse, self._rr
         p.sat_frac = SAT_FRAC
+        p.burst_max = e1.p.burst_max
         for i, (d, e) in enumerate((("dl", e1), ("ul", e2))):
             p.rate[i], p.rmax[i], p.c_est[i], p.hold_until[i] = e.rate, e.p.r_max, e.c_est, e.t_hold_until
             p.ach[i], p.peak[i], p.last_delta[i] = ach[d], peak[d], e.last_delta

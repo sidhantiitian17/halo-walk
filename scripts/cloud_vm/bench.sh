@@ -8,8 +8,14 @@ mkdir -p "$dir" "$dest"
 tar -xf "/exchange/$label.tar" -C "$dir"
 cd "$dir"
 python=/workspace/.halo-venv/bin/python
+ml_imported=false
 for spec in "$@"; do
     IFS=, read -r scenario config rep <<< "$spec"
+    if [[ "$config" == C4 && "$ml_imported" == false ]]; then
+        # A fresh guest can otherwise spend the controller's entire startup timeout on 9p reads.
+        "$python" -c 'import fastapi, numpy, sklearn, xgboost'
+        ml_imported=true
+    fi
     echo "HALO_RUN $label $scenario $config $rep"
     set +e
     timeout 200 "$python" scenarios/run.py "$scenario" "$config" "$rep"

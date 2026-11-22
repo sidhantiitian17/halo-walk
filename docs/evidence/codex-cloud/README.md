@@ -43,5 +43,9 @@ Each experimental revision has a separate directory under [results/codex-cloud](
 | `candidate2` | `bd82666f65c45c86a302479a779afb733bdf6a11` |
 | `candidate3` | `9318173` |
 | `candidate4` | `8b6d3b42fe3d230bdd403e5083b9ea7eb1a3bba5` |
+| `candidate5-smoke` | `42799d4f993b51bfa2ec9ac7f61c7253741a7e3b` (separate guest, diagnostic only) |
+| `candidate6` | `21ca28e044252507f7559f98a8359bc5ba5a8463` |
 
 The original evidence campaign used Ubuntu 6.8. This Debian guest is a separate measurement environment. Compare baseline and candidate within the cloud guest. The original results remain in `results/raw`.
+
+The second guest reproduced the kernel preflight. Its diagnostic C4 run began traffic before the model finished loading, so the scorer excludes its CPU number. The batch helper now warms dependency imports before its first C4 run. The scorer checks that adaptive-controller telemetry started before the workload.

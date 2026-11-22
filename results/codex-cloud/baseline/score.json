@@ -18,6 +18,7 @@
       "expected": 2
     }
   },
+  "controller_not_ready": [],
   "measurements": {
     "4": {
       "id": 4,

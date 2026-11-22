@@ -1,0 +1,42 @@
+{
+  "campaign_pass": null,
+  "run_counts": {
+    "S2/C3": {
+      "observed": 0,
+      "expected": 3
+    },
+    "CPU/C1": {
+      "observed": 0,
+      "expected": 2
+    },
+    "CPU/C3": {
+      "observed": 0,
+      "expected": 2
+    },
+    "CPU/C4": {
+      "observed": 0,
+      "expected": 2
+    }
+  },
+  "controller_not_ready": [
+    "CPU/C4/r01"
+  ],
+  "measurements": {
+    "4": {
+      "id": 4,
+      "name": "S2 capacity step: adaptation, recovery, stability",
+      "value": "pending: no data",
+      "pass": null,
+      "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
+      "detail": {}
+    },
+    "12": {
+      "id": 12,
+      "name": "Controller CPU cost",
+      "value": "pending: no data",
+      "pass": null,
+      "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
+      "detail": {}
+    }
+  }
+}

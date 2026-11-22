@@ -46,6 +46,7 @@ Each experimental revision has a separate directory under [results/codex-cloud](
 | `candidate5-smoke` | `42799d4f993b51bfa2ec9ac7f61c7253741a7e3b` (separate guest, diagnostic only) |
 | `candidate6` | `21ca28e044252507f7559f98a8359bc5ba5a8463` |
 | `candidate7` | `6247ae4e8ec1c81b22e1f46e14f5f40479ad5420` |
+| `candidate8` | `5c8bf0016999091f9949d08cbf652f848579d130` |
 
 The original evidence campaign used Ubuntu 6.8. This Debian guest is a separate measurement environment. Compare baseline and candidate within the cloud guest. The original results remain in `results/raw`.
 

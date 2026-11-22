@@ -1,5 +1,5 @@
 {
-  "campaign_pass": null,
+  "campaign_pass": false,
   "run_counts": {
     "S2/C3": {
       "observed": 3,
@@ -10,11 +10,11 @@
       "expected": 2
     },
     "CPU/C3": {
-      "observed": 1,
+      "observed": 2,
       "expected": 2
     },
     "CPU/C4": {
-      "observed": 1,
+      "observed": 2,
       "expected": 2
     }
   },
@@ -144,7 +144,7 @@
     "12": {
       "id": 12,
       "name": "Controller CPU cost",
-      "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core; C3 2.12% [CI n/a, N<2], N=1 of a core; C4 2.86% [CI n/a, N<2], N=1 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
+      "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core; C3 2.83% [95% CI 2.12, 3.54], N=2 of a core; C4 2.63% [95% CI 2.40, 2.86], N=2 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
       "pass": false,
       "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
       "detail": {
@@ -161,25 +161,27 @@
           ]
         },
         "C3": {
-          "n": 1,
-          "median": 2.125,
+          "n": 2,
+          "median": 2.832,
           "ci95": [
-            null,
-            null
+            2.125,
+            3.539
           ],
           "values": [
-            2.125
+            2.125,
+            3.539
           ]
         },
         "C4": {
-          "n": 1,
-          "median": 2.86,
+          "n": 2,
+          "median": 2.629,
           "ci95": [
-            null,
-            null
+            2.398,
+            2.86
           ],
           "values": [
-            2.86
+            2.86,
+            2.398
           ]
         },
         "baseline_C1": 0.0,
@@ -200,25 +202,27 @@
             ]
           },
           "C3": {
-            "n": 1,
-            "median": 61.707,
+            "n": 2,
+            "median": 64.528,
             "ci95": [
-              null,
-              null
+              61.707,
+              67.349
             ],
             "values": [
-              61.707
+              61.707,
+              67.349
             ]
           },
           "C4": {
-            "n": 1,
-            "median": 61.858,
+            "n": 2,
+            "median": 61.373,
             "ci95": [
-              null,
-              null
+              60.888,
+              61.858
             ],
             "values": [
-              61.858
+              61.858,
+              60.888
             ]
           }
         }

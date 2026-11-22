@@ -1,0 +1,19 @@
+{"mode": {"plan_dl": 50.0, "plan_ul": 10.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 20.0, "safe_ul": 4.0, "autorate": 1, "classifier": "ml", "model": "/tmp/candidate4/halo/model.pkl", "collect": false, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "quiet_probe_hz": 2.0, "quiet_tick": 0.25, "sentinel": 1, "sentinel_lib": "", "health_s": 5.0, "out": "/tmp/candidate4/results/raw/CPU/C4/r02/ctl", "nice": 10}, "t": 1795384741.5446, "kind": "start"}
+{"lkg": "08622e7c6c2fe6e5", "why": "initial", "t": 1795384742.0324, "kind": "commit"}
+{"msg": "C calm-mode thread loaded", "t": 1795384742.1139, "kind": "sentinel"}
+{"key": ["tcp", "10.0.0.15", 57120, "10.9.0.2", 5201], "cls": "bulk", "p": 0.983, "abstain": false, "tin": 2, "stage": 1, "age": 0.09, "t": 1795384746.7089, "kind": "classify"}
+{"key": ["tcp", "10.0.0.15", 57128, "10.9.0.2", 5201], "cls": "bulk", "p": 0.983, "abstain": false, "tin": 2, "stage": 1, "age": 0.01, "t": 1795384746.8485, "kind": "classify"}
+{"key": ["tcp", "10.0.0.15", 57140, "10.9.0.2", 5201], "cls": "bulk", "p": 0.975, "abstain": false, "tin": 2, "stage": 1, "age": 2.03, "t": 1795384747.2211, "kind": "classify"}
+{"key": ["tcp", "10.0.0.15", 57144, "10.9.0.2", 5201], "cls": "bulk", "p": 0.984, "abstain": false, "tin": 2, "stage": 1, "age": 2.01, "t": 1795384747.2229, "kind": "classify"}
+{"key": ["tcp", "10.0.0.15", 57150, "10.9.0.2", 5201], "cls": "bulk", "p": 0.978, "abstain": false, "tin": 2, "stage": 1, "age": 1.98, "t": 1795384747.2242, "kind": "classify"}
+{"key": ["tcp", "10.0.0.15", 57152, "10.9.0.2", 5201], "cls": "bulk", "p": 0.955, "abstain": false, "tin": 2, "stage": 1, "age": 1.95, "t": 1795384747.2304, "kind": "classify"}
+{"key": ["tcp", "10.0.0.15", 57160, "10.9.0.2", 5201], "cls": "bulk", "p": 0.987, "abstain": false, "tin": 2, "stage": 1, "age": 1.92, "t": 1795384747.2831, "kind": "classify"}
+{"key": ["tcp", "10.0.0.15", 57170, "10.9.0.2", 5201], "cls": "bulk", "p": 0.981, "abstain": false, "tin": 2, "stage": 1, "age": 1.86, "t": 1795384747.2888, "kind": "classify"}
+{"key": ["tcp", "10.0.0.15", 57184, "10.9.0.2", 5201], "cls": "bulk", "p": 0.964, "abstain": false, "tin": 2, "stage": 1, "age": 1.83, "t": 1795384747.2892, "kind": "classify"}
+{"key": ["udp", "10.0.0.10", 40227, "10.9.0.2", 3478], "cls": "call", "p": 0.996, "abstain": false, "tin": 4, "stage": 1, "age": 1.14, "t": 1795384747.297, "kind": "classify"}
+{"key": ["tcp", "10.0.0.15", 57120, "10.9.0.2", 5201], "cls": "other", "p": 0.945, "abstain": false, "tin": 2, "stage": 2, "age": 3.06, "t": 1795384748.1008, "kind": "classify"}
+{"why": "collapse", "ach_dl": 29.72, "ach_ul": 0.61, "t": 1795384753.4537, "kind": "sent_alert"}
+{"probes": 0, "ticks": 45, "ticks_full": 43, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 1}, "cpu_main": 33.47, "cpu_slow": 0.54, "cpu_poll": 0.09, "slow_runs": 9, "slow_polls": 8, "ct_in_c": true, "t": 1795384753.4607, "kind": "gov"}
+{"probes": 0, "ticks": 65, "ticks_full": 60, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 1}, "cpu_main": 33.61, "cpu_slow": 0.62, "cpu_poll": 0.12, "slow_runs": 12, "slow_polls": 11, "ct_in_c": true, "t": 1795384763.8053, "kind": "gov"}
+{"why": "collapse", "ach_dl": 27.43, "ach_ul": 1.65, "t": 1795384775.4879, "kind": "sent_alert"}
+{"probes": 0, "ticks": 68, "ticks_full": 61, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {"collapse": 2}, "cpu_main": 33.65, "cpu_slow": 0.67, "cpu_poll": 0.15, "slow_runs": 15, "slow_polls": 14, "ct_in_c": true, "t": 1795384775.4889, "kind": "gov"}

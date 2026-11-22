@@ -2,7 +2,7 @@
   "campaign_pass": null,
   "run_counts": {
     "S2/C3": {
-      "observed": 0,
+      "observed": 1,
       "expected": 3
     },
     "CPU/C1": {
@@ -25,10 +25,85 @@
     "4": {
       "id": 4,
       "name": "S2 capacity step: adaptation, recovery, stability",
-      "value": "pending: no data",
-      "pass": null,
+      "value": "C3 T_adapt 13.40 s, recovery 3.5 s, 3.4 changes/min (medians, N=1)",
+      "pass": false,
       "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
-      "detail": {}
+      "detail": {
+        "C3": {
+          "n": 1,
+          "runs": [
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.636,
+              "low_phase_added_p99_ms": 314.238,
+              "low_phase_added_p95_ms": 288.847,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 13.4,
+              "t_settle_strict_s": 13.4,
+              "recovery_s": 3.497,
+              "telemetry_end_rel_s": 38.063,
+              "changes_pre_down": 2,
+              "changes_last15": 0,
+              "changes_per_min": 3.429
+            }
+          ],
+          "t_adapt_median_s": 13.4,
+          "recovery_median_s": 3.497,
+          "changes_per_min_median": 3.429,
+          "t_adapt_s": {
+            "n": 1,
+            "median": 13.4,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              13.4
+            ]
+          },
+          "recovery_s": {
+            "n": 1,
+            "median": 3.497,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              3.497
+            ]
+          },
+          "changes_per_min": {
+            "n": 1,
+            "median": 3.429,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              3.429
+            ]
+          },
+          "low_phase_added_p99_ms": {
+            "n": 1,
+            "median": 314.238,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              314.238
+            ]
+          },
+          "pass": false
+        },
+        "capacity_steps_mbps": [
+          [
+            10.0,
+            50.0
+          ]
+        ]
+      }
     },
     "12": {
       "id": 12,

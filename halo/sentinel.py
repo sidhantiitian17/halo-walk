@@ -33,7 +33,8 @@ class Event(ctypes.Structure):
 
 class State(ctypes.Structure):
     _fields_ = [("ach", ctypes.c_double * 2), ("peak", ctypes.c_double * 2), ("last_delta", ctypes.c_double * 2),
-                ("t_counters", ctypes.c_double), ("rx", ctypes.c_uint64), ("tx", ctypes.c_uint64),
+                ("t_counters", ctypes.c_double), ("dl_collapse_at", ctypes.c_double),
+                ("rx", ctypes.c_uint64), ("tx", ctypes.c_uint64),
                 ("alert", ctypes.c_int32), ("armed", ctypes.c_int32)]
 
 

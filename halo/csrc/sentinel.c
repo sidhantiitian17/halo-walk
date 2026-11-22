@@ -56,6 +56,7 @@ typedef struct {                                                           /* mi
 
 typedef struct {
     double ach[2], peak[2], last_delta[2], t_counters;
+    double dl_collapse_at;
     uint64_t rx, tx;
     int32_t alert, armed;
 } hs_state;
@@ -109,6 +110,11 @@ static void send_probe(int ri, uint32_t *seqc, pend_t *pend) {
     for (int i = 0; i < MAXPEND; i++) if (!pend[i].used) { pend[i] = (pend_t){ seq, ts, ri, 0, 1 }; return; }
 }
 
+static void confirm_burst(double now, uint32_t *seqc, pend_t *pend) {
+    push(EV_BURST, now, 0, 0, 0);
+    for (int j = 0; j < G.nsock; j++) send_probe(j, seqc, pend);
+}
+
 /* Two modes while armed. CALM: counters / telemetry / heartbeat every tick_s, probes at probe_s
  * (up to once per tick at saturation), and alerts.
  * FAST: full-rate probing (fast_s) only; samples, late and lost probes are queued for Python, which runs the control loop
@@ -135,7 +141,7 @@ void *sentinel_thread(void *arg) {
         memset(pend, 0, sizeof pend);
         { uint64_t x; if (read(G.cefd, &x, 8) < 0) { } }
         double now = rt(), next_tick = now + p.tick_s, last_probe = now - p.probe_s, next_fprobe = now;
-        double confirm_until = 0, watch_until = 0, dl_delay_since = 0;
+        double confirm_until = 0, watch_until = 0, dl_delay_since = 0, dl_collapse_at = 0;
         int confirm_bad[2] = {0, 0};
         uint64_t rx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : 0, tx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : 0;
         double t_last = now, ach[2] = { p.ach[0], p.ach[1] }, peak[2] = { p.peak[0], p.peak[1] }, ld[2] = { p.last_delta[0], p.last_delta[1] };
@@ -199,7 +205,9 @@ void *sentinel_thread(void *arg) {
                     m = be32toh(m); sq = be32toh(sq); b1 = be64toh(b1); b2 = be64toh(b2); memcpy(&ts, &b1, 8); memcpy(&tref, &b2, 8);
                     if (m != MAGIC) continue;
                     int k = -1;
-                    for (int j = 0; j < MAXPEND; j++) if (pend[j].used && pend[j].seq == sq) { k = j; break; }
+                    for (int j = 0; j < MAXPEND; j++) {
+                        if (pend[j].used && pend[j].ri == i && pend[j].seq == sq) { k = j; break; }
+                    }
                     if (k < 0) continue;
                     pend[k].used = 0;
                     pending_by_socket[i]--;
@@ -228,14 +236,14 @@ void *sentinel_thread(void *arg) {
                             confirm_bad[1] += ul_delayed;
                             if (!alert && (confirm_bad[0] >= p.confirm_n || confirm_bad[1] >= p.confirm_n)) {
                                 push(EV_FAST, tn, 0, 0, 0);
-                                alert = AL_DELAY;
+                                alert = confirm_bad[0] >= p.confirm_n && dl_collapse_at > 0 ? AL_COLLAPSE : AL_DELAY;
                             }
                         } else {
                             confirm_until = tr + p.confirm_win;
                             confirm_bad[0] = confirm_bad[1] = 0;
                             watch_until = tn + p.confirm_win;
-                            push(EV_BURST, tn, 0, 0, 0);
-                            for (int j = 0; j < G.nsock; j++) send_probe(j, &seqc, pend);
+                            dl_collapse_at = 0;
+                            confirm_burst(tn, &seqc, pend);
                         }
                     }
                 }
@@ -277,13 +285,23 @@ void *sentinel_thread(void *arg) {
                     char hb[48]; int n = snprintf(hb, sizeof hb, "%.3f %s", now, p.fsm);
                     if (pwrite(G.fd_hb, hb, n, 0) == n && n != G.hb_len) { if (ftruncate(G.fd_hb, n) == 0) G.hb_len = n; }
                 }
+                int drop[2] = {0, 0};
                 double probe_period = p.probe_s;
                 for (int d = 0; d < 2; d++) {
-                    if (peak[d] > 0.5 * p.rate[d] && ach[d] >= 0.10 * p.rate[d]
-                            && ach[d] < p.collapse * p.rate[d] && ach[d] <= 0.8 * peak[d]) alert = AL_COLLAPSE;
-                    else if (p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= 0.9 * p.load_thresh * p.rate[d] && now >= p.hold_until[d] - 0.5) alert = AL_PROBEUP;
+                    drop[d] = peak[d] > 0.5 * p.rate[d] && ach[d] >= 0.10 * p.rate[d]
+                              && ach[d] < p.collapse * p.rate[d] && ach[d] <= 0.8 * peak[d];
+                    if (!drop[d] && p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= 0.9 * p.load_thresh * p.rate[d]
+                            && now >= p.hold_until[d] - 0.5) alert = AL_PROBEUP;
                     if (p.sat_frac > 0 && ach[d] >= p.sat_frac * p.rate[d])
                         probe_period = fmin(probe_period, p.tick_s);  /* stay alert without running the Python rate loop */
+                }
+                /* A disappearing sender also causes an arrival drop. Ask the reflectors before
+                 * waking Python. The next tick or a delayed reply can still escalate immediately. */
+                if (!alert && (drop[0] || drop[1]) && now >= watch_until) {
+                    dl_collapse_at = drop[0] ? now : 0;
+                    confirm_until = watch_until = now + p.confirm_win;
+                    confirm_bad[0] = confirm_bad[1] = 0;
+                    confirm_burst(now, &seqc, pend);
                 }
                 if (!alert && now - last_probe >= probe_period - 0.5 * p.tick_s && G.nsock > 0) {
                     last_probe = now; send_probe(p.rr % G.nsock, &seqc, pend); p.rr++;
@@ -294,10 +312,11 @@ void *sentinel_thread(void *arg) {
                 pthread_mutex_lock(&G.mu);
                 G.st.rx = rx; G.st.tx = tx; G.st.t_counters = t_last;
                 G.st.ach[0] = ach[0]; G.st.ach[1] = ach[1]; G.st.peak[0] = peak[0]; G.st.peak[1] = peak[1];
-                G.st.alert = alert; G.fast = 1; fs = G.fast_s;
+                G.st.alert = alert; G.st.dl_collapse_at = dl_collapse_at; G.fast = 1; fs = G.fast_s;
                 pthread_mutex_unlock(&G.mu);
+                if (alert != AL_DELAY && alert != AL_COLLAPSE)
+                    for (int j = 0; j < G.nsock; j++) send_probe(j, &seqc, pend);
                 fast = 1; alert = 0; next_fprobe = now + fs;
-                for (int j = 0; j < G.nsock; j++) send_probe(j, &seqc, pend);   /* quick delay vote */
                 uint64_t one = 1; if (write(G.efd, &one, 8) < 0) { }
             }
         }

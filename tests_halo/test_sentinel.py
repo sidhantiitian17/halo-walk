@@ -208,14 +208,20 @@ def test_single_delayed_sample_does_not_alert(refl, tmp_path):
 
 
 def test_collapse_and_probe_up_alerts_use_the_params_python_hands_over(refl, tmp_path):
-    sent = _load(refl, tmp_path, n=1)
+    sent = _load(refl, tmp_path)
     try:
         p = _params()
         p.rate[0] = p.rmax[0] = 10.0
         p.peak[0], p.ach[0] = 8.0, 8.0                             # was loaded, the arrival rate is gone (lo is idle)
+        sent.set_fast(0.05)
+        refl.extra_ms = -60.0                                     # shift delay into the downlink
+        for i in range(4):
+            p.has_base_dl[i] = 1
         sent.arm(p)
         assert _wait_alert(sent) == S.AL_COLLAPSE
+        assert sent.state().dl_collapse_at > 0
         sent.disarm()
+        refl.extra_ms = 0.0
         p = _params()
         p.rate[0], p.rmax[0], p.hold_until[0] = 1.0, 100.0, 0.0     # room to probe upwards, hold expired, link loaded
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -233,7 +239,7 @@ def test_collapse_and_probe_up_alerts_use_the_params_python_hands_over(refl, tmp
             sent.disarm()
 
             # At the ceiling, sustained traffic increases the native probe cadence without an alert.
-            # Keep the reflector healthy while withdrawing the background traffic to test the wakeup.
+            # Stopping a sender should cause a check, but successful probes must leave Python asleep.
             p = _params(sat_frac=0.9, probe_s=1.0)
             p.rate[0] = p.rmax[0] = 1.0
             sent.arm(p)
@@ -245,7 +251,8 @@ def test_collapse_and_probe_up_alerts_use_the_params_python_hands_over(refl, tmp
             assert sent.ack_alert() == S.AL_NONE
             stopl.set()
             th.join()
-            assert _wait_alert(sent, 1.0) == S.AL_COLLAPSE
+            assert _wait_alert(sent, 0.8) == S.AL_NONE
+            assert any(event[0] == S.EV_BURST for event in sent.drain())
         finally:
             stopl.set(); th.join()
     finally:

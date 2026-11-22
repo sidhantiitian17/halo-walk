@@ -904,8 +904,8 @@ class Ctl:
             elif (e.rate < 0.999 * e.p.r_max and ach[d] >= 0.9 * e.p.load_thresh * e.rate
                   and now >= e.t_hold_until - 0.5):
                 hot = True                                   # about to probe upwards
-            elif collapsed(ach[d], e.rate, peak[d], e.p.collapse):
-                hot = True                                   # the arrival rate fell away: possible capacity loss
+            elif self.sent is None and collapsed(ach[d], e.rate, peak[d], e.p.collapse):
+                hot = True                                   # the native watcher corroborates a collapse itself
             elif self.sent is None and SAT_FRAC > 0 and ach[d] >= SAT_FRAC * e.rate:
                 hot = True                                   # fallback saturation monitoring
         if self.txn is not None or self.fsm == "VERIFYING":
@@ -977,9 +977,8 @@ class Ctl:
             nm = _sentinel.ALERTS.get(alert, alert)
             self.n_sent_alerts[nm] = self.n_sent_alerts.get(nm, 0) + 1
             self.event("sent_alert", why=nm, ach_dl=round(ach["dl"], 2), ach_ul=round(ach["ul"], 2))
-            if alert == _sentinel.AL_COLLAPSE and collapsed(ach["dl"], self.est["dl"].rate, peak["dl"],
-                                                            self.est["dl"].p.collapse):
-                self.est["dl"].t_native_collapse = st.t_counters
+            if alert == _sentinel.AL_COLLAPSE:
+                self.est["dl"].t_native_collapse = st.dl_collapse_at
             if alert in (_sentinel.AL_COLLAPSE, _sentinel.AL_PROBEUP):
                 gov.force(now)
         return alert, (st.rx, st.tx), st.t_counters

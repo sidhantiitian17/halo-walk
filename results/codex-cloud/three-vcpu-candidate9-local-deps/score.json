@@ -1,8 +1,8 @@
 {
-  "campaign_pass": null,
+  "campaign_pass": false,
   "run_counts": {
     "S2/C3": {
-      "observed": 2,
+      "observed": 3,
       "expected": 3
     },
     "CPU/C1": {
@@ -23,12 +23,12 @@
     "4": {
       "id": 4,
       "name": "S2 capacity step: adaptation, recovery, stability",
-      "value": "C3 T_adapt 2.15 s, recovery 6.1 s, 0.0 changes/min (medians, N=2)",
+      "value": "C3 T_adapt 2.10 s, recovery 10.1 s, 0.0 changes/min (medians, N=3)",
       "pass": false,
       "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
       "detail": {
         "C3": {
-          "n": 2,
+          "n": 3,
           "runs": [
             {
               "cap_down": 10.0,
@@ -59,37 +59,54 @@
               "changes_pre_down": 0,
               "changes_last15": 0,
               "changes_per_min": 0.0
+            },
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.486,
+              "low_phase_added_p99_ms": 161.409,
+              "low_phase_added_p95_ms": 100.349,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 2.1,
+              "t_settle_strict_s": 19.8,
+              "recovery_s": 11.327,
+              "telemetry_end_rel_s": 35.611,
+              "changes_pre_down": 0,
+              "changes_last15": 0,
+              "changes_per_min": 0.0
             }
           ],
-          "t_adapt_median_s": 2.15,
-          "recovery_median_s": 6.15,
+          "t_adapt_median_s": 2.1,
+          "recovery_median_s": 10.068,
           "changes_per_min_median": 0.0,
           "t_adapt_s": {
-            "n": 2,
-            "median": 2.15,
+            "n": 3,
+            "median": 2.1,
             "ci95": [
               2.1,
               2.2
             ],
             "values": [
               2.1,
-              2.2
+              2.2,
+              2.1
             ]
           },
           "recovery_s": {
-            "n": 2,
-            "median": 6.15,
+            "n": 3,
+            "median": 10.068,
             "ci95": [
               2.231,
-              10.068
+              11.327
             ],
             "values": [
               10.068,
-              2.231
+              2.231,
+              11.327
             ]
           },
           "changes_per_min": {
-            "n": 2,
+            "n": 3,
             "median": 0.0,
             "ci95": [
               0.0,
@@ -97,19 +114,21 @@
             ],
             "values": [
               0.0,
+              0.0,
               0.0
             ]
           },
           "low_phase_added_p99_ms": {
-            "n": 2,
-            "median": 173.243,
+            "n": 3,
+            "median": 170.92,
             "ci95": [
-              170.92,
+              161.409,
               175.566
             ],
             "values": [
               170.92,
-              175.566
+              175.566,
+              161.409
             ]
           },
           "pass": false

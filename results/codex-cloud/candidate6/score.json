@@ -1,0 +1,190 @@
+{
+  "campaign_pass": null,
+  "run_counts": {
+    "S2/C3": {
+      "observed": 1,
+      "expected": 3
+    },
+    "CPU/C1": {
+      "observed": 2,
+      "expected": 2
+    },
+    "CPU/C3": {
+      "observed": 1,
+      "expected": 2
+    },
+    "CPU/C4": {
+      "observed": 1,
+      "expected": 2
+    }
+  },
+  "controller_not_ready": [],
+  "measurements": {
+    "4": {
+      "id": 4,
+      "name": "S2 capacity step: adaptation, recovery, stability",
+      "value": "C3 T_adapt 2.30 s, recovery 17.8 s, 0.0 changes/min (medians, N=1)",
+      "pass": false,
+      "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
+      "detail": {
+        "C3": {
+          "n": 1,
+          "runs": [
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.565,
+              "low_phase_added_p99_ms": 165.189,
+              "low_phase_added_p95_ms": 86.614,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 2.3,
+              "t_settle_strict_s": null,
+              "recovery_s": 17.785,
+              "telemetry_end_rel_s": 35.018,
+              "changes_pre_down": 0,
+              "changes_last15": 0,
+              "changes_per_min": 0.0
+            }
+          ],
+          "t_adapt_median_s": 2.3,
+          "recovery_median_s": 17.785,
+          "changes_per_min_median": 0.0,
+          "t_adapt_s": {
+            "n": 1,
+            "median": 2.3,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              2.3
+            ]
+          },
+          "recovery_s": {
+            "n": 1,
+            "median": 17.785,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              17.785
+            ]
+          },
+          "changes_per_min": {
+            "n": 1,
+            "median": 0.0,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              0.0
+            ]
+          },
+          "low_phase_added_p99_ms": {
+            "n": 1,
+            "median": 165.189,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              165.189
+            ]
+          },
+          "pass": false
+        },
+        "capacity_steps_mbps": [
+          [
+            10.0,
+            50.0
+          ]
+        ]
+      }
+    },
+    "12": {
+      "id": 12,
+      "name": "Controller CPU cost",
+      "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core; C3 1.69% [CI n/a, N<2], N=1 of a core; C4 3.38% [CI n/a, N<2], N=1 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
+      "pass": false,
+      "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
+      "detail": {
+        "C1": {
+          "n": 2,
+          "median": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "values": [
+            0.0,
+            0.0
+          ]
+        },
+        "C3": {
+          "n": 1,
+          "median": 1.692,
+          "ci95": [
+            null,
+            null
+          ],
+          "values": [
+            1.692
+          ]
+        },
+        "C4": {
+          "n": 1,
+          "median": 3.382,
+          "ci95": [
+            null,
+            null
+          ],
+          "values": [
+            3.382
+          ]
+        },
+        "baseline_C1": 0.0,
+        "ncpu": [
+          2
+        ],
+        "softirq_pct": {
+          "C1": {
+            "n": 2,
+            "median": 52.309,
+            "ci95": [
+              51.762,
+              52.856
+            ],
+            "values": [
+              51.762,
+              52.856
+            ]
+          },
+          "C3": {
+            "n": 1,
+            "median": 58.729,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              58.729
+            ]
+          },
+          "C4": {
+            "n": 1,
+            "median": 58.881,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              58.881
+            ]
+          }
+        }
+      }
+    }
+  }
+}

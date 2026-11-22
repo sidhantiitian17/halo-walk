@@ -1,0 +1,8 @@
+{"mode": {"plan_dl": 50.0, "plan_ul": 10.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 20.0, "safe_ul": 4.0, "autorate": 1, "classifier": "heur", "model": "/tmp/candidate6/halo/model.pkl", "collect": false, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "quiet_probe_hz": 2.0, "quiet_tick": 0.25, "sentinel": 1, "sentinel_lib": "", "health_s": 5.0, "out": "/tmp/candidate6/results/raw/CPU/C3/r02/ctl", "nice": 10}, "t": 1795385353.1115, "kind": "start"}
+{"lkg": "08622e7c6c2fe6e5", "why": "initial", "t": 1795385353.2784, "kind": "commit"}
+{"msg": "C calm-mode thread loaded", "t": 1795385353.2956, "kind": "sentinel"}
+{"probes": 0, "ticks": 49, "ticks_full": 46, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {}, "cpu_main": 1.18, "cpu_slow": 0.04, "cpu_poll": 0.03, "slow_runs": 3, "slow_polls": 3, "ct_in_c": true, "t": 1795385366.1492, "kind": "gov"}
+{"key": ["udp", "10.0.0.10", 35974, "10.9.0.2", 3478], "cls": "call", "p": 1.0, "abstain": false, "tin": 4, "stage": 1, "age": 0.14, "t": 1795385367.0223, "kind": "classify"}
+{"probes": 0, "ticks": 52, "ticks_full": 46, "bursts": 1, "to_full": 0, "sentinel": true, "sent_alerts": {}, "cpu_main": 1.24, "cpu_slow": 0.17, "cpu_poll": 0.04, "slow_runs": 17, "slow_polls": 5, "ct_in_c": true, "t": 1795385378.573, "kind": "gov"}
+{"why": "delay", "ach_dl": 38.43, "ach_ul": 1.56, "t": 1795385381.7422, "kind": "sent_alert"}
+{"probes": 0, "ticks": 64, "ticks_full": 55, "bursts": 3, "to_full": 1, "sentinel": true, "sent_alerts": {"delay": 1}, "cpu_main": 1.34, "cpu_slow": 0.25, "cpu_poll": 0.08, "slow_runs": 20, "slow_polls": 8, "ct_in_c": true, "t": 1795385390.8904, "kind": "gov"}

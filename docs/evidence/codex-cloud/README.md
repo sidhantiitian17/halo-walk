@@ -50,3 +50,5 @@ Each experimental revision has a separate directory under [results/codex-cloud](
 The original evidence campaign used Ubuntu 6.8. This Debian guest is a separate measurement environment. Compare baseline and candidate within the cloud guest. The original results remain in `results/raw`.
 
 The second guest reproduced the kernel preflight. Its diagnostic C4 run began traffic before the model finished loading, so the scorer excludes its CPU number. The batch helper now warms dependency imports before its first C4 run. The scorer checks that adaptive-controller telemetry started before the workload.
+
+The 22 tracked source and model files in each guest input bundle were byte-compared with its source revision. See [native build fingerprints](native-builds.txt) and [unchanged harness and scorer fingerprints](unchanged-files.sha256). The separate setup diagnostic overlapped part of the candidate4 campaign. The candidate6 and candidate7 campaigns ran without the diagnostic guest.

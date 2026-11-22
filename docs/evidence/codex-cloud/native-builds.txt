@@ -1,0 +1,15 @@
+gcc (Debian 14.2.0-19) 14.2.0
+Compiler flags from Makefile
+CFLAGS ?= -O2 -Wall -Wextra -fPIC -pthread
+Guest vCPUs 2
+Host cgroup cpu.max 400000 100000
+
+SHA-256 of native shared library in each guest input bundle
+b28e15f980b422585bf11793ab02fea1d7cef5b3e7246aa4f61bbd4c8d639da1  baseline.tar
+998a2478e63b502a04ae1415b70ab1984c926d574ca0e13762bec6df7c56fa3d  candidate.tar
+83cdf6113a02840c6f53e0562d9cb57dd9699793446f6fada0fc8dc2ac82f6e5  candidate2.tar
+83cdf6113a02840c6f53e0562d9cb57dd9699793446f6fada0fc8dc2ac82f6e5  candidate3.tar
+21cf7401aa42838da3463643ea4d8dfa043fad130d3de856acf81d7a0c64b942  candidate4.tar
+4c15b5bebd0ea70f30681e8feb564128b12f199bf32f705bdb23d2274e7156fa  candidate5.tar
+7b66c3c3c1191a72ef6b662ef500661847f210ea323d08312930f5f92e674e9b  candidate6.tar
+06f21c38a8e48e114702432283e727f2e8fd51fc6749a9d6afc2d140149bbc51  candidate7.tar

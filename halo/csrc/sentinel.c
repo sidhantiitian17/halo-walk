@@ -298,7 +298,7 @@ void *sentinel_thread(void *arg) {
                 uint64_t nrx = rd_ctr(G.fd_rx);
                 double dt = now - t_last;
                 double arrival = (double)(nrx - rx) * 8 / dt / 1e6;
-                if (arrival >= 0.10 * p.rate[0] && arrival < 0.5 * p.rate[0]) {
+                if (arrival >= 0.10 * p.rate[0] && arrival < p.collapse * p.rate[0]) {
                     /* Check delivery between normal ticks when the downlink was saturated.
                      * Read the other direction and publish counters only on a suspected loss. */
                     uint64_t ntx = rd_ctr(G.fd_tx);
@@ -352,7 +352,7 @@ void *sentinel_thread(void *arg) {
                 }
                 /* Qualify a sharp delivery drop in the native watcher. A sender finishing can
                  * lower the counters without congestion and does not need the Python fast loop. */
-                if (!alert && !drop_check && drop[0] && inst[0] < 0.5 * p.rate[0]) {
+                if (!alert && !drop_check && drop[0] && inst[0] < p.collapse * p.rate[0]) {
                     dl_collapse_at = now;
                     drop_check_until = watch_until = now + p.confirm_win;
                     delayed_reflectors = 0;

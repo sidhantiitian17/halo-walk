@@ -1,0 +1,11 @@
+Linux (none) 6.12.118+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.118-1 (2026-11-20) x86_64 GNU/Linux
+iperf 3.18 (cJSON 1.7.15)
+Linux (none) 6.12.118+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.118-1 (2026-11-20) x86_64
+Optional features available: CPU affinity setting, IPv6 flow label, SCTP, TCP congestion algorithm setting, sendfile / zerocopy, socket pacing, authentication, bind to device, support IPv4 don't fragment, POSIX threads
+tsc hpet acpi_pm 
+20 start clocksource: tsc
+20 end clocksource: tsc
+50 start clocksource: tsc
+50 end clocksource: tsc
+100 start clocksource: tsc
+100 end clocksource: tsc

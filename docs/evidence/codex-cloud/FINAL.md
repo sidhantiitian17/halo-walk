@@ -1,21 +1,58 @@
 # HALO-Walk Codex Cloud acceptance report
 
-**Overall result: FAIL.** The three-vCPU Debian guest ran the untouched S2 and CPU benchmarks against controller revision `ee51eeafc96bcbe920c27e97045f2a4ea9e811b0`. All three S2 repetitions, both static controls and both repetitions of each adaptive CPU variant are in the evidence. [Raw runs, packet timing profiles and original scores](../../../results/codex-cloud/severe-drop-followup)
+**Overall status: FAIL.** M4 and both M12 CPU variants passed together on
+controller revision `d2165baf23279766ff8bfb1a2527313f760f3357` in the pinned
+three vCPU Debian 6.12.118 QEMU guest. M1 fidelity remained below threshold
+in the same guest. [Original scores and raw runs](../../../results/codex-cloud/timely-recovery)
 
-| Check | Limit | Measured median | Result |
+| Check | Original limit | Measured | Verdict |
 |---|---:|---:|---|
-| M4 adaptation | ≤2.00 s | 2.00 s | PASS |
-| M4 recovery | ≤30 s | Never reached | FAIL |
-| M4 steady-state rate changes | ≤6/min | 1.71/min | PASS |
-| M12 heuristic CPU above static CAKE | ≤2% of one core | 1.98% | PASS |
-| M12 ML CPU above static CAKE | ≤2% of one core | 3.88% | FAIL |
+| M4 adaptation median | ≤2.00 s | 1.90 s | PASS |
+| M4 recovery median | ≤30 s | 15.35 s | PASS |
+| M4 steady rate changes median | ≤6/min | 0/min | PASS |
+| M12 heuristic CPU above static CAKE | ≤2% of one core | 1.53% | PASS |
+| M12 ML CPU above static CAKE | ≤2% of one core | 1.62% | PASS |
+| M1 throughput at 100 Mbit/s, pinned guest | ≥96 Mbit/s | 90.36 Mbit/s | FAIL |
 
-M4 adaptation was never reached, 1.80 s and 2.00 s across the three repetitions. Recovery was never reached, 15.67 s and never reached. In the first repetition the nominal 18-second capacity step occurred at 26.14 s. In the third, the controller reached 29.72 Mbit/s after the capacity step back up, while the last ten one-second bulk intervals delivered 15.7–18.9 Mbit/s. The achieved load was below the controller's threshold for probing higher. The two ML CPU repetitions used 2.15% and 5.62%. In the higher-CPU run the controller cut the shaper from 39.08 to 8.17 Mbit/s during a delivery dip and spent the remaining part of that episode probing back up. [S2 and CPU traces](../../../results/codex-cloud/severe-drop-followup/results/raw)
+M4 used three repetitions. Adaptation was 1.90, 1.80 and 2.90 s, so the
+passing median had 0.10 s of margin. Recovery was 15.35, 15.83 and 15.05 s.
+Every repetition had zero steady rate changes. In the 2.90 s outlier the
+first cut was applied 129 ms after the recorded step and the shaper entered
+the target band at 0.90 s. Delayed call packets still affected the scorer's
+one second latency window. The second repetition logged a 397 ms sentinel
+sampling interval and used ordinary confirmation. [Packet timing and controller events](../../../results/codex-cloud/timely-recovery/s2-live-profile.json)
 
-The earlier `a84df7f` revision passed M4 at a 1.80 s median, with 15.15 s recovery and 0.0 changes/min, and failed both CPU gates. The earlier `6f6005e` revision passed both CPU gates at 1.67% and 1.80%, and missed M4 adaptation at 2.10 s. These are separate campaigns. [M4-passing campaign](../../../results/codex-cloud/m4-calm-replay) · [CPU-passing campaign](../../../results/codex-cloud/three-vcpu-candidate9-local-deps)
+M12 used two static controls and two repetitions of each adaptive variant.
+Heuristic used 1.69% and 1.37%, and ML used 1.52% and 1.73%. Both static
+controls contributed 0% controller CPU. All nine targeted runs were included.
+[CPU raw evidence](../../../results/codex-cloud/timely-recovery/results/raw/CPU)
 
-The managed host reported `CapEff: 0000000000000000`, `CapBnd: 0000000000000000` and no `/dev/kvm`. Rootless QEMU TCG booted Linux and passed the actual namespace, veth, CAKE and NetEm checks. At the 100 Mbit/s fidelity setting, two Debian trials delivered 94.33 and 89.39 Mbit/s against the original allowable rate error of ±4%. The Ubuntu kernel and iperf3 3.16 delivered 59.15 Mbit/s under QEMU 10. Under QEMU 8.2 they delivered 43.15 Mbit/s at the 50 Mbit/s setting and hit the execution timeout at 100 Mbit/s. [Host output](host-preflight.txt) · [Debian preflight](restarted-guest-preflight.txt) · [Fidelity evidence](README.md#original-kernel-comparison)
+The controller now shares a load gate with the native sentinel and can
+probe toward previously demonstrated clear delivery after evidence of
+recovery. A missed native sample deadline uses ordinary confirmation before
+a severe loss decision. The classifier uses the existing XGBoost booster
+for supported probability models and preserves calibration. On 2,039
+captured classifier inputs, the faster inference path reduced measured
+inference CPU by about 20% with identical calibrated outputs.
+[Controller comparison and inference profile](BOUNDED-RECOVERY.md)
 
-The final fidelity diagnostic changed only the traffic-generator version to iperf3 3.16 on the three-vCPU Debian guest. The original scorer passed the 20 Mbit/s run at 20.00 Mbit/s and failed the 50 and 100 Mbit/s runs at 42.97 and 83.19 Mbit/s. The original generator version therefore failed to resolve the throughput deficit in this environment. [Version output, raw captures and original score](../../../results/codex-cloud/debian-iperf316-fidelity)
+The 100 Mbit/s fidelity workload uses HTB and NetEm without HALO or CAKE.
+Five tested profiles delivered 56.59 to 93.22 Mbit/s. The previous best
+94.33 Mbit/s also falls short. The separate diagnostic with the original
+160 Mbit/s request recorded only 92.9 Mbit/s of sender payload in the pinned
+guest and zero HTB drops at all snapshots. The raw capture also reported
+zero kernel drops. The four vCPU diagnostic also fell short of its offered
+load and spent about 84% of one core in kernel CPU time on the sender over
+the sampled interval. The managed host returned `Operation not permitted`
+for network namespace creation and exposed no `/dev/kvm`. The guest
+therefore used QEMU TCG to run the real Linux stack. The pinned guest
+retained TSC throughout the M4 and M12 campaign. [M1 raw evidence and diagnosis](FIDELITY-FOLLOWUP.md) ·
+[Clocksource log](../../../results/codex-cloud/timely-recovery/clock-post-run.txt)
 
-The same controller revision passed the complete HALO-Walk regression suite with 329 passed and one expected failure. Git comparison against the imported version verified the original scenario, rig, analysis and workload-list files. The full M1–M12 matrix remains pending because no tested revision cleared M4 and both M12 gates together. [Regression output](severe-drop-regression.txt) · [Matrix reproduction](README.md#repeat-the-full-matrix)
+The HALO-Walk regression suite ran 331 passing checks and one expected
+failure. The older host suite encountered the same twelve environment
+failures on the starting and final controller revisions. Git verified the
+original scenario, rig, scorer and workload lists against the import. The
+full M1–M12 matrix remains pending because M1 did not clear its original
+fidelity gate. [Regression evidence](../../../results/codex-cloud/timely-evidence) ·
+[Reproduction](README.md) · [Previous report](EE51-ACCEPTANCE.md)

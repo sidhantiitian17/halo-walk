@@ -1,0 +1,13 @@
+Mon Nov 23 04:41:23 UTC 2026
+console=ttyS0 rdinit=/init quiet panic=1
+838.44 1263.05
+tsc hpet acpi_pm 
+tsc
+[    0.128999] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+[    0.424662] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.458565] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+[    0.492642] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x2127794b7e4, max_idle_ns: 440795254733 ns
+[    1.741109] clocksource: Switched to clocksource tsc-early
+[    1.854797] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    2.989926] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x212793982db, max_idle_ns: 440795293883 ns
+[    2.990355] clocksource: Switched to clocksource tsc

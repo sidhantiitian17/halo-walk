@@ -13,6 +13,7 @@ without starting the controller or installing CAKE. [Rig and original test](../.
 | Fresh three vCPU | 19.22 | 49.73 | 93.22 | FAIL |
 | Fresh single vCPU | 19.89 | 47.68 | 80.99 | FAIL |
 | Fresh three vCPU, pinned | 20.00 | 49.94 | 90.36 | FAIL |
+| Fresh four vCPU | 19.99 | 42.28 | 56.59 | FAIL |
 
 The minimum at the 100 Mbit/s setting is 96 Mbit/s. The existing long running
 guest had switched from TSC to HPET after a 2.67 ms TSC watchdog read-back
@@ -21,13 +22,16 @@ every tested rate and still missed throughput. The original 94.33 Mbit/s
 best remains below acceptance. [Existing guest](../../../results/codex-cloud/fidelity-current) ·
 [Fresh three vCPU](../../../results/codex-cloud/fidelity-fresh-3vcpu) ·
 [Fresh one vCPU](../../../results/codex-cloud/fidelity-fresh-1vcpu) ·
-[Pinned three vCPU](../../../results/codex-cloud/fidelity-fresh-3vcpu-pinned)
+[Pinned three vCPU](../../../results/codex-cloud/fidelity-fresh-3vcpu-pinned) ·
+[Fresh four vCPU](../../../results/codex-cloud/fidelity-fresh-4vcpu)
 
 An additional diagnostic repeated the same 100 Mbit/s traffic command and
 recorded sender throughput, modem backlog, and capture loss. Sender payload
 throughput was 83.1 Mbit/s on three fresh vCPUs, 77.0 Mbit/s on one, and
-92.9 Mbit/s on three pinned vCPUs. The sampler logged zero HTB drops at
-each snapshot in all three runs, and tcpdump reported zero kernel capture
+92.9 Mbit/s on three pinned vCPUs. The four vCPU diagnostic reached 85.1
+Mbit/s and spent about 84% of a core in kernel CPU time across the sampled
+2.71 seconds, plus about 4% in userspace. The sampler logged zero HTB drops
+at each snapshot, and tcpdump reported zero kernel capture
 drops. The sender could not sustain the requested load in these runs, and
 the qdisc did not have a constant backlog of offered packets. The original
 M1 JSON and these diagnostics are stored separately because the counter

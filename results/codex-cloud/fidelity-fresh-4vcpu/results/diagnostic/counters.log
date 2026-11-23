@@ -1,0 +1,101 @@
+class htb 1:1 root leaf 10: prio 0 quantum 1514 rate 100Mbit ceil 100Mbit linklayer ethernet burst 62500b/1mpu 0b cburst 62500b/1mpu 0b level 0 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+ lended: 0 borrowed: 0 giants: 0
+ tokens: 78125 ctokens: 78125
+
+1795409048.084836827
+sender process: 1100 (iperf3) S 926 925 0 0 -1 4194560 446 0 0 0 2 27 0 0 20 0 2 0 12480 19750912 1101 18446744073709551615 94897240637440 94897240638933 140735671281120 0 0 0 0 4100 16387 0 0 0 17 2 0 0 0 0 0 94897240648944 94897240649744 94897422254080 140735671283521 140735671283573 140735671283573 140735671283688 0
+cpu  1161 0 5333 32402 0 0 908 0 0 0
+cpu0 405 0 1002 8576 0 0 146 0 0 0
+cpu1 228 0 1454 8011 0 0 242 0 0 0
+cpu2 211 0 1694 7383 0 0 282 0 0 0
+cpu3 316 0 1182 8430 0 0 236 0 0 0
+qdisc htb 1: root refcnt 5 r2q 10 default 0x1 direct_packets_stat 1 direct_qlen 1000
+ Sent 3427196 bytes 2388 pkt (dropped 0, overlimits 857 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 3427066 bytes 2387 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether a2:ec:25:34:e3:11 brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+       3867962    2701      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1558      17      0       0       0       0 
+1795409048.789560758
+sender process: 1100 (iperf3) S 926 925 0 0 -1 4194560 446 0 0 0 5 86 0 0 20 0 2 0 12480 19750912 1101 18446744073709551615 94897240637440 94897240638933 140735671281120 0 0 0 0 4100 16387 0 0 0 17 2 0 0 0 0 0 94897240648944 94897240649744 94897422254080 140735671283521 140735671283573 140735671283573 140735671283688 0
+cpu  1169 0 5376 32565 0 0 952 0 0 0
+cpu0 407 0 1008 8626 0 0 155 0 0 0
+cpu1 229 0 1464 8052 0 0 254 0 0 0
+cpu2 214 0 1709 7417 0 0 290 0 0 0
+cpu3 318 0 1194 8469 0 0 251 0 0 0
+qdisc htb 1: root refcnt 5 r2q 10 default 0x1 direct_packets_stat 1 direct_qlen 1000
+ Sent 10951552 bytes 7606 pkt (dropped 0, overlimits 3172 requeues 0) 
+ backlog 92288b 64p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 10952864 bytes 7606 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 90846b 63p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether a2:ec:25:34:e3:11 brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+      11387992    7916      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1558      17      0       0       0       0 
+1795409049.455049012
+sender process: 1100 (iperf3) S 926 925 0 0 -1 4194560 446 0 0 0 7 141 0 0 20 0 2 0 12480 19750912 1101 18446744073709551615 94897240637440 94897240638933 140735671281120 0 0 0 0 4100 16387 0 0 0 17 2 0 0 0 0 0 94897240648944 94897240649744 94897422254080 140735671283521 140735671283573 140735671283573 140735671283688 0
+cpu  1176 0 5417 32719 0 0 999 0 0 0
+cpu0 408 0 1014 8677 0 0 158 0 0 0
+cpu1 230 0 1470 8098 0 0 261 0 0 0
+cpu2 216 0 1724 7444 0 0 308 0 0 0
+cpu3 321 0 1208 8498 0 0 270 0 0 0
+qdisc htb 1: root refcnt 5 r2q 10 default 0x1 direct_packets_stat 1 direct_qlen 1000
+ Sent 18519168 bytes 12854 pkt (dropped 0, overlimits 5857 requeues 0) 
+ backlog 1442b 1p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 18520480 bytes 12854 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether a2:ec:25:34:e3:11 brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+      18778242   13041      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1558      17      0       0       0       0 
+1795409050.116362333
+sender process: 1100 (iperf3) S 926 925 0 0 -1 4194560 446 0 0 0 11 196 0 0 20 0 2 0 12480 19750912 1101 18446744073709551615 94897240637440 94897240638933 140735671281120 0 0 0 0 4100 16387 0 0 0 17 2 0 0 0 0 0 94897240648944 94897240649744 94897422254080 140735671283521 140735671283573 140735671283573 140735671283688 0
+cpu  1185 0 5461 32876 0 0 1040 0 0 0
+cpu0 411 0 1022 8719 0 0 168 0 0 0
+cpu1 232 0 1485 8132 0 0 272 0 0 0
+cpu2 218 0 1736 7482 0 0 321 0 0 0
+cpu3 323 0 1218 8542 0 0 277 0 0 0
+qdisc htb 1: root refcnt 5 r2q 10 default 0x1 direct_packets_stat 1 direct_qlen 1000
+ Sent 26356438 bytes 18289 pkt (dropped 0, overlimits 8515 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 26356308 bytes 18288 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether a2:ec:25:34:e3:11 brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+      26846232   18636      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1558      17      0       0       0       0 
+1795409050.793617811
+sender process: 1100 (iperf3) S 926 925 0 0 -1 4194560 446 0 0 0 13 255 0 0 20 0 2 0 12480 19750912 1101 18446744073709551615 94897240637440 94897240638933 140735671281120 0 0 0 0 4100 16387 0 0 0 17 1 0 0 0 0 0 94897240648944 94897240649744 94897422254080 140735671283521 140735671283573 140735671283573 140735671283688 0
+cpu  1192 0 5514 33035 0 0 1080 0 0 0
+cpu0 412 0 1034 8766 0 0 172 0 0 0
+cpu1 236 0 1498 8173 0 0 281 0 0 0
+cpu2 218 0 1748 7522 0 0 331 0 0 0
+cpu3 325 0 1233 8572 0 0 295 0 0 0
+qdisc htb 1: root refcnt 5 r2q 10 default 0x1 direct_packets_stat 1 direct_qlen 1000
+ Sent 34486434 bytes 23927 pkt (dropped 0, overlimits 11569 requeues 0) 
+ backlog 147084b 102p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 34486304 bytes 23926 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 147084b 102p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether a2:ec:25:34:e3:11 brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+      34751276   24118      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1558      17      0       0       0       0 

@@ -1,0 +1,46 @@
+{
+  "id": 1,
+  "name": "Rig fidelity (20/50/100 Mbit/s)",
+  "value": "20 Mbit/s: err -0.0%, p99 dev 700 us (MTU 606 us) adopted PASS / strict FAIL; 50 Mbit/s: err -15.4%, p99 dev 1687 us (MTU 242 us) adopted FAIL / strict FAIL; 100 Mbit/s: err -43.4%, p99 dev 1523 us (MTU 121 us) adopted FAIL / strict FAIL",
+  "pass": false,
+  "criterion": "adopted: |rate error| <= 4% AND p99 inter-dequeue deviation <= 5 ms at 20, 50 and 100 Mbit/s (strict Mininet-HiFi: p99 deviation <= 1 MTU serialisation time, reported separately)",
+  "detail": {
+    "per_rate": {
+      "20": {
+        "n_files": 1,
+        "rate_err_pct": -0.034,
+        "dev_p95_us": 534.2,
+        "dev_p99_us": 700.2,
+        "mtu_time_us": 605.6,
+        "cpu_idle_pct": 88.1,
+        "strict_pass": false,
+        "adopted_pass": true
+      },
+      "50": {
+        "n_files": 1,
+        "rate_err_pct": -15.447,
+        "dev_p95_us": 324.1,
+        "dev_p99_us": 1687.4,
+        "mtu_time_us": 242.2,
+        "cpu_idle_pct": 79.3,
+        "strict_pass": false,
+        "adopted_pass": false
+      },
+      "100": {
+        "n_files": 1,
+        "rate_err_pct": -43.41,
+        "dev_p95_us": 288.8,
+        "dev_p99_us": 1522.6,
+        "mtu_time_us": 121.1,
+        "cpu_idle_pct": 83.4,
+        "strict_pass": false,
+        "adopted_pass": false
+      }
+    },
+    "strict_pass_all": false,
+    "thresholds": {
+      "rate_err_pct": 4.0,
+      "dev_p99_us": 5000.0
+    }
+  }
+}

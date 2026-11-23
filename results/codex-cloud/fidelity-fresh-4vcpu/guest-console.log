@@ -1,0 +1,12 @@
+c[?7l[2J[0mSeaBIOS (version 1.16.3-debian-1.16.3-2)
+Booting from ROM...
+c[?7l[2JHALO_GUEST_READY 6.12.118+deb13-amd64 4 CPUs
+qdisc netem 8002: dev [36mcheck1 [0mroot refcnt 5 limit 1000 delay 10ms seed 10593389163295094433
+qdisc cake 8001: dev [36mcheck0 [0mroot refcnt 5 bandwidth 100Mbit diffserv3 triple-isolate nonat nowash no-ack-filter split-gso rtt 100ms raw overhead 0 
+HALO_FIDELITY fidelity-fresh-4vcpu 20
+{'rate': 20.0, 'pkts': 7449, 'measured_mbit': 19.99, 'rate_err_pct': -0.03, 'mtu_time_us': 605.6, 'dev_p50_us': 49.89, 'dev_p95_us': 534.23, 'dev_p99_us': 700.17, 'cpu_idle_pct': 88.08, 'pass': False}
+HALO_FIDELITY fidelity-fresh-4vcpu 50
+{'rate': 50.0, 'pkts': 15171, 'measured_mbit': 42.28, 'rate_err_pct': -15.45, 'mtu_time_us': 242.24, 'dev_p50_us': 91.38, 'dev_p95_us': 324.08, 'dev_p99_us': 1687.36, 'cpu_idle_pct': 79.35, 'pass': False}
+HALO_FIDELITY fidelity-fresh-4vcpu 100
+{'rate': 100.0, 'pkts': 20688, 'measured_mbit': 56.59, 'rate_err_pct': -43.41, 'mtu_time_us': 121.12, 'dev_p50_us': 106.54, 'dev_p95_us': 288.76, 'dev_p99_us': 1522.58, 'cpu_idle_pct': 83.37, 'pass': False}
+rig up: down=100.0mbit up=20.0mbit delay=10ms/dir buffer=1500000B

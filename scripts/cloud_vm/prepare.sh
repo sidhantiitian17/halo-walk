@@ -32,8 +32,9 @@ for package in apt/guest/*.deb; do dpkg-deb -x "$package" guest; done
 mkdir -p guest/{proc,sys,dev,run,tmp,workspace,exchange}
 ln -sfn bash guest/usr/bin/sh
 ln -sfn gawk guest/usr/bin/awk
-printf 'root:x:0:0:root:/root:/bin/bash\n' > guest/etc/passwd
-printf 'root:x:0:\n' > guest/etc/group
+# Package extraction skips the tcpdump post-install account setup.
+printf 'root:x:0:0:root:/root:/bin/bash\ntcpdump:x:101:101::/nonexistent:/usr/sbin/nologin\n' > guest/etc/passwd
+printf 'root:x:0:\ntcpdump:x:101:\n' > guest/etc/group
 printf 'hosts: files dns\n' > guest/etc/nsswitch.conf
 kernel_version=$(find guest/boot -name 'vmlinuz-*' -printf '%f\n' | sort -V | tail -n1)
 ln -sfn "boot/$kernel_version" guest/kernel

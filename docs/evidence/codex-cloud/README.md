@@ -123,9 +123,12 @@ In the packet-tap repetition, 13,246 call packets matched at modem ingress, gate
 | `m4-quorum` | 2.00, 2.10, 2.10 | 2.04% | 5.56% | Fail |
 | `m4-native` | 2.10, never, 2.20 | 2.10% | 2.55% | Fail |
 | `m4-shared-threshold` | 2.60, 2.30, 1.50 | 2.32% | 2.24% | Fail |
+| `m4-fresh-delivery` | never, never, 1.70 | 4.21% | 16.05% | Fail |
 
 In the native midpoint campaign, the failed S2 run had cut rates before the capacity step following late-probe alerts. In the CPU runs, the native thread reached 1.56% of a core in one heuristic repetition and 1.75% in one ML repetition. Both were measured inside the original process-wide CPU window. See the [quorum evidence](../../../results/codex-cloud/m4-quorum) and [native evidence](../../../results/codex-cloud/m4-native).
 
 The widened native detector made the first cut within 26 ms of the harness marker in all three repetitions. Two runs still estimated initial capacity above 22 Mbit/s and cut initially to 6.6–6.8 Mbit/s. The 1.50 s run initially estimated 14.6 Mbit/s and cut to 4.38 Mbit/s. See the [widened-detector runs](../../../results/codex-cloud/m4-shared-threshold).
+
+The fresh-sample detector applied its first cut 83 ms after the marker and entered the rate band at 0.80 s in the 1.70 s repetition. Its first repetition instead confirmed a drop using a sample 2.90 s old, beyond the 0.40 s confirmation window. One heuristic CPU repetition made a rate cut during routine replay while the native watcher had withheld an alert. All three M4 repetitions and all six CPU and control runs are included in the failed campaign. See the [fresh-sample evidence](../../../results/codex-cloud/m4-fresh-delivery).
 
 The first fidelity capture was empty because package extraction had skipped creating the Debian `tcpdump` account. An independent run confirmed that the original `iperf3` flow reached the receiver and that HTB dequeued packets while `tcpdump` reported `Couldn't find user 'tcpdump'`. After installing the account, the original scorer passed 20 and 50 Mbit/s under the adopted criterion. The 100 Mbit/s test measured 94.33 Mbit/s and failed the ±4% limit. See the [capture diagnostic](../../../results/codex-cloud/m1-platform-diagnostic) and [fidelity repetitions](../../../results/codex-cloud/m1-platform-fixed).

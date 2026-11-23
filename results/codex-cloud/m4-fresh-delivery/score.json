@@ -1,0 +1,232 @@
+{
+  "campaign_pass": false,
+  "run_counts": {
+    "S2/C3": {
+      "observed": 3,
+      "expected": 3
+    },
+    "CPU/C1": {
+      "observed": 2,
+      "expected": 2
+    },
+    "CPU/C3": {
+      "observed": 2,
+      "expected": 2
+    },
+    "CPU/C4": {
+      "observed": 2,
+      "expected": 2
+    }
+  },
+  "controller_not_ready": [],
+  "measurements": {
+    "4": {
+      "id": 4,
+      "name": "S2 capacity step: adaptation, recovery, stability",
+      "value": "C3 T_adapt never, recovery never, 3.4 changes/min (medians, N=3)",
+      "pass": false,
+      "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
+      "detail": {
+        "C3": {
+          "n": 3,
+          "runs": [
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.606,
+              "low_phase_added_p99_ms": 1691.513,
+              "low_phase_added_p95_ms": 1025.412,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": null,
+              "t_adapt_note": "not reached before rate_up",
+              "t_settle_strict_s": null,
+              "recovery_s": null,
+              "telemetry_end_rel_s": 46.329,
+              "recovery_note": "r_dl never reached 42.75 Mbit/s after rate_up (data ends 46.3 s after rate_up)",
+              "changes_pre_down": 0,
+              "changes_last15": 2,
+              "changes_per_min": 3.429
+            },
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 11.822,
+              "low_phase_added_p99_ms": 1354.8,
+              "low_phase_added_p95_ms": 809.914,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": null,
+              "t_adapt_note": "not reached before rate_up",
+              "t_settle_strict_s": null,
+              "recovery_s": null,
+              "telemetry_end_rel_s": 37.874,
+              "recovery_note": "r_dl never reached 42.75 Mbit/s after rate_up (data ends 37.9 s after rate_up)",
+              "changes_pre_down": 4,
+              "changes_last15": 17,
+              "changes_per_min": 36.0
+            },
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.549,
+              "low_phase_added_p99_ms": 138.132,
+              "low_phase_added_p95_ms": 58.46,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 1.7,
+              "t_settle_strict_s": null,
+              "recovery_s": 11.292,
+              "telemetry_end_rel_s": 35.509,
+              "changes_pre_down": 0,
+              "changes_last15": 0,
+              "changes_per_min": 0.0
+            }
+          ],
+          "t_adapt_median_s": null,
+          "recovery_median_s": null,
+          "changes_per_min_median": 3.429,
+          "t_adapt_s": {
+            "n": 1,
+            "median": 1.7,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              1.7
+            ]
+          },
+          "recovery_s": {
+            "n": 1,
+            "median": 11.292,
+            "ci95": [
+              null,
+              null
+            ],
+            "values": [
+              11.292
+            ]
+          },
+          "changes_per_min": {
+            "n": 3,
+            "median": 3.429,
+            "ci95": [
+              0.0,
+              36.0
+            ],
+            "values": [
+              3.429,
+              36.0,
+              0.0
+            ]
+          },
+          "low_phase_added_p99_ms": {
+            "n": 3,
+            "median": 1354.8,
+            "ci95": [
+              138.132,
+              1691.513
+            ],
+            "values": [
+              1691.513,
+              1354.8,
+              138.132
+            ]
+          },
+          "pass": false
+        },
+        "capacity_steps_mbps": [
+          [
+            10.0,
+            50.0
+          ]
+        ]
+      }
+    },
+    "12": {
+      "id": 12,
+      "name": "Controller CPU cost",
+      "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core; C3 4.21% [95% CI 1.55, 6.86], N=2 of a core; C4 16.05% [95% CI 2.18, 29.93], N=2 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
+      "pass": false,
+      "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
+      "detail": {
+        "C1": {
+          "n": 2,
+          "median": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "values": [
+            0.0,
+            0.0
+          ]
+        },
+        "C3": {
+          "n": 2,
+          "median": 4.205,
+          "ci95": [
+            1.553,
+            6.858
+          ],
+          "values": [
+            6.858,
+            1.553
+          ]
+        },
+        "C4": {
+          "n": 2,
+          "median": 16.052,
+          "ci95": [
+            2.179,
+            29.926
+          ],
+          "values": [
+            2.179,
+            29.926
+          ]
+        },
+        "baseline_C1": 0.0,
+        "ncpu": [
+          3
+        ],
+        "softirq_pct": {
+          "C1": {
+            "n": 2,
+            "median": 51.699,
+            "ci95": [
+              48.469,
+              54.928
+            ],
+            "values": [
+              48.469,
+              54.928
+            ]
+          },
+          "C3": {
+            "n": 2,
+            "median": 54.57,
+            "ci95": [
+              53.012,
+              56.128
+            ],
+            "values": [
+              56.128,
+              53.012
+            ]
+          },
+          "C4": {
+            "n": 2,
+            "median": 39.997,
+            "ci95": [
+              22.356,
+              57.639
+            ],
+            "values": [
+              57.639,
+              22.356
+            ]
+          }
+        }
+      }
+    }
+  }
+}

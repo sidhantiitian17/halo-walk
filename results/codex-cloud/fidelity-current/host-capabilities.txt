@@ -1,0 +1,6 @@
+CapEff:	0000000000000000
+CapBnd:	0000000000000000
+uid=1000(agent) gid=1000(agent) groups=1000(agent)
+ls: cannot access '/dev/kvm': No such file or directory
+unshare: unshare failed: Operation not permitted
+400000 100000

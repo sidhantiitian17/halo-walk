@@ -1,0 +1,9 @@
+vCPU 0, CPU 0
+pid 51796's current affinity list: 0-4
+pid 51796's new affinity list: 0
+vCPU 1, CPU 2
+pid 51797's current affinity list: 0-4
+pid 51797's new affinity list: 2
+vCPU 2, CPU 3
+pid 51798's current affinity list: 0-4
+pid 51798's new affinity list: 3

@@ -1,0 +1,10 @@
+{
+  "frame_length_counts": {
+    "46": 1,
+    "1442": 39650
+  },
+  "elapsed_s": 4.929682016372681,
+  "gaps_over_5ms": 17,
+  "sum_of_gaps_over_5ms_ms": 124.97901916503906,
+  "largest_gap_ms": 24.207115173339844
+}

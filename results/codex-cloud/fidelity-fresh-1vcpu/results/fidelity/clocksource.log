@@ -1,0 +1,8 @@
+[    0.000000] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.000000] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+[    0.001042] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x2127b2b9b0b, max_idle_ns: 440795226595 ns
+[    1.554437] clocksource: Switched to clocksource tsc-early
+[    1.627581] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    2.806762] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x212793982db, max_idle_ns: 440795293883 ns
+[    2.807067] clocksource: Switched to clocksource tsc

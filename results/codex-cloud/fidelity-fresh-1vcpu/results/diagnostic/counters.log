@@ -1,0 +1,71 @@
+class htb 1:1 root leaf 10: prio 0 quantum 1514 rate 100Mbit ceil 100Mbit linklayer ethernet burst 62500b/1mpu 0b cburst 62500b/1mpu 0b level 0 
+ Sent 470 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+ lended: 3 borrowed: 0 giants: 0
+ tokens: 77912 ctokens: 77912
+
+1795408036.012439849
+qdisc htb 1: root refcnt 2 r2q 10 default 0x1 direct_packets_stat 0 direct_qlen 1000
+ Sent 6956044 bytes 4836 pkt (dropped 0, overlimits 1885 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 6956044 bytes 4836 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether 7a:bf:41:5d:9b:4f brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+       7706340    5360      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1488      16      0       0       0       0 
+1795408036.951913450
+qdisc htb 1: root refcnt 2 r2q 10 default 0x1 direct_packets_stat 0 direct_qlen 1000
+ Sent 16187728 bytes 11238 pkt (dropped 0, overlimits 4511 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 16187728 bytes 11238 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether 7a:bf:41:5d:9b:4f brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+      17144230   11905      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1488      16      0       0       0       0 
+1795408037.925302819
+qdisc htb 1: root refcnt 2 r2q 10 default 0x1 direct_packets_stat 0 direct_qlen 1000
+ Sent 25518910 bytes 17709 pkt (dropped 0, overlimits 7082 requeues 0) 
+ backlog 15862b 11p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 25518910 bytes 17709 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 15862b 11p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether 7a:bf:41:5d:9b:4f brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+      26468202   18371      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1488      16      0       0       0       0 
+1795408038.872734138
+qdisc htb 1: root refcnt 2 r2q 10 default 0x1 direct_packets_stat 0 direct_qlen 1000
+ Sent 35103884 bytes 24356 pkt (dropped 0, overlimits 9802 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 35103884 bytes 24356 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether 7a:bf:41:5d:9b:4f brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+      36171420   25100      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1488      16      0       0       0       0 
+1795408039.842461487
+qdisc htb 1: root refcnt 2 r2q 10 default 0x1 direct_packets_stat 0 direct_qlen 1000
+ Sent 43353566 bytes 30077 pkt (dropped 0, overlimits 12426 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 43353566 bytes 30077 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+3: m-isp@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc htb state UP mode DEFAULT group default qlen 1000
+    link/ether 7a:bf:41:5d:9b:4f brd ff:ff:ff:ff:ff:ff link-netns isp
+    RX:  bytes packets errors dropped  missed   mcast           
+      44030320   30550      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+          1488      16      0       0       0       0 

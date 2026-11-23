@@ -1,0 +1,16 @@
+-----------------------------------------------------------
+Server listening on 5300 (test #1)
+-----------------------------------------------------------
+Accepted connection from 10.9.0.2, port 46988
+[  5] local 10.0.0.15 port 5300 connected to 10.9.0.2 port 38529
+[ ID] Interval           Transfer     Bitrate         Jitter    Lost/Total Datagrams
+[  5]   0.00-1.00   sec  10.8 MBytes  90.8 Mbits/sec  0.347 ms  31/8145 (0.38%)  
+[  5]   1.00-2.00   sec  10.9 MBytes  91.6 Mbits/sec  0.171 ms  0/8183 (0%)  
+[  5]   2.00-3.00   sec  11.1 MBytes  93.4 Mbits/sec  0.082 ms  0/8341 (0%)  
+[  5]   3.00-4.00   sec  11.2 MBytes  94.0 Mbits/sec  0.226 ms  0/8383 (0%)  
+[  5]   4.00-5.00   sec  11.0 MBytes  92.6 Mbits/sec  0.105 ms  0/8275 (0%)  
+[  5]   5.00-5.03   sec   283 KBytes  86.8 Mbits/sec  0.187 ms  0/207 (0%)  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Jitter    Lost/Total Datagrams
+[SUM]  0.0- 5.0 sec  153 datagrams received out-of-order
+[  5]   0.00-5.03   sec  55.4 MBytes  92.4 Mbits/sec  0.187 ms  31/41534 (0.075%)  receiver

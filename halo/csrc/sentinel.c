@@ -307,12 +307,20 @@ void *sentinel_thread(void *arg) {
                     nrx = rd_ctr(G.fd_rx);
                     arrival = (double)(nrx - rx) * 8 / dt / 1e6;
                 }
-                if (arrival >= p.collapse * p.rate[0]) {
-                    /* The fall recovered during confirmation. Keep the normal
-                     * counter cadence and let the genuine delay samples stand. */
-                    dl_collapse_at = 0;
+                if (arrival >= 0.5 * p.rate[0]) {
+                    /* A mixed counter window can start a check. Bypassing the
+                     * normal confirmation requires a severe drop in fresh bytes. */
                     drop_check_until = 0;
-                    watch_until = 0;
+                    for (int i = 0; i < MAXPEND; i++)
+                        if (pend[i].used && pend[i].ts >= dl_collapse_at && early_late[pend[i].ri] > 0)
+                            pend[i].late = 0;
+                    if (arrival >= p.collapse * p.rate[0]) {
+                        dl_collapse_at = 0;
+                        watch_until = 0;
+                    } else {
+                        confirm_until = watch_until;
+                        confirm_bad[0] = confirm_bad[1] = 0;
+                    }
                 } else {
                     if (dt >= 0.04 && arrival >= 0.10 * p.rate[0]) {
                         /* The interval after the drop excludes the prior operating
@@ -373,7 +381,8 @@ void *sentinel_thread(void *arg) {
                 }
                 /* Qualify a sharp delivery drop in the native watcher. A sender finishing can
                  * lower the counters without congestion and does not need the Python fast loop. */
-                if (!alert && !drop_check && drop[0] && inst[0] < p.collapse * p.rate[0]) {
+                if (!alert && !drop_check && drop[0] && inst[0] < p.collapse * p.rate[0]
+                        && (now >= watch_until || inst[0] < 0.5 * p.rate[0])) {
                     dl_collapse_at = now;
                     drop_check_until = watch_until = now + p.confirm_win;
                     delayed_reflectors = 0;

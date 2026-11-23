@@ -23,6 +23,11 @@ sender=$!
     for _ in 1 2 3 4 5; do
         sleep 0.5
         date +%s.%N
+        if [[ -r /proc/$sender/stat ]]; then
+            printf 'sender process: '
+            cat "/proc/$sender/stat" || :
+        fi
+        sed -n '/^cpu/p' /proc/stat
         ip netns exec modem tc -s qdisc show dev m-gw
         ip -n modem -s link show dev m-isp
     done

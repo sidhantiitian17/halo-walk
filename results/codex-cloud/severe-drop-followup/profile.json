@@ -1,0 +1,504 @@
+[
+  {
+    "run": "results/codex-cloud/severe-drop-followup/results/raw/S2/C3/r01",
+    "time_origin": "rate_down event after the rig's rate command",
+    "native_drop_s": [],
+    "alert_s": [],
+    "confirm_s": [],
+    "first_cut_decision_s": 5.4055,
+    "first_cut_applied_s": 5.4344,
+    "first_rate_in_band_s": null,
+    "latency_limit_ms": 25.548,
+    "last_delayed_packet_in_passing_window_s": null,
+    "disjoint_100ms_call_latency": [
+      {
+        "end_s": -0.1,
+        "packets": 5,
+        "p95_ms": 173.72
+      },
+      {
+        "end_s": 0.0,
+        "packets": 26,
+        "p95_ms": 131.916
+      },
+      {
+        "end_s": 0.1,
+        "packets": 30,
+        "p95_ms": 63.194
+      },
+      {
+        "end_s": 0.2,
+        "packets": 65,
+        "p95_ms": 82.286
+      },
+      {
+        "end_s": 0.3,
+        "packets": 40,
+        "p95_ms": 84.11
+      },
+      {
+        "end_s": 0.4,
+        "packets": 30,
+        "p95_ms": 208.677
+      },
+      {
+        "end_s": 0.5,
+        "packets": 83,
+        "p95_ms": 206.15
+      },
+      {
+        "end_s": 0.6,
+        "packets": 85,
+        "p95_ms": 136.981
+      },
+      {
+        "end_s": 0.7,
+        "packets": 106,
+        "p95_ms": 112.193
+      },
+      {
+        "end_s": 0.8,
+        "packets": 78,
+        "p95_ms": 88.616
+      },
+      {
+        "end_s": 0.9,
+        "packets": 50,
+        "p95_ms": 150.055
+      },
+      {
+        "end_s": 1.0,
+        "packets": 91,
+        "p95_ms": 45.706
+      },
+      {
+        "end_s": 1.1,
+        "packets": 103,
+        "p95_ms": 72.585
+      },
+      {
+        "end_s": 1.2,
+        "packets": 62,
+        "p95_ms": 79.082
+      },
+      {
+        "end_s": 1.6,
+        "packets": 76,
+        "p95_ms": 402.51
+      },
+      {
+        "end_s": 1.7,
+        "packets": 10,
+        "p95_ms": 100.24
+      },
+      {
+        "end_s": 1.8,
+        "packets": 14,
+        "p95_ms": 178.466
+      },
+      {
+        "end_s": 1.9,
+        "packets": 16,
+        "p95_ms": 91.093
+      },
+      {
+        "end_s": 2.0,
+        "packets": 8,
+        "p95_ms": 174.913
+      },
+      {
+        "end_s": 2.1,
+        "packets": 3,
+        "p95_ms": 229.334
+      },
+      {
+        "end_s": 2.2,
+        "packets": 6,
+        "p95_ms": 87.417
+      },
+      {
+        "end_s": 2.3,
+        "packets": 6,
+        "p95_ms": 102.422
+      },
+      {
+        "end_s": 2.4,
+        "packets": 10,
+        "p95_ms": 147.455
+      },
+      {
+        "end_s": 2.5,
+        "packets": 64,
+        "p95_ms": 27.038
+      },
+      {
+        "end_s": 2.6,
+        "packets": 51,
+        "p95_ms": 20.138
+      }
+    ],
+    "original_score": {
+      "cap_down": 10.0,
+      "cap_up": 50.0,
+      "pre_median_ms": 10.548,
+      "low_phase_added_p99_ms": 3739.6964000000007,
+      "low_phase_added_p95_ms": 978.9895999999958,
+      "rate_source": "telemetry r_dl",
+      "t_adapt_s": null,
+      "t_adapt_note": "not reached before rate_up",
+      "t_settle_strict_s": null,
+      "recovery_s": null,
+      "telemetry_end_rel_s": 36.95851731300354,
+      "recovery_note": "r_dl never reached 42.75 Mbit/s after rate_up (data ends 37.0 s after rate_up)",
+      "changes_pre_down": 0,
+      "changes_last15": 1,
+      "changes_per_min": 1.7142857142857142
+    }
+  },
+  {
+    "run": "results/codex-cloud/severe-drop-followup/results/raw/S2/C3/r02",
+    "time_origin": "rate_down event after the rig's rate command",
+    "native_drop_s": [
+      0.0447
+    ],
+    "alert_s": [
+      0.1032
+    ],
+    "confirm_s": [
+      0.0975
+    ],
+    "first_cut_decision_s": 0.0988,
+    "first_cut_applied_s": 0.1292,
+    "first_rate_in_band_s": 0.9,
+    "latency_limit_ms": 25.681,
+    "last_delayed_packet_in_passing_window_s": 0.8385,
+    "disjoint_100ms_call_latency": [
+      {
+        "end_s": -0.1,
+        "packets": 19,
+        "p95_ms": 38.666
+      },
+      {
+        "end_s": 0.1,
+        "packets": 10,
+        "p95_ms": 192.713
+      },
+      {
+        "end_s": 0.2,
+        "packets": 14,
+        "p95_ms": 212.245
+      },
+      {
+        "end_s": 0.3,
+        "packets": 16,
+        "p95_ms": 222.006
+      },
+      {
+        "end_s": 0.4,
+        "packets": 17,
+        "p95_ms": 230.268
+      },
+      {
+        "end_s": 0.5,
+        "packets": 17,
+        "p95_ms": 230.187
+      },
+      {
+        "end_s": 0.6,
+        "packets": 16,
+        "p95_ms": 218.961
+      },
+      {
+        "end_s": 0.7,
+        "packets": 26,
+        "p95_ms": 201.216
+      },
+      {
+        "end_s": 0.8,
+        "packets": 33,
+        "p95_ms": 137.712
+      },
+      {
+        "end_s": 0.9,
+        "packets": 19,
+        "p95_ms": 30.992
+      },
+      {
+        "end_s": 1.0,
+        "packets": 17,
+        "p95_ms": 13.225
+      },
+      {
+        "end_s": 1.1,
+        "packets": 17,
+        "p95_ms": 13.359
+      },
+      {
+        "end_s": 1.2,
+        "packets": 17,
+        "p95_ms": 13.535
+      },
+      {
+        "end_s": 1.3,
+        "packets": 17,
+        "p95_ms": 14.369
+      },
+      {
+        "end_s": 1.4,
+        "packets": 16,
+        "p95_ms": 21.349
+      },
+      {
+        "end_s": 1.5,
+        "packets": 18,
+        "p95_ms": 22.197
+      },
+      {
+        "end_s": 1.6,
+        "packets": 16,
+        "p95_ms": 22.285
+      },
+      {
+        "end_s": 1.7,
+        "packets": 18,
+        "p95_ms": 17.481
+      },
+      {
+        "end_s": 1.8,
+        "packets": 17,
+        "p95_ms": 16.267
+      },
+      {
+        "end_s": 1.9,
+        "packets": 17,
+        "p95_ms": 13.035
+      },
+      {
+        "end_s": 2.0,
+        "packets": 17,
+        "p95_ms": 13.375
+      },
+      {
+        "end_s": 2.1,
+        "packets": 17,
+        "p95_ms": 14.196
+      },
+      {
+        "end_s": 2.2,
+        "packets": 17,
+        "p95_ms": 13.785
+      },
+      {
+        "end_s": 2.3,
+        "packets": 17,
+        "p95_ms": 13.084
+      },
+      {
+        "end_s": 2.4,
+        "packets": 17,
+        "p95_ms": 14.574
+      },
+      {
+        "end_s": 2.5,
+        "packets": 17,
+        "p95_ms": 16.956
+      },
+      {
+        "end_s": 2.6,
+        "packets": 18,
+        "p95_ms": 13.405
+      }
+    ],
+    "original_score": {
+      "cap_down": 10.0,
+      "cap_up": 50.0,
+      "pre_median_ms": 10.6815,
+      "low_phase_added_p99_ms": 206.2355,
+      "low_phase_added_p95_ms": 64.36775,
+      "rate_source": "telemetry r_dl",
+      "t_adapt_s": 1.7999982833862305,
+      "t_settle_strict_s": null,
+      "recovery_s": 15.669175148010254,
+      "telemetry_end_rel_s": 37.12517523765564,
+      "changes_pre_down": 0,
+      "changes_last15": 4,
+      "changes_per_min": 6.857142857142857
+    }
+  },
+  {
+    "run": "results/codex-cloud/severe-drop-followup/results/raw/S2/C3/r03",
+    "time_origin": "rate_down event after the rig's rate command",
+    "native_drop_s": [
+      0.221
+    ],
+    "alert_s": [
+      0.2787
+    ],
+    "confirm_s": [
+      0.2736
+    ],
+    "first_cut_decision_s": 0.2741,
+    "first_cut_applied_s": 0.3083,
+    "first_rate_in_band_s": 1.1,
+    "latency_limit_ms": 25.571,
+    "last_delayed_packet_in_passing_window_s": 1.4367,
+    "disjoint_100ms_call_latency": [
+      {
+        "end_s": -0.1,
+        "packets": 13,
+        "p95_ms": 18.504
+      },
+      {
+        "end_s": 0.0,
+        "packets": 2,
+        "p95_ms": 130.392
+      },
+      {
+        "end_s": 0.1,
+        "packets": 11,
+        "p95_ms": 168.438
+      },
+      {
+        "end_s": 0.2,
+        "packets": 17,
+        "p95_ms": 178.184
+      },
+      {
+        "end_s": 0.3,
+        "packets": 15,
+        "p95_ms": 184.836
+      },
+      {
+        "end_s": 0.4,
+        "packets": 16,
+        "p95_ms": 190.269
+      },
+      {
+        "end_s": 0.5,
+        "packets": 16,
+        "p95_ms": 199.572
+      },
+      {
+        "end_s": 0.6,
+        "packets": 18,
+        "p95_ms": 201.871
+      },
+      {
+        "end_s": 0.7,
+        "packets": 21,
+        "p95_ms": 186.488
+      },
+      {
+        "end_s": 0.8,
+        "packets": 18,
+        "p95_ms": 161.324
+      },
+      {
+        "end_s": 0.9,
+        "packets": 24,
+        "p95_ms": 139.651
+      },
+      {
+        "end_s": 1.0,
+        "packets": 27,
+        "p95_ms": 73.048
+      },
+      {
+        "end_s": 1.1,
+        "packets": 17,
+        "p95_ms": 16.694
+      },
+      {
+        "end_s": 1.2,
+        "packets": 18,
+        "p95_ms": 13.646
+      },
+      {
+        "end_s": 1.3,
+        "packets": 16,
+        "p95_ms": 14.121
+      },
+      {
+        "end_s": 1.4,
+        "packets": 16,
+        "p95_ms": 23.889
+      },
+      {
+        "end_s": 1.5,
+        "packets": 19,
+        "p95_ms": 25.989
+      },
+      {
+        "end_s": 1.6,
+        "packets": 17,
+        "p95_ms": 15.548
+      },
+      {
+        "end_s": 1.7,
+        "packets": 16,
+        "p95_ms": 14.489
+      },
+      {
+        "end_s": 1.8,
+        "packets": 18,
+        "p95_ms": 16.127
+      },
+      {
+        "end_s": 1.9,
+        "packets": 17,
+        "p95_ms": 14.733
+      },
+      {
+        "end_s": 2.0,
+        "packets": 17,
+        "p95_ms": 12.635
+      },
+      {
+        "end_s": 2.1,
+        "packets": 17,
+        "p95_ms": 13.826
+      },
+      {
+        "end_s": 2.2,
+        "packets": 17,
+        "p95_ms": 13.386
+      },
+      {
+        "end_s": 2.3,
+        "packets": 16,
+        "p95_ms": 13.418
+      },
+      {
+        "end_s": 2.4,
+        "packets": 18,
+        "p95_ms": 13.888
+      },
+      {
+        "end_s": 2.5,
+        "packets": 17,
+        "p95_ms": 12.081
+      },
+      {
+        "end_s": 2.6,
+        "packets": 17,
+        "p95_ms": 13.268
+      }
+    ],
+    "original_score": {
+      "cap_down": 10.0,
+      "cap_up": 50.0,
+      "pre_median_ms": 10.571,
+      "low_phase_added_p99_ms": 178.55693999999994,
+      "low_phase_added_p95_ms": 65.44635,
+      "rate_source": "telemetry r_dl",
+      "t_adapt_s": 1.9999980926513672,
+      "t_settle_strict_s": null,
+      "recovery_s": null,
+      "telemetry_end_rel_s": 35.04298734664917,
+      "recovery_note": "r_dl never reached 42.75 Mbit/s after rate_up (data ends 35.0 s after rate_up)",
+      "changes_pre_down": 0,
+      "changes_last15": 0,
+      "changes_per_min": 0.0
+    }
+  }
+]

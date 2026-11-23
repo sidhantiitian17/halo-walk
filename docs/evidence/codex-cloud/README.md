@@ -1,5 +1,7 @@
 # HALO-Walk inside Codex Cloud
 
+See the [acceptance report](FINAL.md) for the latest combined verdict and the remaining measurement failures.
+
 The cloud host ran as UID 1000, with zero effective and bounding capabilities. Creating a network namespace directly returned `Operation not permitted`. A nested user namespace could be created without a UID map. Mapping root failed on the read-only `/proc/self/uid_map`, and an unmapped child had no effective capabilities and could not create a veth pair. The host had `tc` but exposed neither the running kernel's module directory nor `/dev/kvm`. See [host command outputs](host-preflight.txt).
 
 The benchmark used an x86-64 QEMU 10.0.13 TCG guest with two vCPUs, 4 GiB of RAM and Debian Linux 6.12.118. QEMU ran as the normal cloud user with no guest NIC. Only the benchmark exchange directory and read-only Python dependencies were shared. Package downloads used the signed Debian repositories. The guest created its own namespaces and veth devices and attached real kernel CAKE and NetEm queue disciplines. The original topology and workload are emulated. The qdiscs, packet paths, process accounting, and measurements are from the guest Linux kernel. See [guest command outputs](guest-preflight.txt).

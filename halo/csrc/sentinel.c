@@ -165,7 +165,6 @@ void *sentinel_thread(void *arg) {
             pthread_mutex_unlock(&G.mu);
             if (!go) { parked = !G.armed || G.stop; break; }
             now = rt();
-            if (late_check_at && now - late_check_at > late_s + p.confirm_win) late_check_at = 0;
             if (gfast && !fast) { fast = 1; next_fprobe = now; }          /* Python asked for the full rate */
             if (burst) for (int j = 0; j < G.nsock; j++) send_probe(j, &seqc, pend);
             if (fast && now >= next_fprobe && G.nsock > 0) {
@@ -199,6 +198,7 @@ void *sentinel_thread(void *arg) {
             if (rc > 0 && (pf[0].revents & POLLIN)) { uint64_t x; if (read(G.cefd, &x, 8) < 0) { } continue; }
             /* a reply that is already in the socket buffer must never be taken for a late probe: collect before judging */
             now = rt();
+            drop_check = !fast && now < drop_check_until;
             int collect = fast || watch || now >= next_tick - 0.002;
             for (int i = 0; i < MAXPEND && !collect; i++)
                 if (pend[i].used && !pend[i].late && now - pend[i].ts > late_s - 0.05) collect = 1;
@@ -228,7 +228,7 @@ void *sentinel_thread(void *arg) {
                     int ri = i;
                     double up = (tref - ts) * 1e3, dn = (tr - tref) * 1e3;
                     push(EV_PROBE, tr, up, dn, ri);
-                    if (fast) continue;
+                    if (fast || now - tr > p.confirm_win) continue;
                     if (drop_check) {
                         if (pend[k].ts >= dl_collapse_at && p.has_base_dl[ri] && dn - p.base_dl[ri] > p.thresh_ms)
                             delayed_reflectors |= 1u << ri;
@@ -268,6 +268,9 @@ void *sentinel_thread(void *arg) {
                 }
             }
             now = rt();
+            /* The deadline can expire while the thread is waiting or descheduled. */
+            drop_check = !fast && now < drop_check_until;
+            if (late_check_at && now - late_check_at > late_s + p.confirm_win) late_check_at = 0;
             for (int i = 0; i < MAXPEND; i++) {
                 if (!pend[i].used) continue;
                 double age = now - pend[i].ts;

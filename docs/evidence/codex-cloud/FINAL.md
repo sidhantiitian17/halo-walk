@@ -50,8 +50,10 @@ retained TSC throughout the M4 and M12 campaign. [M1 raw evidence and diagnosis]
 [Clocksource log](../../../results/codex-cloud/timely-recovery/clock-post-run.txt)
 
 The HALO-Walk regression suite ran 331 passing checks and one expected
-failure. The older host suite encountered the same twelve environment
-failures on the starting and final controller revisions. Git verified the
+failure. The older integration suite ran inside a separate guest
+namespace with 95 passing checks, two skips and 17 passing subtests.
+The older host suite encountered the same twelve environment failures
+on the starting and final controller revisions. Git verified the
 original scenario, rig, scorer and workload lists against the import. The
 full M1–M12 matrix remains pending because M1 did not clear its original
 fidelity gate. [Regression evidence](../../../results/codex-cloud/timely-evidence) ·

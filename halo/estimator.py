@@ -136,7 +136,7 @@ class DirEstimator:
         return sum(fresh) >= self.p.vote_k
 
     # ---- decision ---------------------------------------------------------
-    def tick(self, t, achieved, shaper_load=None):
+    def tick(self, t, achieved, shaper_load=None, *, use_delay=True):
         """achieved: Mbit/s measured behind the bottleneck. Returns (new_rate|None, reason)."""
         p = self.p
         if self.healthy(t) < p.min_reflectors:
@@ -146,7 +146,7 @@ class DirEstimator:
             return None, ""
         if self.state in ("INIT", "DEGRADED"):
             self.state = "STEADY"
-        bloat = self.bloat(t)
+        bloat = use_delay and self.bloat(t)
         self.ach_hist.append((t, achieved))
         if self.state == "DRAIN":
             standing = self.last_delta > p.thresh_ms

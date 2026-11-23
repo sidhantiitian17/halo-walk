@@ -891,7 +891,7 @@ class Ctl:
             self.wake.wait(max(0.05, self.slow_period(t0, last_poll, woken) - (time.time() - t0)))
 
     # ---------------------------------------------------------------- main loop
-    def govern(self, now, ach, peak, dt):
+    def govern(self, now, ach, peak, dt, *, native_calm=False):
         """decide whether the control path must run at the full rate (see halo/probe_gov.py)"""
         gov, hot = self.gov, False
         for d in ("dl", "ul"):
@@ -899,7 +899,7 @@ class Ctl:
             peak[d] = decay_peak(peak[d], ach[d], dt)
             if e.state != "STEADY" and not (e.state == "PROBING_UP" and e.rate >= 0.999 * e.p.r_max):
                 hot = True                                   # INIT / DEGRADED / DRAIN / still climbing
-            elif e.bloat(now) or now - self.last_action[d] < 3.0:
+            elif (not native_calm and e.bloat(now)) or now - self.last_action[d] < 3.0:
                 hot = True
             elif (e.rate < 0.999 * e.p.r_max and ach[d] >= 0.9 * e.p.load_thresh * e.rate
                   and now >= e.t_hold_until - 0.5):
@@ -1108,7 +1108,9 @@ class Ctl:
                 for d in ("dl", "ul"):
                     e = self.est[d]
                     old = e.rate
-                    new, why = e.tick(now, ach[d])
+                    # While the sentinel owns delay detection, its replayed samples
+                    # inform telemetry and health. Rate cuts require its alert.
+                    new, why = e.tick(now, ach[d], use_delay=not armed)
                     if (d == "dl" and getattr(self, "vid_on", False) and e.state != "DRAIN"
                             and e.rate * self.lim.voice_share >= 1.05 * getattr(self, "voice_dl", 0.0)):
                         self.video_to_voice(now)
@@ -1144,7 +1146,7 @@ class Ctl:
                                ach=round(ach[d], 3), shield=v.reasons, decision_t=now)
             e1, e2 = self.est["dl"], self.est["ul"]
             if gov.enabled:
-                self.govern(now, ach, peak, dt)
+                self.govern(now, ach, peak, dt, native_calm=armed)
             if armed and (gov.is_fast(now) or self.txn is not None):
                 sent.set_fast(1.0 / gov.fast_hz, 0.4, True)  # not calm any more: C probes at the full rate (+ one burst)
                 armed = False

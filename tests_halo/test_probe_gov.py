@@ -109,6 +109,28 @@ def test_govern_stays_quiet_when_idle_and_steady(tmp_path, fake_sh, state_dir):
     assert not c.gov.is_fast(now)
 
 
+def test_calm_replay_requires_native_delay_confirmation(tmp_path, fake_sh, state_dir):
+    c = _ctl(tmp_path, fake_sh, state_dir)
+    c.sent = object()
+    now = time.time() + 100
+    for estimator in c.est.values():
+        estimator.state, estimator.rate = "STEADY", estimator.p.r_max
+    downlink = c.est["dl"]
+    for reflector in range(4):
+        downlink.on_probe(reflector, 10.0, now - 1.0)
+        downlink.on_probe(reflector, 55.0, now - 0.1)
+    assert downlink.bloat(now)
+
+    arrival = {"dl": 0.96 * downlink.rate, "ul": 0.0}
+    c.govern(now, arrival, dict(arrival), 0.25, native_calm=True)
+    assert not c.gov.is_fast(now)
+    assert downlink.tick(now, arrival["dl"], use_delay=False) == (None, "")
+
+    c.govern(now, arrival, dict(arrival), 0.25)
+    assert c.gov.is_fast(now)
+    assert downlink.tick(now, arrival["dl"])[1] == "bloat_unconfirmed"
+
+
 def test_govern_forces_full_rate_on_each_not_calm_condition(tmp_path, fake_sh, state_dir):
     c = _ctl(tmp_path, fake_sh, state_dir)
     base = time.time() + 100

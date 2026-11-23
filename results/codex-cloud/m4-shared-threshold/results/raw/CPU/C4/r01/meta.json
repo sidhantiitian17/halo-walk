@@ -1,0 +1,44 @@
+{
+ "scenario": "CPU",
+ "config": "C4",
+ "rep": 1,
+ "seed": 1232,
+ "kernel": "6.12.118+deb13-amd64",
+ "emulated": true,
+ "delay_ms_each_way": 10,
+ "modem_buffer_bytes": 1500000,
+ "events": [
+  {
+   "name": "start",
+   "t": 1795401619.1950376,
+   "rel": 0.0
+  },
+  {
+   "name": "end",
+   "t": 1795401654.5181885,
+   "rel": 35.323
+  }
+ ],
+ "down": 50,
+ "up": 10,
+ "cpu": {
+  "ctl_cpu_s": 0.41999999999999815,
+  "wall_s": 20.50501275062561,
+  "ctl_pct_of_core": 2.048279633413951,
+  "softirq_pct": 53.098591549295776,
+  "idle_pct": 15.123239436619718,
+  "ncpu": 3,
+  "threads_pct": {
+   "halo-main:25331": 0.341,
+   "python:25347": 0.0,
+   "python:25348": 0.0,
+   "python:25349": 0.0,
+   "python:25350": 0.0,
+   "python:25351": 0.0,
+   "python:25352": 0.0,
+   "halo-sniffer:25356": 0.0,
+   "halo-slow:25357": 0.488,
+   "halo-sentinel:25358": 1.268
+  }
+ }
+}

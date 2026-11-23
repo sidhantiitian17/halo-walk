@@ -111,3 +111,21 @@ The guest-local campaign finished all nine runs. Controller telemetry began befo
 The M4 adaptation repetitions were 2.10, 2.20 and 2.10 s. The CPU repetitions were 1.58% and 1.76% for the heuristic controller, and 1.53% and 2.07% for ML. The existing M12 rule uses the median for each configuration. See the [machine-readable score](../../../results/codex-cloud/three-vcpu-candidate9-local-deps/score.json), [raw runs](../../../results/codex-cloud/three-vcpu-candidate9-local-deps/results/raw), and [controller test output](controller-tests.txt).
 
 The original controller's matched three-vCPU M4 repetitions were all 2.20 s, with median recovery of 15.4 s and 0.0 rate changes per minute. The candidate improved median adaptation by 0.10 s and median recovery by about 5.3 s on that guest. Both versions missed the 2.00 s adaptation gate there. The archived 1.90 s result was measured on the earlier Ubuntu guest. See the [matched baseline score](../../../results/codex-cloud/three-vcpu-baseline/score.json) and [raw runs](../../../results/codex-cloud/three-vcpu-baseline/results/raw).
+
+## Adaptation profile
+
+The time origin is the original S2 `rate_down` marker after both rig rate commands. The profile records the native drop observation, reflector confirmation, controller decision, CAKE update and packet arrival relative to that marker. The downlink can begin slowing before the marker. Acceptance uses the original rolling one-second p95 and rate-band checks.
+
+In the packet-tap repetition, 13,246 call packets matched at modem ingress, gateway ingress and client receipt. During the first half-second the modem-to-gateway p95 rose from 3.7 ms to 167.2 ms. In the next 0.6 s the gateway-to-client p95 rose from 2.6 ms to 128.8 ms. In the 0.7–0.8 s interval the modem-to-gateway p95 had fallen below 1 ms while the gateway-to-client p95 was still 121.4 ms. CAKE applied the first cut 234.9 ms after the marker and entered the scoring rate band at 1.10 s. The unchanged scorer returned 2.00 s for this diagnostic repetition. See the [packet taps and matched profile](../../../results/codex-cloud/m4-quorum-diagnostic).
+
+| Targeted campaign | M4 repetitions (s) | Heuristic CPU median | ML CPU median | Combined |
+|---|---|---:|---:|---|
+| `m4-quorum` | 2.00, 2.10, 2.10 | 2.04% | 5.56% | Fail |
+| `m4-native` | 2.10, never, 2.20 | 2.10% | 2.55% | Fail |
+| `m4-shared-threshold` | 2.60, 2.30, 1.50 | 2.32% | 2.24% | Fail |
+
+In the native midpoint campaign, the failed S2 run had cut rates before the capacity step following late-probe alerts. In the CPU runs, the native thread reached 1.56% of a core in one heuristic repetition and 1.75% in one ML repetition. Both were measured inside the original process-wide CPU window. See the [quorum evidence](../../../results/codex-cloud/m4-quorum) and [native evidence](../../../results/codex-cloud/m4-native).
+
+The widened native detector made the first cut within 26 ms of the harness marker in all three repetitions. Two runs still estimated initial capacity above 22 Mbit/s and cut initially to 6.6–6.8 Mbit/s. The 1.50 s run initially estimated 14.6 Mbit/s and cut to 4.38 Mbit/s. See the [widened-detector runs](../../../results/codex-cloud/m4-shared-threshold).
+
+The first fidelity capture was empty because package extraction had skipped creating the Debian `tcpdump` account. An independent run confirmed that the original `iperf3` flow reached the receiver and that HTB dequeued packets while `tcpdump` reported `Couldn't find user 'tcpdump'`. After installing the account, the original scorer passed 20 and 50 Mbit/s under the adopted criterion. The 100 Mbit/s test measured 94.33 Mbit/s and failed the ±4% limit. See the [capture diagnostic](../../../results/codex-cloud/m1-platform-diagnostic) and [fidelity repetitions](../../../results/codex-cloud/m1-platform-fixed).

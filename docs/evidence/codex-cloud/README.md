@@ -32,6 +32,40 @@ MPLCONFIGDIR=/tmp/halo-mpl /workspace/halo-benchmark-vm/venv/bin/python \
 
 The scorer invokes the original M4 and M12 functions and checks that the campaign includes the original number of repetitions. M4 requires median adaptation at most 2 s, recovery at most 30 s, and at most 6 rate changes per minute. M12 requires both controller variants to use at most 2% of one core above static CAKE. The original results and analyzer remain intact.
 
+## Repeat the full matrix
+
+Prepare the guest from the revision you want to measure. Start it with three vCPUs to match the latest targeted campaigns.
+
+```bash
+vm=/workspace/halo-benchmark-vm
+scripts/cloud_vm/prepare.sh "$vm"
+HALO_VM_VCPUS=3 scripts/cloud_vm/boot.sh "$vm"
+```
+
+From a second terminal in the same checkout, submit a new label after the guest prints `HALO_GUEST_READY`. The job executes the original 20, 50 and 100 Mbit/s fidelity tests, the 95 runs in `lists/all.txt` and the 24 classifier data batches in `lists/dg2.txt`, in order. The guest records the exact source revision and archives every completed run, including unsuccessful runs. The original workload runner and scoring rules apply.
+
+```bash
+vm=/workspace/halo-benchmark-vm
+label=matrix-01
+scripts/cloud_vm/submit-matrix.sh "$vm" "$label"
+```
+
+Wait for the batch exit code in `exchange/status`. Copy the guest output to a separate directory so the imported evidence stays intact. Run the scorer from the measured checkout. It runs leave-batch-out evaluation on the new classifier data and records missing runs and late controller startup alongside the original M1–M12 analysis.
+
+```bash
+input="$vm/exchange/$label"
+report="/workspace/$label-report"
+mkdir -p "$report/results/raw"
+cp "$input/"{all.txt,dg2.txt,source-revision.txt,input-sha256.txt} "$report/"
+while read -r scenario; do
+    if [ -d "$input/$scenario" ]; then
+        cp -a "$input/$scenario" "$report/results/raw/"
+    fi
+done < <(awk '{print $1}' "$input/all.txt" "$input/dg2.txt" | sort -u)
+cp -a "$input/fidelity" "$report/results/"
+MPLCONFIGDIR=/tmp/halo-mpl "$vm/venv/bin/python" scripts/cloud_vm/report-matrix.py "$report"
+```
+
 ## Evidence
 
 Each experimental revision has a separate directory under [results/codex-cloud](../../../results/codex-cloud). A candidate uses the static-CAKE runs from the same guest through its shared C1 path. This avoids duplication of control runs. Each `score.json` distinguishes an incomplete campaign from a pass.

@@ -174,3 +174,11 @@ DATAGEN inputs, run the repository's pinned Python environment with
 `scripts/cloud_vm/profile-ml.py results/raw/DATAGEN/C2/r*/ctl/raw_flows.jsonl`.
 This profile compares inference on recorded features. M12 comes from the
 controller CPU measurements in the original CPU scenario.
+
+The older integration suite under `tests/` also needs the tracked
+`results/m2` fixtures, loopback, and a default route. To run it inside the
+guest, stage the repository code and these fixtures in `$label.tar` under
+the exchange directory and install the pinned Python environment at
+`/opt/halo-venv`. Run `scripts/cloud_vm/legacy-regression.sh` inside the
+guest with the archive label. The script creates and removes its own
+network namespace with a local veth route. Run it while the benchmark is idle.

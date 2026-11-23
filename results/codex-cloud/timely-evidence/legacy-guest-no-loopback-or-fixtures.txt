@@ -1,0 +1,183 @@
+......FFF.......F...............................F...... [ 56%]
+...F..........F....................ss.....                               [100%]
+=================================== FAILURES ===================================
+________ TestM2ArtifactsIntegrity.test_bursty_cross_traffic_json_fields ________
+
+self = <test_m2_consistency.TestM2ArtifactsIntegrity testMethod=test_bursty_cross_traffic_json_fields>
+
+    def test_bursty_cross_traffic_json_fields(self):
+        fpath = os.path.join(RESULTS_M2_DIR, "bursty_cross_traffic.json")
+>       with open(fpath, "r") as f:
+             ^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/legacy-regression/results/m2/bursty_cross_traffic.json'
+
+tests/test_m2_consistency.py:105: FileNotFoundError
+_______ TestM2ArtifactsIntegrity.test_no_variance_mbps_in_json_artifacts _______
+
+self = <test_m2_consistency.TestM2ArtifactsIntegrity testMethod=test_no_variance_mbps_in_json_artifacts>
+
+    def test_no_variance_mbps_in_json_artifacts(self):
+>       for fname in os.listdir(RESULTS_M2_DIR):
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/legacy-regression/results/m2'
+
+tests/test_m2_consistency.py:96: FileNotFoundError
+____________ TestM2ArtifactsIntegrity.test_summary_csv_matches_json ____________
+
+self = <test_m2_consistency.TestM2ArtifactsIntegrity testMethod=test_summary_csv_matches_json>
+
+    def test_summary_csv_matches_json(self):
+        fpath = os.path.join(RESULTS_M2_DIR, "summary.csv")
+>       self.assertTrue(os.path.exists(fpath))
+E       AssertionError: False is not true
+
+tests/test_m2_consistency.py:121: AssertionError
+___________ TestM2ExecutionAndFallback.test_loopback_slops_execution ___________
+
+self = <test_m2_slops_estimator.TestM2ExecutionAndFallback testMethod=test_loopback_slops_execution>
+
+    def test_loopback_slops_execution(self):
+        cfg = SlopsConfig(
+            packets_per_probe=20,
+            maximum_iterations=3,
+            minimum_probe_rate_mbps=10.0,
+            maximum_probe_rate_mbps=60.0
+        )
+        est = SlopsLinkEstimator(target_ip="127.0.0.1", sender_namespace=None, receiver_namespace=None, config=cfg)
+        try:
+            res = est.estimate_capacity()
+            self.assertIsInstance(res, CapacityEstimate)
+            self.assertGreater(res.estimated_bandwidth_min_mbps, 0)
+            self.assertGreaterEqual(res.estimated_bandwidth_max_mbps, res.estimated_bandwidth_min_mbps)
+>           self.assertGreater(res.samples, 0)
+E           AssertionError: 0 not greater than 0
+
+tests/test_m2_slops_estimator.py:185: AssertionError
+_______________ TestPhase21Fixes.test_01_udp_echo_rtt_and_jitter _______________
+
+self = <test_phase2_1_fixes.TestPhase21Fixes testMethod=test_01_udp_echo_rtt_and_jitter>
+
+    def test_01_udp_echo_rtt_and_jitter(self):
+        """Verify genuine two-way UDP echo round-trip and RFC 3550 consecutive MAD jitter."""
+        port = 5291
+        server = UdpEchoServer(host="127.0.0.1", port=port)
+        server.start()
+        time.sleep(0.1)
+    
+        prober = UdpRttProber()
+        train_res = prober.run_probe_train(
+            target_host="127.0.0.1",
+            target_port=port,
+            count=8,
+            interval_sec=0.03,
+            timeout_sec=0.3
+        )
+        server.stop()
+    
+>       self.assertEqual(train_res["status"], "success")
+E       AssertionError: 'timeout' != 'success'
+E       - timeout
+E       + success
+
+tests/test_phase2_1_fixes.py:56: AssertionError
+___________ TestPhase2TrafficDatapath.test_udp_real_packet_exchange ____________
+
+self = <test_phase2_datapath.TestPhase2TrafficDatapath testMethod=test_udp_real_packet_exchange>
+
+    def test_udp_real_packet_exchange(self):
+        port = 15202
+        receiver = TrafficReceiver(host="127.0.0.1", port=port, proto="udp")
+        receiver.start()
+        time.sleep(0.1)
+    
+        generator = RealTrafficGenerator(target_ip="127.0.0.1")
+        stats = generator.run_flow(
+            profile_name="VIDEO_CONFERENCE",
+            duration_sec=0.5,
+            target_port=port
+        )
+        time.sleep(0.1)
+        receiver.stop()
+        rx_stats = receiver.get_stats()
+    
+>       self.assertGreater(stats["packets_sent"], 0, "No packets were sent by generator")
+E       AssertionError: 0 not greater than 0 : No packets were sent by generator
+
+tests/test_phase2_datapath.py:37: AssertionError
+___ TestPhase4OperationalHardening.test_01_interface_discovery_non_loopback ____
+
+self = <test_phase4_operational_hardening.TestPhase4OperationalHardening testMethod=test_01_interface_discovery_non_loopback>
+
+    def test_01_interface_discovery_non_loopback(self):
+        """Verify interface discovery rejects loopback and discovers real network device."""
+        disco = InterfaceDiscovery()
+>       topo = disco.discover_topology()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_phase4_operational_hardening.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <network.interface_discovery.InterfaceDiscovery object at 0x7f7dcfe3d6d0>
+
+    def discover_topology(self) -> Dict[str, Any]:
+        """
+        Discovers LAN and WAN interfaces deterministically.
+        Rules:
+          1. Explicit CLI/Env overrides take precedence.
+          2. WAN interface is derived from default gateway route dev.
+          3. LAN interface is derived from secondary routed subnet or explicit config.
+          4. Loopback ('lo') is strictly rejected.
+          5. If ambiguous or conflicting, raises InterfaceDiscoveryError.
+        """
+        interfaces = self.get_all_interfaces()
+        routes = self.get_routes()
+    
+        wan_iface = self.wan_override or os.environ.get("AQOS_WAN_IFACE")
+        lan_iface = self.lan_override or os.environ.get("AQOS_LAN_IFACE")
+    
+        # 1. Discover WAN
+        if not wan_iface:
+            def_v4 = routes.get("default_ipv4_route")
+            if def_v4 and "dev" in def_v4:
+                wan_iface = def_v4["dev"]
+            elif "veth-gw-wan" in interfaces:
+                wan_iface = "veth-gw-wan"
+            elif "eth0" in interfaces:
+                wan_iface = "eth0"
+    
+        # Validate WAN
+        if not wan_iface:
+>           raise InterfaceDiscoveryError("Ambiguous WAN discovery: No default route interface found and no AQOS_WAN_IFACE specified.")
+E           network.interface_discovery.InterfaceDiscoveryError: Ambiguous WAN discovery: No default route interface found and no AQOS_WAN_IFACE specified.
+
+network/interface_discovery.py:243: InterfaceDiscoveryError
+=============================== warnings summary ===============================
+dashboard/report_generator.py:525
+  /tmp/legacy-regression/dashboard/report_generator.py:525: SyntaxWarning: invalid escape sequence '\g'
+    | **C5: Anti-Starvation Floor** | Deterministic rule floor | Scenario A | Floor $\ge 2\text{ Mbps}$ | EV-006 | **PASS ✅** |
+
+../../opt/halo-venv/lib/python3.13/site-packages/joblib/_multiprocessing_helpers.py:44
+  /opt/halo-venv/lib/python3.13/site-packages/joblib/_multiprocessing_helpers.py:44: UserWarning: [Errno 2] No such file or directory.  joblib will operate in serial mode
+    warnings.warn("%s.  joblib will operate in serial mode" % (e,))
+
+classifier/runtime_classifier.py:38
+  /tmp/legacy-regression/classifier/runtime_classifier.py:38: UserWarning: [04:47:05] WARNING: /__w/xgboost/xgboost/src/collective/../data/../common/error_msg.h:83: If you are loading a serialized model (like pickle in Python, RDS in R) or
+  configuration generated by an older version of XGBoost, please export the model by calling
+  `Booster.save_model` from that version first, then load it back in current version. See:
+  
+      https://xgboost.readthedocs.io/en/stable/tutorials/saving_model.html
+  
+  for more details about differences between saving model and serializing.
+  
+    data = pickle.load(f)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_m2_consistency.py::TestM2ArtifactsIntegrity::test_bursty_cross_traffic_json_fields
+FAILED tests/test_m2_consistency.py::TestM2ArtifactsIntegrity::test_no_variance_mbps_in_json_artifacts
+FAILED tests/test_m2_consistency.py::TestM2ArtifactsIntegrity::test_summary_csv_matches_json
+FAILED tests/test_m2_slops_estimator.py::TestM2ExecutionAndFallback::test_loopback_slops_execution
+FAILED tests/test_phase2_1_fixes.py::TestPhase21Fixes::test_01_udp_echo_rtt_and_jitter
+FAILED tests/test_phase2_datapath.py::TestPhase2TrafficDatapath::test_udp_real_packet_exchange
+FAILED tests/test_phase4_operational_hardening.py::TestPhase4OperationalHardening::test_01_interface_discovery_non_loopback
+7 failed, 88 passed, 2 skipped, 3 warnings, 17 subtests passed in 98.13s (0:01:38)

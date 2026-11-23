@@ -152,3 +152,25 @@ HALO_VM_VCPUS=3 scripts/cloud_vm/boot.sh /workspace/halo-reference-vm
 The severe-drop revision (`ee51eea`) ran the full targeted gate on the Ubuntu-kernel guest. Heuristic CPU passed at 1.97%. ML CPU failed at 5.41%, and M4 failed at 2.80 s with 20.6 steady-state changes per minute. See the [targeted gate and all repetitions](../../../results/codex-cloud/reference-severe-drop).
 
 QEMU 8.2.2 with the same Ubuntu kernel and two vCPUs passed the namespace and qdisc preflight. The original 50 Mbit/s fidelity test measured 43.15 Mbit/s and failed. The 100 Mbit/s test hit the 120-second execution limit, after which the guest also failed to complete cleanup. See the [QEMU 8.2 fidelity logs, captures and package hashes](../../../results/codex-cloud/qemu8-fidelity).
+
+### Repeat the fidelity and inference diagnostics
+
+Boot the prepared guest with `HALO_VM_VCPUS=3 scripts/cloud_vm/boot.sh "$vm"`.
+The same image can boot with `HALO_VM_VCPUS=1` for a single vCPU comparison.
+Record the QEMU process ID at launch. On a three vCPU boot, the optional host
+affinity command is `scripts/cloud_vm/pin-vcpus.sh "$qemu_pid" 0 2 3`.
+Use three distinct available host CPUs for that profile.
+
+With the guest idle, submit `scripts/cloud_vm/submit-fidelity.sh "$vm" "$label" --diagnose`.
+The original M1 script writes its JSON and modem packet captures to
+`$vm/exchange/$label/fidelity`. The platform log records the actual clocksource
+before and after each rate and saves the kernel clocksource messages. The
+`diagnostic` directory holds a separate 100 Mbit/s run with sender throughput,
+HTB statistics and capture counts. Use only the `fidelity` directory as the
+M1 scorer input.
+
+To compare calibrated model outputs and per thread CPU time on the recorded
+DATAGEN inputs, run the repository's pinned Python environment with
+`scripts/cloud_vm/profile-ml.py results/raw/DATAGEN/C2/r*/ctl/raw_flows.jsonl`.
+This profile compares inference on recorded features. M12 comes from the
+controller CPU measurements in the original CPU scenario.

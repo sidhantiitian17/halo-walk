@@ -5,12 +5,15 @@ set -euo pipefail
 cd "$1"
 dest=$2
 mkdir -p "$dest"
-trap 'rig/rig_down.sh' EXIT
+capture_dir=$(mktemp -d)
+trap 'rig/rig_down.sh; rm -rf "$capture_dir"' EXIT
 rig/rig_up.sh 100.0 20.0 10
 ip netns exec pc iperf3 -s -1 -p 5300 >"$dest/server.log" 2>&1 &
 receiver=$!
 sleep 1
-ip netns exec modem tcpdump -ni m-gw -Q out -s 64 -B 16384 -w "$dest/modem.pcap" udp >"$dest/tcpdump.log" 2>&1 &
+# tcpdump drops privileges, so keep its output in the guest tmpfs with write access.
+chmod 1777 "$capture_dir"
+ip netns exec modem tcpdump -ni m-gw -Q out -s 64 -B 16384 -w "$capture_dir/modem.pcap" udp >"$dest/tcpdump.log" 2>&1 &
 capture=$!
 sleep 1.5
 ip netns exec wan iperf3 -c 10.0.0.15 -p 5300 -u -b 160M -l 1400 -t 5 >"$dest/iperf.log" 2>&1 &
@@ -29,3 +32,4 @@ sleep 0.5
 kill -TERM "$capture"
 wait "$capture"
 wait "$receiver"
+cp "$capture_dir/modem.pcap" "$dest/"

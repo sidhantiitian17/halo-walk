@@ -1,0 +1,35 @@
+Linux (none) 6.12.118+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.118-1 (2026-11-20) x86_64 GNU/Linux
+iperf 3.18 (cJSON 1.7.15)
+Linux (none) 6.12.118+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.118-1 (2026-11-20) x86_64
+Optional features available: CPU affinity setting, IPv6 flow label, SCTP, TCP congestion algorithm setting, sendfile / zerocopy, socket pacing, authentication, bind to device, support IPv4 don't fragment, POSIX threads
+hpet
+           CPU0       CPU1       CPU2       
+  0:        130          0          0   IO-APIC   2-edge      timer
+  1:          9          0          0   IO-APIC   1-edge      i8042
+  4:          0          0        101   IO-APIC   4-edge      ttyS0
+  8:          0          1          0   IO-APIC   8-edge      rtc0
+  9:          0          0          0   IO-APIC   9-fasteoi   acpi
+ 12:          0          0          3   IO-APIC  12-edge      i8042
+ 24:          0          0          0  PCI-MSIX-0000:00:03.0   0-edge      virtio0-config
+ 25:          0     200679          0  PCI-MSIX-0000:00:03.0   1-edge      virtio0-requests
+ 26:          0          0          0  PCI-MSIX-0000:00:04.0   0-edge      virtio1-config
+ 27:          5          0          0  PCI-MSIX-0000:00:04.0   1-edge      virtio1-requests
+NMI:          0          0          0   Non-maskable interrupts
+LOC:     582871     571095     577001   Local timer interrupts
+SPU:          0          0          0   Spurious interrupts
+PMI:          0          0          0   Performance monitoring interrupts
+IWI:          0          0          0   IRQ work interrupts
+RTR:          0          0          0   APIC ICR read retries
+RES:      18481      18952      19255   Rescheduling interrupts
+CAL:     109650      84630     138617   Function call interrupts
+TLB:        153        152        125   TLB shootdowns
+TRM:          0          0          0   Thermal event interrupts
+THR:          0          0          0   Threshold APIC interrupts
+DFR:          0          0          0   Deferred Error APIC interrupts
+MCE:          0          0          0   Machine check exceptions
+MCP:          5          5          5   Machine check polls
+ERR:          0
+MIS:          0
+PIN:          0          0          0   Posted-interrupt notification event
+NPI:          0          0          0   Nested posted-interrupt event
+PIW:          0          0          0   Posted-interrupt wakeup event

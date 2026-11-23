@@ -148,14 +148,14 @@ void *sentinel_thread(void *arg) {
         { uint64_t x; if (read(G.cefd, &x, 8) < 0) { } }
         double now = rt(), next_tick = now + p.tick_s, last_probe = now - p.probe_s, next_fprobe = now;
         double confirm_until = 0, watch_until = 0, dl_delay_since = 0, dl_collapse_at = 0;
-        double next_heartbeat = now, drop_check_until = 0, next_down_check = 0;
+        double next_heartbeat = now, drop_check_until = 0, next_down_check = 0, late_check_at = 0;
         int confirm_bad[2] = {0, 0};
         uint64_t rx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : 0, tx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : 0;
         double t_last = now, ach[2] = { p.ach[0], p.ach[1] }, peak[2] = { p.peak[0], p.peak[1] }, ld[2] = { p.last_delta[0], p.last_delta[1] };
         pthread_mutex_lock(&G.mu); G.last_live = G.live; G.last_live_t = now; pthread_mutex_unlock(&G.mu);
         int alert = 0, parked = 0;
-        unsigned int delayed_reflectors = 0;
-        double early_late[MAXR] = {0};
+        unsigned int delayed_reflectors = 0, late_reflectors = 0;
+        double early_late[MAXR] = {0}, late_age[MAXR] = {0};
 
         for (;;) {
             pthread_mutex_lock(&G.mu);
@@ -165,6 +165,7 @@ void *sentinel_thread(void *arg) {
             pthread_mutex_unlock(&G.mu);
             if (!go) { parked = !G.armed || G.stop; break; }
             now = rt();
+            if (late_check_at && now - late_check_at > late_s + p.confirm_win) late_check_at = 0;
             if (gfast && !fast) { fast = 1; next_fprobe = now; }          /* Python asked for the full rate */
             if (burst) for (int j = 0; j < G.nsock; j++) send_probe(j, &seqc, pend);
             if (fast && now >= next_fprobe && G.nsock > 0) {
@@ -279,12 +280,22 @@ void *sentinel_thread(void *arg) {
                     if (deadline < late_s) {
                         early_late[pend[i].ri] = age * 1e3;
                         delayed_reflectors |= 1u << pend[i].ri;
-                    } else {
+                    } else if (fast) {
                         push(EV_LATE, now, age * 1e3, 0, pend[i].ri);
-                        if (!fast && !drop_check) alert = AL_LATE;
+                    } else if (!drop_check && !late_check_at) {
+                        /* One missing reply can be a reflector fault. Check the other paths
+                         * in this thread so an isolated loss cannot create a queue vote. */
+                        late_check_at = now;
+                        late_reflectors = 0;
+                        memset(late_age, 0, sizeof late_age);
+                        watch_until = fmax(watch_until, now + late_s + 0.05);
+                        confirm_burst(now, &seqc, pend);
+                    } else if (!drop_check && pend[i].ts >= late_check_at) {
+                        late_reflectors |= 1u << pend[i].ri;
+                        late_age[pend[i].ri] = age * 1e3;
                     }
                 } else if (pend[i].late && age > 1.0) {
-                    push(EV_LOST, now, age * 1e3, 0, pend[i].ri); pend[i].used = 0;
+                    push(EV_LOST, now, age * 1e3, !fast, pend[i].ri); pend[i].used = 0;
                 }
             }
             if (drop_check && __builtin_popcount(delayed_reflectors) >= p.confirm_n) {
@@ -292,6 +303,11 @@ void *sentinel_thread(void *arg) {
                     if (early_late[i] > 0) push(EV_LATE, now, early_late[i], 1, i);
                 push(EV_DROP_CONFIRMED, now, dl_collapse_at, 0, 0);
                 alert = AL_COLLAPSE;
+            }
+            if (!fast && !alert && !drop_check && late_check_at && __builtin_popcount(late_reflectors) >= p.confirm_n) {
+                for (int i = 0; i < G.nsock; i++)
+                    if (late_age[i] > 0) push(EV_LATE, now, late_age[i], 0, i);
+                alert = AL_LATE;
             }
             if (!fast && !alert && !drop_check && next_down_check && now >= next_down_check && now < next_tick) {
                 next_down_check = 0;

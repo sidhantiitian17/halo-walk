@@ -952,7 +952,8 @@ class Ctl:
                 self.probes.append((t, self.est["ul"].last_delta, self.est["dl"].last_delta, 0))
             elif kind == _sentinel.EV_LOST:
                 self.probes.append((t, float("nan"), float("nan"), 1))
-                gov.late(t)
+                if not b:                                  # unconfirmed calm loss is logged without forcing full rate
+                    gov.late(t)
             elif kind == _sentinel.EV_ACH:
                 self.est["dl"].ach_hist.append((t, a))
                 self.est["ul"].ach_hist.append((t, b))

@@ -20,6 +20,7 @@ class Reflector(threading.Thread):
         self.s.settimeout(0.05)
         self.port = self.s.getsockname()[1]
         self.extra_ms, self.drop, self.run_, self.n, self.extra_n = 0.0, False, True, 0, None
+        self.drop_n = 0
         self.start()
 
     def run(self):
@@ -29,6 +30,9 @@ class Reflector(threading.Thread):
             except OSError:
                 continue
             self.n += 1
+            if self.drop_n:
+                self.drop_n -= 1
+                continue
             if self.drop or len(d) < 16:
                 continue
             m, sq, ts = struct.unpack("!IId", d[:16])
@@ -146,6 +150,20 @@ def test_late_probe_raises_an_alert_and_switches_to_full_rate(refl, tmp_path):
         assert refl.n - n0 >= 15
         assert any(e[0] == S.EV_LOST for e in sent.drain())        # unanswered > 1 s: reported lost
         assert sent.state().armed == 1
+    finally:
+        sent.stop()
+
+
+def test_one_lost_calm_probe_is_reported_without_a_fast_alert(refl, tmp_path):
+    sent = _load(refl, tmp_path)
+    try:
+        refl.drop_n = 1
+        sent.arm(_params())
+        assert _wait_alert(sent, 1.4) == S.AL_NONE
+        events = sent.drain()
+        assert any(e[0] == S.EV_BURST for e in events)
+        assert not any(e[0] == S.EV_LATE for e in events)
+        assert [e[3] for e in events if e[0] == S.EV_LOST] == [1.0]
     finally:
         sent.stop()
 

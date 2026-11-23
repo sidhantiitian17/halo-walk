@@ -19,7 +19,7 @@ class Params(ctypes.Structure):
                                                "gate_s", "ewma_alpha_ref", "ewma_dt_ref")] + [
         ("rate", ctypes.c_double * 2), ("rmax", ctypes.c_double * 2), ("c_est", ctypes.c_double * 2),
         ("hold_until", ctypes.c_double * 2), ("ach", ctypes.c_double * 2), ("peak", ctypes.c_double * 2),
-        ("last_delta", ctypes.c_double * 2), ("load_thresh", ctypes.c_double), ("collapse", ctypes.c_double),
+        ("last_delta", ctypes.c_double * 2), ("probe_gate", ctypes.c_double * 2), ("collapse", ctypes.c_double),
         ("sat_frac", ctypes.c_double), ("burst_max", ctypes.c_double),
         ("base_ul", ctypes.c_double * MAXR), ("base_dl", ctypes.c_double * MAXR),
         ("has_base_ul", ctypes.c_int32 * MAXR), ("has_base_dl", ctypes.c_int32 * MAXR),

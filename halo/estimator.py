@@ -34,6 +34,8 @@ class EstParams:
     up_max: float = 1.50          # ... capped at +50 % per step (the shield admits probe steps up to max_probe_step)
     up_period: float = 0.5        # s
     load_thresh: float = 0.75
+    recovery_load: float = 0.40
+    recovery_gain: float = 1.5
     hold_base: float = 6.0        # s ceiling hold after an episode
     hold_max: float = 12.0        # s: bounded so a capacity INCREASE is found and climbed back to within ~30 s (S2 recovery)
     min_reflectors: int = 2
@@ -89,6 +91,7 @@ class DirEstimator:
     hold: float = 0.0
     up_streak: int = 0
     last_ceiling: float = 0.0
+    clear_peak: float = 0.0
     episodes: int = 0
     t_bloat_on: float = -1.0
     t_native_collapse: float = float("-inf")
@@ -134,6 +137,19 @@ class DirEstimator:
     def bloat(self, t):
         fresh = [d for (ts, d) in tuple(self.votes) if t - ts <= self.p.sample_ttl]
         return sum(fresh) >= self.p.vote_k
+
+    def probe_gate(self):
+        """Minimum arrival rate and maximum target for an upward probe."""
+        p = self.p
+        normal = self.rate * p.load_thresh
+        # Restore a previously demonstrated operating point only after observed
+        # delivery has grown substantially past the last congestion ceiling.
+        restore = min(self.clear_peak, p.r_max)
+        if self.behind and self.last_ceiling > 0 and self.rate < 0.999 * restore:
+            recovery = max(p.recovery_gain * self.last_ceiling, p.recovery_load * self.rate)
+            if recovery < normal:
+                return recovery, restore
+        return normal, p.r_max
 
     # ---- decision ---------------------------------------------------------
     def tick(self, t, achieved, shaper_load=None, *, use_delay=True):
@@ -263,9 +279,16 @@ class DirEstimator:
             self.t_last_action = self.t_clear = t
             f = p.deep_drain if (self.last_delta > p.deep_delay or self._collapsed(t, achieved)) else p.drain_factor
             return self._set(max(p.r_min, f * c), "bloat_fast_down")
-        # no bloat: maybe probe upwards
+        # Bank delivery only when recent samples agree and fresh probes are clear.
+        if self.behind and self.last_delta <= p.thresh_ms / 2 and (use_delay or not self.bloat(t)):
+            recent = [a for ts, a in self.ach_hist if 0 <= t - ts <= p.up_period + 0.05]
+            if len(recent) >= 3:
+                self.clear_peak = max(self.clear_peak, min(min(recent), self.rate))
+        gate, target = self.probe_gate()
         load = shaper_load if shaper_load is not None else (achieved / self.rate if self.rate else 0)
-        if (load >= p.load_thresh and t >= self.t_hold_until and self.rate < p.r_max
+        normal_load = load >= p.load_thresh
+        can_probe = normal_load or (shaper_load is None and achieved >= gate)
+        if (can_probe and t >= self.t_hold_until and self.rate < p.r_max
                 and t - self.t_last_action >= p.up_period):
             pt = p.margin * self.last_ceiling            # last known-good operating point
             near_ceiling = self.last_ceiling > 0 and 0.85 * pt <= self.rate <= 1.03 * pt
@@ -276,12 +299,12 @@ class DirEstimator:
             self.up_streak += 1
             self.state = "PROBING_UP"
             self.t_last_action = t
-            new = min(p.r_max, self.rate * f)
+            new = min(p.r_max if normal_load else target, self.rate * f)
             if achieved > self.c_est:
                 self.c_est = achieved                # only DEMONSTRATED capacity (carried without bloat) is claimed
                 self.c_hi = max(self.c_hi, self.c_est)
             return self._set(new, "slow_up")
-        if load < p.load_thresh:
+        if not can_probe:
             self.up_streak = 0
             if self.state == "PROBING_UP":
                 self.state = "STEADY"

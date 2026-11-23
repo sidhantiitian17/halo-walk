@@ -92,6 +92,18 @@ class Model:
             b = pickle.load(f)
         self.b = b
         self.version = b.get("version", "?")
+        self._predictors = {stage: self._predictor(b[f"m{stage}"]) for stage in (1, 2)}
+
+    @staticmethod
+    def _predictor(model):
+        # The multiclass probability wrapper returns the booster output directly.
+        # Keep the estimator path for other objectives, devices and early stopping.
+        if (getattr(model, "objective", None) == "multi:softprob"
+                and model.get_xgb_params().get("device") in (None, "cpu")):
+            booster = model.get_booster()
+            if booster.attr("best_iteration") is None:
+                return booster.inplace_predict
+        return model.predict_proba
 
     @staticmethod
     def _cal(p, cal):
@@ -106,10 +118,9 @@ class Model:
         import numpy as np
         if not rows:
             return []
-        m = self.b["m%d" % stage]
         cal = self.b["cal%d" % stage]
         results = []
-        for raw in m.predict_proba(np.asarray(rows, dtype=np.float32)).tolist():
+        for raw in self._predictors[stage](np.asarray(rows, dtype=np.float32)).tolist():
             p = self._cal(raw, cal)
             i = max(range(len(p)), key=p.__getitem__)
             results.append((CLASSES[i], p[i], p))

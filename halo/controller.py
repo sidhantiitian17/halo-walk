@@ -901,7 +901,7 @@ class Ctl:
                 hot = True                                   # INIT / DEGRADED / DRAIN / still climbing
             elif (not native_calm and e.bloat(now)) or now - self.last_action[d] < 3.0:
                 hot = True
-            elif (e.rate < 0.999 * e.p.r_max and ach[d] >= 0.9 * e.p.load_thresh * e.rate
+            elif (e.rate < 0.999 * e.p.r_max and ach[d] >= e.probe_gate()[0]
                   and now >= e.t_hold_until - 0.5):
                 hot = True                                   # about to probe upwards
             elif self.sent is None and collapsed(ach[d], e.rate, peak[d], e.p.collapse):
@@ -924,10 +924,11 @@ class Ctl:
         p.tick_s, p.probe_s, p.thresh_ms, p.late_s = g.quiet_tick, 1.0 / g.quiet_hz, e1.p.thresh_ms, 0.4
         p.confirm_win, p.confirm_n, p.base_alpha, p.peak_tau = CONFIRM_WIN, CONFIRM_N, e1.p.base_alpha, 2.0
         p.gate_s, p.ewma_alpha_ref, p.ewma_dt_ref = _sentinel.GATE_S, 0.6, 0.1
-        p.load_thresh, p.collapse, p.rr = e1.p.load_thresh, e1.p.collapse, self._rr
+        p.collapse, p.rr = e1.p.collapse, self._rr
         p.sat_frac = SAT_FRAC
         p.burst_max = e1.p.burst_max
         for i, (d, e) in enumerate((("dl", e1), ("ul", e2))):
+            p.probe_gate[i] = e.probe_gate()[0]
             p.rate[i], p.rmax[i], p.c_est[i], p.hold_until[i] = e.rate, e.p.r_max, e.c_est, e.t_hold_until
             p.ach[i], p.peak[i], p.last_delta[i] = ach[d], peak[d], e.last_delta
             p.st[i].value = e.state.encode()[:15]
@@ -1043,7 +1044,7 @@ class Ctl:
         ach = {"dl": 0.0, "ul": 0.0}
         self.ach_hist = deque(maxlen=600)
         self.host_rate = {}
-        hb_fd = None
+        hb_fd, hb_len = None, None
         req_f = os.path.join(STATE_DIR, "txn_request.json")
         t_flush, n_tick, t_gov = 0.0, 0, time.time()
         t_heavy = 0.0
@@ -1174,7 +1175,9 @@ class Ctl:
                 if hb_fd is None:
                     hb_fd = os.open(hb, os.O_WRONLY | os.O_CREAT, 0o644)
                 os.pwrite(hb_fd, msg, 0)                   # mtime = liveness (watchdog); content = last tick
-                os.ftruncate(hb_fd, len(msg))
+                if len(msg) != hb_len:
+                    os.ftruncate(hb_fd, len(msg))
+                    hb_len = len(msg)
             if now - t_flush >= 1.0:                       # telemetry is block-buffered, flushed once a second
                 self.tel.flush()
                 t_flush = now
@@ -1184,6 +1187,7 @@ class Ctl:
                 sent.arm(self.sent_params(now, ach, peak))
                 sent.bump()
                 armed, t_heavy = True, time.time()
+                hb_len = None  # the native writer can change the file length
 
     def close(self):
         """clean shutdown (SIGTERM -> KeyboardInterrupt in the main loop): stop the C thread (the heartbeat stops with it),

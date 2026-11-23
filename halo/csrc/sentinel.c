@@ -46,7 +46,7 @@ typedef struct {                                                           /* mi
     double tick_s, probe_s, thresh_ms, late_s, confirm_win, base_alpha, peak_tau, gate_s;
     double ewma_alpha_ref, ewma_dt_ref;
     double rate[2], rmax[2], c_est[2], hold_until[2], ach[2], peak[2], last_delta[2];
-    double load_thresh, collapse, sat_frac, burst_max;
+    double probe_gate[2], collapse, sat_frac, burst_max;
     double base_ul[MAXR], base_dl[MAXR];
     int32_t has_base_ul[MAXR], has_base_dl[MAXR];
     int32_t confirm_n, rr;
@@ -376,7 +376,7 @@ void *sentinel_thread(void *arg) {
                 for (int d = 0; d < 2; d++) {
                     drop[d] = peak[d] > 0.5 * p.rate[d] && ach[d] >= 0.10 * p.rate[d]
                               && ach[d] < p.collapse * p.rate[d] && ach[d] <= 0.8 * peak[d];
-                    if (!drop[d] && p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= 0.9 * p.load_thresh * p.rate[d]
+                    if (!drop[d] && p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= p.probe_gate[d]
                             && now >= p.hold_until[d] - 0.5) alert = AL_PROBEUP;
                 }
                 /* Qualify a sharp delivery drop in the native watcher. A sender finishing can

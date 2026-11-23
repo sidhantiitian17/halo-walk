@@ -13,13 +13,18 @@ if [[ -e "$exchange/job" || -e "$exchange/running" || -e "$exchange/$label.tar" 
     exit 1
 fi
 cd "$(dirname "$0")/../.."
-git diff --quiet HEAD -- halo rig scenarios analysis lists
 revision=$(git rev-parse HEAD)
+git diff --quiet "$revision" -- Makefile halo rig scenarios analysis lists
 make -B
-tar --exclude=__pycache__ -cf "$exchange/$label.tar" halo rig scenarios
+git archive --format=tar --output="$exchange/$label.tar" "$revision" halo rig scenarios
+tar -rf "$exchange/$label.tar" halo/libhalo_sentinel.so
 mkdir "$exchange/$label"
 printf '%s\n' "$revision" > "$exchange/$label/source-revision.txt"
 cp lists/{all,dg2}.txt "$exchange/$label/"
+{
+    (cd "$exchange" && sha256sum "$label.tar")
+    sha256sum halo/libhalo_sentinel.so
+} > "$exchange/$label/input-sha256.txt"
 mapfile -t specs < <(awk 'NF == 3 {printf "%s,%s,%s\n", $1, $2, $3}' lists/all.txt lists/dg2.txt)
 {
     printf '#!/bin/bash\nset -euo pipefail\n'

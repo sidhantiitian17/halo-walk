@@ -1,0 +1,2 @@
+stage=1 rows=628 exact_match=true feature_cpu_ms=2.866 reference_inference_cpu_ms=59.878 optimized_inference_cpu_ms=47.061
+stage=2 rows=1411 exact_match=true feature_cpu_ms=12.420 reference_inference_cpu_ms=119.930 optimized_inference_cpu_ms=95.862

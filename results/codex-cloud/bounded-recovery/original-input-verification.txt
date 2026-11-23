@@ -1,0 +1,4 @@
+scenarios/run.py: OK
+rig/rig_up.sh: OK
+rig/set_rate.sh: OK
+analysis/analyze.py: OK

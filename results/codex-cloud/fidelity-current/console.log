@@ -1,0 +1,6 @@
+HALO_FIDELITY fidelity-current 20
+{'rate': 20.0, 'pkts': 7652, 'measured_mbit': 19.99, 'rate_err_pct': -0.06, 'mtu_time_us': 605.6, 'dev_p50_us': 57.16, 'dev_p95_us': 516.72, 'dev_p99_us': 732.36, 'cpu_idle_pct': 78.56, 'pass': False}
+HALO_FIDELITY fidelity-current 50
+{'rate': 50.0, 'pkts': 16550, 'measured_mbit': 49.38, 'rate_err_pct': -1.23, 'mtu_time_us': 242.24, 'dev_p50_us': 75.41, 'dev_p95_us': 290.46, 'dev_p99_us': 908.21, 'cpu_idle_pct': 68.6, 'pass': False}
+HALO_FIDELITY fidelity-current 100
+{'rate': 100.0, 'pkts': 27584, 'measured_mbit': 80.93, 'rate_err_pct': -19.07, 'mtu_time_us': 121.12, 'dev_p50_us': 105.35, 'dev_p95_us': 338.59, 'dev_p99_us': 1611.51, 'cpu_idle_pct': 68.11, 'pass': False}

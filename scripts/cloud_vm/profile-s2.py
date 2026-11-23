@@ -50,6 +50,8 @@ def profile(path):
                          "p95_ms": round(float(np.percentile(values, 95)), 3)})
     return {
         "run": str(path), "time_origin": "rate_down event after the rig's rate command",
+        "native_drop_s": [relative(e["collapse_t"]) for e in events if e.get("kind") == "drop_confirmed"
+                          and -0.5 <= e["collapse_t"] - start <= 2],
         "alert_s": [relative(e["t"]) for e in events if e.get("kind") == "sent_alert"
                     and e.get("why") == "collapse" and -0.5 <= e["t"] - start <= 2],
         "confirm_s": [relative(e["observed_t"]) for e in events if e.get("kind") == "drop_confirmed"

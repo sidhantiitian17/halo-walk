@@ -1,0 +1,40 @@
+Linux (none) 6.12.118+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.118-1 (2026-11-20) x86_64 GNU/Linux
+iperf 3.18 (cJSON 1.7.15)
+Linux (none) 6.12.118+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.118-1 (2026-11-20) x86_64
+Optional features available: CPU affinity setting, IPv6 flow label, SCTP, TCP congestion algorithm setting, sendfile / zerocopy, socket pacing, authentication, bind to device, support IPv4 don't fragment, POSIX threads
+rig up: down=20.0mbit up=4.0mbit delay=10ms/dir buffer=1500000B
+20.0 4.0 10 1500000
+10.0.0.15 via 10.9.0.1 dev eth0 src 10.9.0.2 uid 0 
+    cache 
+10.9.0.2 via 10.0.0.1 dev eth0 src 10.0.0.15 uid 0 
+    cache 
+qdisc htb 1: root refcnt 4 r2q 10 default 0x1 direct_packets_stat 0 direct_qlen 1000
+ Sent 340 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 340 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                           
+LISTEN 0      4096               *:5300            *:*    users:(("iperf3",pid=22636,fd=3))
+Connecting to host 10.0.0.15, port 5300
+[  5] local 10.9.0.2 port 48593 connected to 10.0.0.15 port 5300
+[ ID] Interval           Transfer     Bitrate         Total Datagrams
+[  5]   0.00-1.00   sec  3.82 MBytes  32.0 Mbits/sec  2860  
+[  5]   1.00-2.00   sec  3.82 MBytes  32.0 Mbits/sec  2860  
+[  5]   2.00-3.00   sec  3.81 MBytes  32.0 Mbits/sec  2854  
+[  5]   3.00-4.00   sec  3.81 MBytes  32.0 Mbits/sec  2856  
+[  5]   4.00-5.01   sec  3.82 MBytes  31.8 Mbits/sec  2859  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Jitter    Lost/Total Datagrams
+[  5]   0.00-5.01   sec  19.1 MBytes  32.0 Mbits/sec  0.000 ms  0/14289 (0%)  sender
+[  5]   0.00-5.62   sec  13.0 MBytes  19.3 Mbits/sec  0.272 ms  4584/14288 (32%)  receiver
+
+iperf Done.
+iperf exit=0
+qdisc htb 1: root refcnt 4 r2q 10 default 0x1 direct_packets_stat 0 direct_qlen 1000
+ Sent 13995196 bytes 9725 pkt (dropped 4585, overlimits 9449 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc bfifo 10: parent 1:1 limit 1500000b
+ Sent 13995196 bytes 9725 pkt (dropped 4585, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+/exchange/m1-diagnostic.sh: line 1: 22636 Killed                  ip netns exec pc iperf3 -s -p 5300 > "$dest/server.log" 2>&1

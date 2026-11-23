@@ -1079,10 +1079,9 @@ class Ctl:
             else:
                 now = time.time()
                 period = gov.tick_period(now)
-                if sent is not None and 0 <= now - self.est["dl"].t_native_collapse < CONFIRM_WIN:
-                    select.select([sent.efd], [], [], min(period, 0.05))
-                else:
-                    self.kick.wait(period)
+                if 0 <= now - self.est["dl"].t_native_collapse < CONFIRM_WIN:
+                    period = min(period, 0.05)
+                self.kick.wait(period)
                 if self.kick.is_set():
                     self.kick.clear()
                     if time.time() - last_t < 0.05:

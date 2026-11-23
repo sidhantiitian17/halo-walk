@@ -118,7 +118,7 @@ static void confirm_burst(double now, uint32_t *seqc, pend_t *pend) {
 static double probe_deadline(const hs_params *p, int ri, double ordinary, int drop_check) {
     if (!drop_check || !p->has_base_ul[ri] || !p->has_base_dl[ri]) return ordinary;
     double baseline_rtt = (p->base_ul[ri] + p->base_dl[ri]) / 1000;
-    return fmin(ordinary, fmax(0.08, baseline_rtt + 0.06));
+    return fmin(ordinary, fmax(0.05, baseline_rtt + 2 * p->thresh_ms / 1000));
 }
 
 /* Two modes while armed. CALM: counters and telemetry every tick_s, gated heartbeats,
@@ -153,8 +153,9 @@ void *sentinel_thread(void *arg) {
         uint64_t rx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : 0, tx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : 0;
         double t_last = now, ach[2] = { p.ach[0], p.ach[1] }, peak[2] = { p.peak[0], p.peak[1] }, ld[2] = { p.last_delta[0], p.last_delta[1] };
         pthread_mutex_lock(&G.mu); G.last_live = G.live; G.last_live_t = now; pthread_mutex_unlock(&G.mu);
-        int alert = 0, parked = 0, abrupt_dl_drop = 0, drop_confirmed = 0;
+        int alert = 0, parked = 0;
         unsigned int delayed_reflectors = 0;
+        double early_late[MAXR] = {0};
 
         for (;;) {
             pthread_mutex_lock(&G.mu);
@@ -173,14 +174,14 @@ void *sentinel_thread(void *arg) {
             double tmo = fast ? next_fprobe - now : next_tick - now;
             if (!fast && next_down_check && next_down_check - now < tmo)
                 tmo = next_down_check - now;
-            int drop_check = now < drop_check_until;
+            int drop_check = !fast && now < drop_check_until;
             int pending_by_socket[MAXR] = {0};
             for (int i = 0; i < MAXPEND; i++) {
                 if (!pend[i].used) continue;
                 pending_by_socket[pend[i].ri]++;
-                double deadline = probe_deadline(&p, pend[i].ri, late_s, drop_check);
+                double deadline = probe_deadline(&p, pend[i].ri, late_s, drop_check && pend[i].ts >= dl_collapse_at);
                 double d = pend[i].ts + (pend[i].late ? 1.0 : deadline) - now;
-                if (!(fast == 0 && pend[i].late) && d < tmo) tmo = d;
+                if (d < tmo) tmo = d;
             }
             if (tmo < 0) tmo = 0;
             /* CALM: replies are not waited for (their kernel RX timestamps carry the timing); they are collected at the next
@@ -228,9 +229,9 @@ void *sentinel_thread(void *arg) {
                     int ri = i;
                     double up = (tref - ts) * 1e3, dn = (tr - tref) * 1e3;
                     push(EV_PROBE, tr, up, dn, ri);
-                    if (fast) {
-                        if (drop_check && pend[k].ts >= dl_collapse_at && p.has_base_dl[ri]
-                                && dn - p.base_dl[ri] > p.thresh_ms)
+                    if (fast) continue;
+                    if (drop_check) {
+                        if (pend[k].ts >= dl_collapse_at && p.has_base_dl[ri] && dn - p.base_dl[ri] > p.thresh_ms)
                             delayed_reflectors |= 1u << ri;
                         continue;
                     }
@@ -271,24 +272,28 @@ void *sentinel_thread(void *arg) {
             for (int i = 0; i < MAXPEND; i++) {
                 if (!pend[i].used) continue;
                 double age = now - pend[i].ts;
-                double deadline = probe_deadline(&p, pend[i].ri, late_s, drop_check);
+                int drop_probe = drop_check && pend[i].ts >= dl_collapse_at;
+                double deadline = probe_deadline(&p, pend[i].ri, late_s, drop_probe);
                 if (!pend[i].late && age > deadline) {
                     pend[i].late = 1;
-                    push(EV_LATE, now, age * 1e3, deadline < late_s, pend[i].ri);
-                    if (deadline < late_s && pend[i].ts >= dl_collapse_at)
+                    if (deadline < late_s) {
+                        early_late[pend[i].ri] = age * 1e3;
                         delayed_reflectors |= 1u << pend[i].ri;
-                    if (!fast) alert = AL_LATE;
-                } else if (pend[i].late && fast && age > 1.0) {
+                    } else {
+                        push(EV_LATE, now, age * 1e3, 0, pend[i].ri);
+                        if (!fast && !drop_check) alert = AL_LATE;
+                    }
+                } else if (pend[i].late && age > 1.0) {
                     push(EV_LOST, now, age * 1e3, 0, pend[i].ri); pend[i].used = 0;
                 }
             }
-            if (drop_check && !drop_confirmed && __builtin_popcount(delayed_reflectors) >= p.confirm_n) {
-                drop_confirmed = 1;
+            if (drop_check && __builtin_popcount(delayed_reflectors) >= p.confirm_n) {
+                for (int i = 0; i < G.nsock; i++)
+                    if (early_late[i] > 0) push(EV_LATE, now, early_late[i], 1, i);
                 push(EV_DROP_CONFIRMED, now, dl_collapse_at, 0, 0);
-                uint64_t one = 1;
-                if (write(G.efd, &one, 8) < 0) { }
+                alert = AL_COLLAPSE;
             }
-            if (!fast && !alert && next_down_check && now >= next_down_check && now < next_tick) {
+            if (!fast && !alert && !drop_check && next_down_check && now >= next_down_check && now < next_tick) {
                 next_down_check = 0;
                 uint64_t nrx = rd_ctr(G.fd_rx);
                 double dt = now - t_last;
@@ -303,9 +308,10 @@ void *sentinel_thread(void *arg) {
                     rx = nrx; tx = ntx; t_last = now;
                     push(EV_ACH, now, ach[0], ach[1], 0);
                     dl_collapse_at = now;
-                    abrupt_dl_drop = 1;
-                    drop_check_until = now + p.confirm_win;
-                    alert = AL_COLLAPSE;
+                    drop_check_until = watch_until = now + p.confirm_win;
+                    delayed_reflectors = 0;
+                    memset(early_late, 0, sizeof early_late);
+                    confirm_burst(now, &seqc, pend);
                 }
             }
             if (!fast && !alert && now >= next_tick) {
@@ -344,13 +350,14 @@ void *sentinel_thread(void *arg) {
                     if (!drop[d] && p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= 0.9 * p.load_thresh * p.rate[d]
                             && now >= p.hold_until[d] - 0.5) alert = AL_PROBEUP;
                 }
-                /* Start the fast loop immediately on a sharp drop in the last delivery sample.
-                 * It still requires delay votes before cutting. For smaller drops, corroborate in C. */
-                if (!alert && drop[0] && inst[0] < 0.5 * p.rate[0]) {
+                /* Qualify a sharp delivery drop in the native watcher. A sender finishing can
+                 * lower the counters without congestion and does not need the Python fast loop. */
+                if (!alert && !drop_check && drop[0] && inst[0] < 0.5 * p.rate[0]) {
                     dl_collapse_at = now;
-                    abrupt_dl_drop = 1;
-                    drop_check_until = now + p.confirm_win;
-                    alert = AL_COLLAPSE;
+                    drop_check_until = watch_until = now + p.confirm_win;
+                    delayed_reflectors = 0;
+                    memset(early_late, 0, sizeof early_late);
+                    confirm_burst(now, &seqc, pend);
                 } else if (!alert && (drop[0] || drop[1]) && now >= watch_until) {
                     dl_collapse_at = drop[0] ? now : 0;
                     confirm_until = watch_until = now + p.confirm_win;
@@ -360,7 +367,8 @@ void *sentinel_thread(void *arg) {
                 if (!alert && now - last_probe >= p.probe_s - 0.5 * p.tick_s && G.nsock > 0) {
                     last_probe = now; send_probe(p.rr % G.nsock, &seqc, pend); p.rr++;
                 }
-                next_down_check = !alert && p.tick_s >= 0.2 && p.sat_frac > 0 && G.fd_rx >= 0 && G.fd_tx >= 0
+                next_down_check = !alert && now >= drop_check_until && p.tick_s >= 0.2
+                    && p.sat_frac > 0 && G.fd_rx >= 0 && G.fd_tx >= 0
                     && ach[0] >= p.sat_frac * p.rate[0] ? now + p.tick_s / 2 : 0;
             }
             if (alert == AL_ERROR) break;
@@ -370,7 +378,7 @@ void *sentinel_thread(void *arg) {
                 G.st.ach[0] = ach[0]; G.st.ach[1] = ach[1]; G.st.peak[0] = peak[0]; G.st.peak[1] = peak[1];
                 G.st.alert = alert; G.st.dl_collapse_at = dl_collapse_at; G.fast = 1; fs = G.fast_s;
                 pthread_mutex_unlock(&G.mu);
-                if ((alert != AL_DELAY && alert != AL_COLLAPSE) || abrupt_dl_drop)
+                if (alert != AL_DELAY && alert != AL_COLLAPSE)
                     for (int j = 0; j < G.nsock; j++) send_probe(j, &seqc, pend);
                 fast = 1; alert = 0; next_fprobe = now + fs;
                 uint64_t one = 1; if (write(G.efd, &one, 8) < 0) { }

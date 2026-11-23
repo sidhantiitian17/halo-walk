@@ -180,11 +180,11 @@ def test_abrupt_downlink_drop_uses_baseline_relative_probe_deadlines(refl, tmp_p
         refl.drop = True
         sent.set_fast(0.05)
         sent.arm(p)
-        assert _wait_alert(sent) == S.AL_COLLAPSE
-        time.sleep(0.2)
+        expected_alert = S.AL_COLLAPSE if reflector_count == 4 else S.AL_NONE
+        assert _wait_alert(sent, 0.35) == expected_alert
         events = sent.drain()
         early = [e for e in events if e[0] == S.EV_LATE and e[3]]
-        assert {e[4] for e in early if 79 <= e[2] < 400} == set(range(reflector_count))
+        assert {e[4] for e in early if 49 <= e[2] < 400} == (set(range(4)) if reflector_count == 4 else set())
         assert sum(e[0] == S.EV_DROP_CONFIRMED for e in events) == (reflector_count == 4)
     finally:
         sent.stop()

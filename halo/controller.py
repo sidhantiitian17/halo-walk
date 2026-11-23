@@ -174,7 +174,7 @@ def ct_dump_netlink():
 MANY_FLOWS_N = int(os.environ.get("HALO_MANY_FLOWS_N", policy.MANY_FLOWS_N))
 MANY_FLOWS_MARGIN = float(os.environ.get("HALO_MANY_FLOWS_MARGIN", policy.MANY_FLOWS_MARGIN))
 HEUR_SIZE_ACTS = os.environ.get("HALO_HEUR_SIZE_ACTS") == "1"     # diagnostics: act on the elephant (size) verdict
-NEED_BINS = max(HORIZONS) + 1      # baseline poll + bins for the largest classification horizon
+NEED_BINS = max(HORIZONS)          # bins already exclude the initial conntrack snapshot
 # The native sentinel samples arrivals on every calm tick and confirms suspected capacity loss with a probe burst.
 # The Python fallback keeps full-rate saturation monitoring.
 SAT_FRAC = float(os.environ.get("HALO_SAT_FRAC", "0.9"))

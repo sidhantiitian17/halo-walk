@@ -148,7 +148,7 @@ void *sentinel_thread(void *arg) {
         { uint64_t x; if (read(G.cefd, &x, 8) < 0) { } }
         double now = rt(), next_tick = now + p.tick_s, last_probe = now - p.probe_s, next_fprobe = now;
         double confirm_until = 0, watch_until = 0, dl_delay_since = 0, dl_collapse_at = 0;
-        double next_heartbeat = now, drop_check_until = 0, next_down_check = 0, late_check_at = 0;
+        double next_heartbeat = now, drop_check_until = 0, late_check_at = 0;
         int confirm_bad[2] = {0, 0};
         uint64_t rx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : 0, tx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : 0;
         double t_last = now, ach[2] = { p.ach[0], p.ach[1] }, peak[2] = { p.peak[0], p.peak[1] }, ld[2] = { p.last_delta[0], p.last_delta[1] };
@@ -173,8 +173,6 @@ void *sentinel_thread(void *arg) {
                 next_fprobe += fs; if (next_fprobe < now) next_fprobe = now + fs;
             }
             double tmo = fast ? next_fprobe - now : next_tick - now;
-            if (!fast && next_down_check && next_down_check - now < tmo)
-                tmo = next_down_check - now;
             int drop_check = !fast && now < drop_check_until;
             int pending_by_socket[MAXR] = {0};
             for (int i = 0; i < MAXPEND; i++) {
@@ -299,36 +297,29 @@ void *sentinel_thread(void *arg) {
                 }
             }
             if (drop_check && __builtin_popcount(delayed_reflectors) >= p.confirm_n) {
-                for (int i = 0; i < G.nsock; i++)
-                    if (early_late[i] > 0) push(EV_LATE, now, early_late[i], 1, i);
-                push(EV_DROP_CONFIRMED, now, dl_collapse_at, 0, 0);
-                alert = AL_COLLAPSE;
+                double dt = now - t_last;
+                int recovered = 0;
+                if (dt >= 0.04) {
+                    uint64_t nrx = rd_ctr(G.fd_rx);
+                    recovered = (double)(nrx - rx) * 8 / dt / 1e6 >= p.collapse * p.rate[0];
+                }
+                if (recovered) {
+                    /* The fall recovered during confirmation. Keep the normal
+                     * counter cadence and let the genuine delay samples stand. */
+                    dl_collapse_at = 0;
+                    drop_check_until = 0;
+                    watch_until = 0;
+                } else {
+                    for (int i = 0; i < G.nsock; i++)
+                        if (early_late[i] > 0) push(EV_LATE, now, early_late[i], 1, i);
+                    push(EV_DROP_CONFIRMED, now, dl_collapse_at, 0, 0);
+                    alert = AL_COLLAPSE;
+                }
             }
             if (!fast && !alert && !drop_check && late_check_at && __builtin_popcount(late_reflectors) >= p.confirm_n) {
                 for (int i = 0; i < G.nsock; i++)
                     if (late_age[i] > 0) push(EV_LATE, now, late_age[i], 0, i);
                 alert = AL_LATE;
-            }
-            if (!fast && !alert && !drop_check && next_down_check && now >= next_down_check && now < next_tick) {
-                next_down_check = 0;
-                uint64_t nrx = rd_ctr(G.fd_rx);
-                double dt = now - t_last;
-                double arrival = (double)(nrx - rx) * 8 / dt / 1e6;
-                if (arrival >= 0.10 * p.rate[0] && arrival < p.collapse * p.rate[0]) {
-                    /* Check delivery between normal ticks when the downlink was saturated.
-                     * Read the other direction and publish counters only on a suspected loss. */
-                    uint64_t ntx = rd_ctr(G.fd_tx);
-                    ach[0] = arrival;
-                    ach[1] += (1.0 - pow(1.0 - p.ewma_alpha_ref, dt / p.ewma_dt_ref))
-                            * ((double)(ntx - tx) * 8 / dt / 1e6 - ach[1]);
-                    rx = nrx; tx = ntx; t_last = now;
-                    push(EV_ACH, now, ach[0], ach[1], 0);
-                    dl_collapse_at = now;
-                    drop_check_until = watch_until = now + p.confirm_win;
-                    delayed_reflectors = 0;
-                    memset(early_late, 0, sizeof early_late);
-                    confirm_burst(now, &seqc, pend);
-                }
             }
             if (!fast && !alert && now >= next_tick) {
                 next_tick += p.tick_s; if (next_tick < now) next_tick = now + p.tick_s;
@@ -383,9 +374,6 @@ void *sentinel_thread(void *arg) {
                 if (!alert && now - last_probe >= p.probe_s - 0.5 * p.tick_s && G.nsock > 0) {
                     last_probe = now; send_probe(p.rr % G.nsock, &seqc, pend); p.rr++;
                 }
-                next_down_check = !alert && now >= drop_check_until && p.tick_s >= 0.2
-                    && p.sat_frac > 0 && G.fd_rx >= 0 && G.fd_tx >= 0
-                    && ach[0] >= p.sat_frac * p.rate[0] ? now + p.tick_s / 2 : 0;
             }
             if (alert == AL_ERROR) break;
             if (alert) {                                                    /* calm -> full rate, no gap; Python decides when calm returns */

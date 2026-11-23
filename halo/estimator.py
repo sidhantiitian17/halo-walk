@@ -92,6 +92,7 @@ class DirEstimator:
     episodes: int = 0
     t_bloat_on: float = -1.0
     t_native_collapse: float = float("-inf")
+    t_native_confirmed: float = float("-inf")
     t_burst_on: float = -1.0
     ach_onset: float = 0.0
     ach_hist: deque = field(default_factory=lambda: deque(maxlen=64))   # (t, achieved) for the 'has it fallen' test
@@ -205,7 +206,11 @@ class DirEstimator:
                 # Count the interval since the native watcher detected the arrival drop,
                 # while retaining this estimator's independent delay vote.
                 self.t_bloat_on = self.t_native_collapse
-        if bloat and (t - self.t_bloat_on < (p.confirm_fast if self._collapsed(t, achieved) else p.confirm)
+        if bloat:
+            collapsed = self._collapsed(t, achieved)
+            confirmed_drop = (self.behind and collapsed and self.t_native_confirmed == self.t_native_collapse
+                              and 0 <= t - self.t_native_confirmed <= p.confirm)
+        if bloat and ((not confirmed_drop and t - self.t_bloat_on < (p.confirm_fast if collapsed else p.confirm))
                       or achieved > p.ramp_tol * max(self.ach_onset, 1e-3)
                       or self._flow_start(t, achieved)):
             if achieved > p.ramp_tol * max(self.ach_onset, 1e-3):

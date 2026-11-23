@@ -167,8 +167,9 @@ def test_fast_mode_probes_at_full_rate_and_queues_samples(refl, tmp_path):
         sent.stop()
 
 
-def test_abrupt_downlink_drop_uses_baseline_relative_probe_deadlines(refl, tmp_path):
-    sent = _load(refl, tmp_path)
+@pytest.mark.parametrize("reflector_count", [1, 4])
+def test_abrupt_downlink_drop_uses_baseline_relative_probe_deadlines(refl, tmp_path, reflector_count):
+    sent = _load(refl, tmp_path, n=reflector_count)
     try:
         p = _params()
         p.rate[0] = p.rmax[0] = 10.0
@@ -181,8 +182,10 @@ def test_abrupt_downlink_drop_uses_baseline_relative_probe_deadlines(refl, tmp_p
         sent.arm(p)
         assert _wait_alert(sent) == S.AL_COLLAPSE
         time.sleep(0.2)
-        early = [e for e in sent.drain() if e[0] == S.EV_LATE and e[3]]
-        assert {e[4] for e in early if 79 <= e[2] < 400} == set(range(4))
+        events = sent.drain()
+        early = [e for e in events if e[0] == S.EV_LATE and e[3]]
+        assert {e[4] for e in early if 79 <= e[2] < 400} == set(range(reflector_count))
+        assert sum(e[0] == S.EV_DROP_CONFIRMED for e in events) == (reflector_count == 4)
     finally:
         sent.stop()
 

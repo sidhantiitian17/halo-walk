@@ -966,6 +966,9 @@ class Ctl:
             elif kind == _sentinel.EV_FAST:
                 gov.n_fast += 1
                 gov.force(t)
+            elif kind == _sentinel.EV_DROP_CONFIRMED:
+                self.est["dl"].t_native_confirmed = a
+                self.event("drop_confirmed", observed_t=t, collapse_t=a)
         if not calm:                                         # FAST mode: Python counts bytes and writes telemetry itself
             return alert, None, None
         st = sent.state()
@@ -1076,9 +1079,10 @@ class Ctl:
             else:
                 now = time.time()
                 period = gov.tick_period(now)
-                if 0 <= now - self.est["dl"].t_native_collapse < CONFIRM_WIN:
-                    period = min(period, 0.05)
-                self.kick.wait(period)
+                if sent is not None and 0 <= now - self.est["dl"].t_native_collapse < CONFIRM_WIN:
+                    select.select([sent.efd], [], [], min(period, 0.05))
+                else:
+                    self.kick.wait(period)
                 if self.kick.is_set():
                     self.kick.clear()
                     if time.time() - last_t < 0.05:
@@ -1137,7 +1141,7 @@ class Ctl:
                     self.last_action[d] = now
                     self.fsm = "ADAPTING" if e.state in ("DRAIN", "PROBING_UP") else "STEADY"
                     self.event("rate", dir=d, old=round(old, 3), new=v.value, why=why, c_est=round(e.c_est, 3),
-                               ach=round(ach[d], 3), shield=v.reasons)
+                               ach=round(ach[d], 3), shield=v.reasons, decision_t=now)
             e1, e2 = self.est["dl"], self.est["ul"]
             if gov.enabled:
                 self.govern(now, ach, peak, dt)

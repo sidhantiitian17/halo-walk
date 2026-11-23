@@ -6,7 +6,7 @@ import ctypes, os, socket, sys
 
 MAXR = 8
 LIB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "libhalo_sentinel.so")
-EV_PROBE, EV_ACH, EV_LATE, EV_BURST, EV_FAST, EV_LOST = 1, 2, 3, 4, 5, 6
+EV_PROBE, EV_ACH, EV_LATE, EV_BURST, EV_FAST, EV_LOST, EV_DROP_CONFIRMED = range(1, 8)
 AL_NONE, AL_DELAY, AL_LATE, AL_COLLAPSE, AL_PROBEUP, AL_ERROR = range(6)
 ALERTS = {0: "none", 1: "delay", 2: "late", 3: "collapse", 4: "probe_up", 5: "error"}
 SYNC_S = 1.0                    # the Python main loop wakes at least this often while the sentinel runs (liveness bump)

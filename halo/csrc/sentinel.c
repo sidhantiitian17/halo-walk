@@ -37,7 +37,7 @@
 #define TELCAP 65536
 #define MAGIC 0x48414C4Fu
 
-enum { EV_PROBE = 1, EV_ACH = 2, EV_LATE = 3, EV_BURST = 4, EV_FAST = 5, EV_LOST = 6 };
+enum { EV_PROBE = 1, EV_ACH = 2, EV_LATE = 3, EV_BURST = 4, EV_FAST = 5, EV_LOST = 6, EV_DROP_CONFIRMED = 7 };
 enum { AL_NONE = 0, AL_DELAY = 1, AL_LATE = 2, AL_COLLAPSE = 3, AL_PROBEUP = 4, AL_ERROR = 5 };
 
 typedef struct { double t, a, b; int32_t kind, ri; } hs_event;            /* 32 bytes */
@@ -153,7 +153,8 @@ void *sentinel_thread(void *arg) {
         uint64_t rx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : 0, tx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : 0;
         double t_last = now, ach[2] = { p.ach[0], p.ach[1] }, peak[2] = { p.peak[0], p.peak[1] }, ld[2] = { p.last_delta[0], p.last_delta[1] };
         pthread_mutex_lock(&G.mu); G.last_live = G.live; G.last_live_t = now; pthread_mutex_unlock(&G.mu);
-        int alert = 0, parked = 0, abrupt_dl_drop = 0;
+        int alert = 0, parked = 0, abrupt_dl_drop = 0, drop_confirmed = 0;
+        unsigned int delayed_reflectors = 0;
 
         for (;;) {
             pthread_mutex_lock(&G.mu);
@@ -223,7 +224,12 @@ void *sentinel_thread(void *arg) {
                     int ri = i;
                     double up = (tref - ts) * 1e3, dn = (tr - tref) * 1e3;
                     push(EV_PROBE, tr, up, dn, ri);
-                    if (fast) continue;                              /* Python's estimators judge the samples in FAST mode */
+                    if (fast) {
+                        if (drop_check && pend[k].ts >= dl_collapse_at && p.has_base_dl[ri]
+                                && dn - p.base_dl[ri] > p.thresh_ms)
+                            delayed_reflectors |= 1u << ri;
+                        continue;
+                    }
                     double du, dd;
                     /* same baseline rule as DirEstimator.on_probe (min, slow upward drift) */
                     if (!p.has_base_ul[ri] || up < p.base_ul[ri]) { p.base_ul[ri] = up; p.has_base_ul[ri] = 1; } else p.base_ul[ri] += p.base_alpha * (up - p.base_ul[ri]);
@@ -265,10 +271,18 @@ void *sentinel_thread(void *arg) {
                 if (!pend[i].late && age > deadline) {
                     pend[i].late = 1;
                     push(EV_LATE, now, age * 1e3, deadline < late_s, pend[i].ri);
+                    if (deadline < late_s && pend[i].ts >= dl_collapse_at)
+                        delayed_reflectors |= 1u << pend[i].ri;
                     if (!fast) alert = AL_LATE;
                 } else if (pend[i].late && fast && age > 1.0) {
                     push(EV_LOST, now, age * 1e3, 0, pend[i].ri); pend[i].used = 0;
                 }
+            }
+            if (drop_check && !drop_confirmed && __builtin_popcount(delayed_reflectors) >= p.confirm_n) {
+                drop_confirmed = 1;
+                push(EV_DROP_CONFIRMED, now, dl_collapse_at, 0, 0);
+                uint64_t one = 1;
+                if (write(G.efd, &one, 8) < 0) { }
             }
             if (!fast && !alert && now >= next_tick) {
                 next_tick += p.tick_s; if (next_tick < now) next_tick = now + p.tick_s;
@@ -306,9 +320,9 @@ void *sentinel_thread(void *arg) {
                     if (!drop[d] && p.rate[d] < 0.999 * p.rmax[d] && ach[d] >= 0.9 * p.load_thresh * p.rate[d]
                             && now >= p.hold_until[d] - 0.5) alert = AL_PROBEUP;
                 }
-                /* Start the fast loop immediately when delivery has fallen by more than half.
+                /* Start the fast loop immediately on a sharp drop in the last delivery sample.
                  * It still requires delay votes before cutting. For smaller drops, corroborate in C. */
-                if (!alert && drop[0] && ach[0] < 0.5 * p.rate[0]) {
+                if (!alert && drop[0] && inst[0] < 0.5 * p.rate[0]) {
                     dl_collapse_at = now;
                     abrupt_dl_drop = 1;
                     drop_check_until = now + p.confirm_win;

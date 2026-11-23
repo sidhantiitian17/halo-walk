@@ -108,6 +108,24 @@ def test_native_collapse_waits_for_delay_votes_and_uses_their_sample_times():
     assert rate == pytest.approx(6.0)
 
 
+@pytest.mark.parametrize("confirmed", [True, False])
+def test_only_current_native_confirmation_skips_the_extra_timer(confirmed):
+    e = DirEstimator(EstParams(), rate=95.0)
+    for i in range(4):
+        e.on_probe(i, 20.0, 5.0)
+    e.tick(5.0, 95.0)
+    e.t_native_collapse = 5.1
+    e.t_native_confirmed = 5.1 if confirmed else 5.0
+    assert e.tick(5.15, 20.0)[0] is None
+    for i in range(3):
+        e.on_probe(i, 120.0, 5.18)
+    rate, reason = e.tick(5.19, 20.0)
+    if confirmed:
+        assert (rate, reason) == (6.0, "bloat_fast_down")
+    else:
+        assert (rate, reason) == (None, "bloat_unconfirmed")
+
+
 def test_overshoot_after_hold_converges():
     p = EstParams()
     e = DirEstimator(p, rate=95.0)

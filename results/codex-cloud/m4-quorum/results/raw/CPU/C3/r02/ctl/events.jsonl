@@ -1,0 +1,9 @@
+{"mode": {"plan_dl": 50.0, "plan_ul": 10.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 20.0, "safe_ul": 4.0, "autorate": 1, "classifier": "heur", "model": "/tmp/m4-quorum/halo/model.pkl", "collect": false, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "quiet_probe_hz": 2.0, "quiet_tick": 0.25, "sentinel": 1, "sentinel_lib": "", "health_s": 5.0, "out": "/tmp/m4-quorum/results/raw/CPU/C3/r02/ctl", "nice": 10}, "t": 1795399832.1978, "kind": "start"}
+{"lkg": "3e08979d1a8a7cf3", "why": "initial", "t": 1795399832.3312, "kind": "commit"}
+{"msg": "C calm-mode thread loaded", "t": 1795399832.3602, "kind": "sentinel"}
+{"key": ["udp", "10.0.0.10", 58325, "10.9.0.2", 3478], "cls": "call", "p": 1.0, "abstain": false, "tin": 4, "stage": 1, "age": 0.0, "t": 1795399841.0285, "kind": "classify"}
+{"probes": 0, "ticks": 48, "ticks_full": 45, "bursts": 1, "to_full": 0, "sentinel": true, "sent_alerts": {}, "cpu_main": 1.51, "cpu_slow": 0.16, "cpu_poll": 0.05, "slow_runs": 15, "slow_polls": 3, "ct_in_c": true, "t": 1795399845.2964, "kind": "gov"}
+{"why": "collapse", "ach_dl": 29.94, "ach_ul": 1.25, "t": 1795399847.1646, "kind": "sent_alert"}
+{"probes": 0, "ticks": 63, "ticks_full": 57, "bursts": 2, "to_full": 1, "sentinel": true, "sent_alerts": {"collapse": 1}, "cpu_main": 1.59, "cpu_slow": 0.21, "cpu_poll": 0.07, "slow_runs": 17, "slow_polls": 5, "ct_in_c": true, "t": 1795399856.2495, "kind": "gov"}
+{"probes": 0, "ticks": 66, "ticks_full": 57, "bursts": 2, "to_full": 1, "sentinel": true, "sent_alerts": {"collapse": 1}, "cpu_main": 1.62, "cpu_slow": 0.26, "cpu_poll": 0.1, "slow_runs": 19, "slow_polls": 7, "ct_in_c": true, "t": 1795399868.3194, "kind": "gov"}
+{"why": "collapse", "ach_dl": 25.07, "ach_ul": 1.74, "t": 1795399870.9533, "kind": "sent_alert"}

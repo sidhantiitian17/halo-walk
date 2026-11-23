@@ -1,0 +1,232 @@
+{
+  "campaign_pass": false,
+  "run_counts": {
+    "S2/C3": {
+      "observed": 3,
+      "expected": 3
+    },
+    "CPU/C1": {
+      "observed": 2,
+      "expected": 2
+    },
+    "CPU/C3": {
+      "observed": 2,
+      "expected": 2
+    },
+    "CPU/C4": {
+      "observed": 2,
+      "expected": 2
+    }
+  },
+  "controller_not_ready": [],
+  "measurements": {
+    "4": {
+      "id": 4,
+      "name": "S2 capacity step: adaptation, recovery, stability",
+      "value": "C3 T_adapt 2.10 s, recovery 9.8 s, 0.0 changes/min (medians, N=3)",
+      "pass": false,
+      "criterion": "C3: T_adapt <= 2 s AND recovery <= 30 s AND steady-state dl rate changes <= 6 /min (medians over reps)",
+      "detail": {
+        "C3": {
+          "n": 3,
+          "runs": [
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.518,
+              "low_phase_added_p99_ms": 162.377,
+              "low_phase_added_p95_ms": 63.325,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 2.0,
+              "t_settle_strict_s": 22.2,
+              "recovery_s": 9.848,
+              "telemetry_end_rel_s": 36.176,
+              "changes_pre_down": 0,
+              "changes_last15": 0,
+              "changes_per_min": 0.0
+            },
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.508,
+              "low_phase_added_p99_ms": 155.238,
+              "low_phase_added_p95_ms": 66.608,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 2.1,
+              "t_settle_strict_s": null,
+              "recovery_s": 14.993,
+              "telemetry_end_rel_s": 37.029,
+              "changes_pre_down": 0,
+              "changes_last15": 0,
+              "changes_per_min": 0.0
+            },
+            {
+              "cap_down": 10.0,
+              "cap_up": 50.0,
+              "pre_median_ms": 10.607,
+              "low_phase_added_p99_ms": 161.52,
+              "low_phase_added_p95_ms": 66.139,
+              "rate_source": "telemetry r_dl",
+              "t_adapt_s": 2.1,
+              "t_settle_strict_s": 18.8,
+              "recovery_s": 9.605,
+              "telemetry_end_rel_s": 37.897,
+              "changes_pre_down": 0,
+              "changes_last15": 3,
+              "changes_per_min": 5.143
+            }
+          ],
+          "t_adapt_median_s": 2.1,
+          "recovery_median_s": 9.848,
+          "changes_per_min_median": 0.0,
+          "t_adapt_s": {
+            "n": 3,
+            "median": 2.1,
+            "ci95": [
+              2.0,
+              2.1
+            ],
+            "values": [
+              2.0,
+              2.1,
+              2.1
+            ]
+          },
+          "recovery_s": {
+            "n": 3,
+            "median": 9.848,
+            "ci95": [
+              9.605,
+              14.993
+            ],
+            "values": [
+              9.848,
+              14.993,
+              9.605
+            ]
+          },
+          "changes_per_min": {
+            "n": 3,
+            "median": 0.0,
+            "ci95": [
+              0.0,
+              5.143
+            ],
+            "values": [
+              0.0,
+              0.0,
+              5.143
+            ]
+          },
+          "low_phase_added_p99_ms": {
+            "n": 3,
+            "median": 161.52,
+            "ci95": [
+              155.238,
+              162.377
+            ],
+            "values": [
+              162.377,
+              155.238,
+              161.52
+            ]
+          },
+          "pass": false
+        },
+        "capacity_steps_mbps": [
+          [
+            10.0,
+            50.0
+          ]
+        ]
+      }
+    },
+    "12": {
+      "id": 12,
+      "name": "Controller CPU cost",
+      "value": "C1 0.00% [95% CI 0.00, 0.00], N=2 of a core; C3 2.04% [95% CI 1.75, 2.33], N=2 of a core; C4 5.56% [95% CI 1.92, 9.19], N=2 of a core (C1 baseline 0.00%; platform software-emulated (TCG) -> pessimistic)",
+      "pass": false,
+      "criterion": "controller CPU (C3/C4) minus C1 <= 2% of one core",
+      "detail": {
+        "C1": {
+          "n": 2,
+          "median": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "values": [
+            0.0,
+            0.0
+          ]
+        },
+        "C3": {
+          "n": 2,
+          "median": 2.039,
+          "ci95": [
+            1.753,
+            2.325
+          ],
+          "values": [
+            2.325,
+            1.753
+          ]
+        },
+        "C4": {
+          "n": 2,
+          "median": 5.555,
+          "ci95": [
+            1.918,
+            9.193
+          ],
+          "values": [
+            1.918,
+            9.193
+          ]
+        },
+        "baseline_C1": 0.0,
+        "ncpu": [
+          3
+        ],
+        "softirq_pct": {
+          "C1": {
+            "n": 2,
+            "median": 49.643,
+            "ci95": [
+              47.108,
+              52.177
+            ],
+            "values": [
+              47.108,
+              52.177
+            ]
+          },
+          "C3": {
+            "n": 2,
+            "median": 54.812,
+            "ci95": [
+              54.787,
+              54.836
+            ],
+            "values": [
+              54.836,
+              54.787
+            ]
+          },
+          "C4": {
+            "n": 2,
+            "median": 54.007,
+            "ci95": [
+              52.55,
+              55.463
+            ],
+            "values": [
+              55.463,
+              52.55
+            ]
+          }
+        }
+      }
+    }
+  }
+}

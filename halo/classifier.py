@@ -98,11 +98,12 @@ class Model:
     def _predictor(model):
         # The multiclass probability wrapper returns the booster output directly.
         # Keep the estimator path for other objectives, devices and early stopping.
-        if (getattr(model, "objective", None) == "multi:softprob"
-                and model.get_xgb_params().get("device") in (None, "cpu")):
-            booster = model.get_booster()
-            if booster.attr("best_iteration") is None:
-                return booster.inplace_predict
+        if getattr(model, "objective", None) == "multi:softprob":
+            params = model.get_xgb_params()
+            if params.get("device") in (None, "cpu") and params.get("booster") != "gblinear":
+                booster = model.get_booster()
+                if booster.attr("best_iteration") is None:
+                    return booster.inplace_predict
         return model.predict_proba
 
     @staticmethod

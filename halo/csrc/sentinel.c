@@ -37,7 +37,10 @@
 #define TELCAP 65536
 #define MAGIC 0x48414C4Fu
 
-enum { EV_PROBE = 1, EV_ACH = 2, EV_LATE = 3, EV_BURST = 4, EV_FAST = 5, EV_LOST = 6, EV_DROP_CONFIRMED = 7 };
+enum {
+    EV_PROBE = 1, EV_ACH = 2, EV_LATE = 3, EV_BURST = 4, EV_FAST = 5,
+    EV_LOST = 6, EV_DROP_CONFIRMED = 7, EV_SAMPLE_GAP = 8
+};
 enum { AL_NONE = 0, AL_DELAY = 1, AL_LATE = 2, AL_COLLAPSE = 3, AL_PROBEUP = 4, AL_ERROR = 5 };
 
 typedef struct { double t, a, b; int32_t kind, ri; } hs_event;            /* 32 bytes */
@@ -346,6 +349,7 @@ void *sentinel_thread(void *arg) {
             if (!fast && !alert && now >= next_tick) {
                 next_tick += p.tick_s; if (next_tick < now) next_tick = now + p.tick_s;
                 double dt = now - t_last; if (dt < 1e-3) dt = 1e-3;
+                int fresh_window = dt <= 1.5 * p.tick_s;
                 uint64_t nrx = G.fd_rx >= 0 ? rd_ctr(G.fd_rx) : rx, ntx = G.fd_tx >= 0 ? rd_ctr(G.fd_tx) : tx;
                 double inst[2] = { (double)(nrx - rx) * 8 / dt / 1e6, (double)(ntx - tx) * 8 / dt / 1e6 };
                 rx = nrx; tx = ntx; t_last = now;
@@ -381,7 +385,7 @@ void *sentinel_thread(void *arg) {
                 }
                 /* Qualify a sharp delivery drop in the native watcher. A sender finishing can
                  * lower the counters without congestion and does not need the Python fast loop. */
-                if (!alert && !drop_check && drop[0] && inst[0] < p.collapse * p.rate[0]
+                if (fresh_window && !alert && !drop_check && drop[0] && inst[0] < p.collapse * p.rate[0]
                         && (now >= watch_until || inst[0] < 0.5 * p.rate[0])) {
                     dl_collapse_at = now;
                     drop_check_until = watch_until = now + p.confirm_win;
@@ -389,7 +393,11 @@ void *sentinel_thread(void *arg) {
                     memset(early_late, 0, sizeof early_late);
                     confirm_burst(now, &seqc, pend);
                 } else if (!alert && (drop[0] || drop[1]) && now >= watch_until) {
-                    dl_collapse_at = drop[0] ? now : 0;
+                    /* A missed sampling deadline can include a local forwarding
+                     * stall. Check the paths, but use ordinary delay confirmation. */
+                    if (drop[0] && !fresh_window)
+                        push(EV_SAMPLE_GAP, now, dt, inst[0], 0);
+                    dl_collapse_at = drop[0] && fresh_window ? now : 0;
                     confirm_until = watch_until = now + p.confirm_win;
                     confirm_bad[0] = confirm_bad[1] = 0;
                     confirm_burst(now, &seqc, pend);

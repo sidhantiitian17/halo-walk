@@ -971,6 +971,8 @@ class Ctl:
             elif kind == _sentinel.EV_DROP_CONFIRMED:
                 self.est["dl"].t_native_confirmed = a
                 self.event("drop_confirmed", observed_t=t, collapse_t=a)
+            elif kind == _sentinel.EV_SAMPLE_GAP:
+                self.event("sent_sample_gap", observed_t=t, gap_s=round(a, 3), arrival_dl=round(b, 3))
         if not calm:                                         # FAST mode: Python counts bytes and writes telemetry itself
             return alert, None, None
         st = sent.state()

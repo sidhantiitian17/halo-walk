@@ -1,0 +1,41 @@
+{"mode": {"plan_dl": 50.0, "plan_ul": 10.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 20.0, "safe_ul": 4.0, "autorate": 1, "classifier": "heur", "model": "/tmp/timely-recovery/halo/model.pkl", "collect": false, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "quiet_probe_hz": 2.0, "quiet_tick": 0.25, "sentinel": 1, "sentinel_lib": "", "health_s": 5.0, "out": "/tmp/timely-recovery/results/raw/S2/C3/r01/ctl", "nice": 10}, "t": 1795408219.7819, "kind": "start"}
+{"lkg": "3e08979d1a8a7cf3", "why": "initial", "t": 1795408219.9495, "kind": "commit"}
+{"msg": "C calm-mode thread loaded", "t": 1795408219.98, "kind": "sentinel"}
+{"probes": 0, "ticks": 49, "ticks_full": 46, "bursts": 0, "to_full": 0, "sentinel": true, "sent_alerts": {}, "cpu_main": 2.92, "cpu_slow": 0.05, "cpu_poll": 0.04, "slow_runs": 3, "slow_polls": 3, "ct_in_c": true, "t": 1795408232.838, "kind": "gov"}
+{"key": ["udp", "10.0.0.10", 37145, "10.9.0.2", 3478], "cls": "call", "p": 1.0, "abstain": false, "tin": 4, "stage": 1, "age": 0.0, "t": 1795408237.5576, "kind": "classify"}
+{"probes": 0, "ticks": 52, "ticks_full": 46, "bursts": 1, "to_full": 0, "sentinel": true, "sent_alerts": {}, "cpu_main": 2.96, "cpu_slow": 0.15, "cpu_poll": 0.06, "slow_runs": 17, "slow_polls": 5, "ct_in_c": true, "t": 1795408244.893, "kind": "gov"}
+{"observed_t": 1795408255.6256304, "collapse_t": 1795408255.56732, "t": 1795408255.6362, "kind": "drop_confirmed"}
+{"why": "collapse", "ach_dl": 10.16, "ach_ul": 1.28, "t": 1795408255.6377, "kind": "sent_alert"}
+{"n": 1, "t": 1795408255.6506, "kind": "voice_to_video"}
+{"dir": "dl", "old": 47.5, "new": 3.523, "why": "bloat_fast_down", "c_est": 10.159, "ach": 10.159, "shield": ["clip_r_min"], "decision_t": 1795408255.633924, "t": 1795408255.6559, "kind": "rate"}
+{"probes": 0, "ticks": 55, "ticks_full": 47, "bursts": 4, "to_full": 1, "sentinel": true, "sent_alerts": {"collapse": 1}, "cpu_main": 3.0, "cpu_slow": 0.21, "cpu_poll": 0.09, "slow_runs": 19, "slow_polls": 7, "ct_in_c": true, "t": 1795408255.6568, "kind": "gov"}
+{"dir": "dl", "old": 3.523, "new": 3.875, "why": "drain_refine", "c_est": 9.977, "ach": 7.854, "shield": ["clip_up_step"], "decision_t": 1795408255.9728355, "t": 1795408255.9762, "kind": "rate"}
+{"dir": "dl", "old": 3.875, "new": 6.303, "why": "drain_refill", "c_est": 9.977, "ach": 2.784, "shield": [], "decision_t": 1795408256.1831524, "t": 1795408256.1862, "kind": "rate"}
+{"n": 1, "t": 1795408256.4015, "kind": "video_to_voice"}
+{"dir": "dl", "old": 6.303, "new": 8.73, "why": "settle_at_margin", "c_est": 9.977, "ach": 3.533, "shield": [], "decision_t": 1795408256.390659, "t": 1795408256.4037, "kind": "rate"}
+{"why": "probe_up", "ach_dl": 8.61, "ach_ul": 1.22, "t": 1795408261.9712, "kind": "sent_alert"}
+{"dir": "dl", "old": 8.73, "new": 9.143, "why": "slow_up", "c_est": 9.977, "ach": 8.51, "shield": [], "decision_t": 1795408262.4920478, "t": 1795408262.4995, "kind": "rate"}
+{"dir": "dl", "old": 9.143, "new": 9.509, "why": "slow_up", "c_est": 9.977, "ach": 9.066, "shield": [], "decision_t": 1795408263.0141237, "t": 1795408263.0206, "kind": "rate"}
+{"dir": "dl", "old": 9.509, "new": 10.741, "why": "slow_up", "c_est": 9.977, "ach": 9.163, "shield": [], "decision_t": 1795408263.5503783, "t": 1795408263.5541, "kind": "rate"}
+{"dir": "dl", "old": 10.741, "new": 6.976, "why": "bloat_fast_down", "c_est": 9.966, "ach": 10.002, "shield": [], "decision_t": 1795408264.4967883, "t": 1795408264.5135, "kind": "rate"}
+{"dir": "dl", "old": 6.976, "new": 8.969, "why": "settle_at_margin", "c_est": 9.966, "ach": 5.694, "shield": [], "decision_t": 1795408265.1325576, "t": 1795408265.1378, "kind": "rate"}
+{"probes": 0, "ticks": 137, "ticks_full": 128, "bursts": 4, "to_full": 1, "sentinel": true, "sent_alerts": {"collapse": 1, "probe_up": 1}, "cpu_main": 3.34, "cpu_slow": 0.26, "cpu_poll": 0.12, "slow_runs": 21, "slow_polls": 9, "ct_in_c": true, "t": 1795408265.654, "kind": "gov"}
+{"why": "probe_up", "ach_dl": 9.08, "ach_ul": 1.27, "t": 1795408276.6556, "kind": "sent_alert"}
+{"probes": 0, "ticks": 170, "ticks_full": 159, "bursts": 5, "to_full": 1, "sentinel": true, "sent_alerts": {"collapse": 1, "probe_up": 2}, "cpu_main": 3.48, "cpu_slow": 0.31, "cpu_poll": 0.14, "slow_runs": 23, "slow_polls": 11, "ct_in_c": true, "t": 1795408276.6585, "kind": "gov"}
+{"dir": "dl", "old": 8.969, "new": 9.328, "why": "slow_up", "c_est": 9.966, "ach": 9.319, "shield": [], "decision_t": 1795408277.1747453, "t": 1795408277.1791, "kind": "rate"}
+{"dir": "dl", "old": 9.328, "new": 10.0, "why": "slow_up", "c_est": 9.966, "ach": 9.788, "shield": [], "decision_t": 1795408277.695155, "t": 1795408277.699, "kind": "rate"}
+{"dir": "dl", "old": 10.0, "new": 11.296, "why": "slow_up", "c_est": 9.966, "ach": 9.811, "shield": [], "decision_t": 1795408278.217935, "t": 1795408278.224, "kind": "rate"}
+{"dir": "dl", "old": 11.296, "new": 6.978, "why": "bloat_fast_down", "c_est": 9.969, "ach": 10.021, "shield": [], "decision_t": 1795408279.058773, "t": 1795408279.064, "kind": "rate"}
+{"dir": "dl", "old": 6.978, "new": 8.972, "why": "settle_at_margin", "c_est": 9.969, "ach": 6.154, "shield": [], "decision_t": 1795408279.6776986, "t": 1795408279.6818, "kind": "rate"}
+{"probes": 0, "ticks": 237, "ticks_full": 224, "bursts": 5, "to_full": 1, "sentinel": true, "sent_alerts": {"collapse": 1, "probe_up": 2}, "cpu_main": 3.71, "cpu_slow": 0.35, "cpu_poll": 0.16, "slow_runs": 25, "slow_polls": 13, "ct_in_c": true, "t": 1795408287.5241, "kind": "gov"}
+{"why": "probe_up", "ach_dl": 9.03, "ach_ul": 1.26, "t": 1795408291.2609, "kind": "sent_alert"}
+{"dir": "dl", "old": 8.972, "new": 9.331, "why": "slow_up", "c_est": 9.969, "ach": 8.921, "shield": [], "decision_t": 1795408291.7773263, "t": 1795408291.7849, "kind": "rate"}
+{"dir": "dl", "old": 9.331, "new": 10.003, "why": "slow_up", "c_est": 9.969, "ach": 9.554, "shield": [], "decision_t": 1795408292.2999194, "t": 1795408292.3026, "kind": "rate"}
+{"dir": "dl", "old": 10.003, "new": 11.299, "why": "slow_up", "c_est": 9.973, "ach": 9.973, "shield": [], "decision_t": 1795408292.8135061, "t": 1795408292.8166, "kind": "rate"}
+{"dir": "dl", "old": 11.299, "new": 13.935, "why": "slow_up", "c_est": 11.328, "ach": 11.328, "shield": [], "decision_t": 1795408293.335437, "t": 1795408293.3402, "kind": "rate"}
+{"dir": "dl", "old": 13.935, "new": 19.786, "why": "slow_up", "c_est": 14.136, "ach": 14.136, "shield": [], "decision_t": 1795408293.8537414, "t": 1795408293.8569, "kind": "rate"}
+{"dir": "dl", "old": 19.786, "new": 29.679, "why": "slow_up", "c_est": 20.264, "ach": 20.264, "shield": [], "decision_t": 1795408294.3752863, "t": 1795408294.3839, "kind": "rate"}
+{"dir": "dl", "old": 29.679, "new": 44.518, "why": "slow_up", "c_est": 30.984, "ach": 30.984, "shield": [], "decision_t": 1795408294.911264, "t": 1795408294.915, "kind": "rate"}
+{"dir": "dl", "old": 44.518, "new": 47.5, "why": "slow_up", "c_est": 45.427, "ach": 45.427, "shield": [], "decision_t": 1795408295.4433692, "t": 1795408295.4481, "kind": "rate"}
+{"probes": 0, "ticks": 298, "ticks_full": 285, "bursts": 5, "to_full": 1, "sentinel": true, "sent_alerts": {"collapse": 1, "probe_up": 3}, "cpu_main": 3.93, "cpu_slow": 0.38, "cpu_poll": 0.17, "slow_runs": 27, "slow_polls": 15, "ct_in_c": true, "t": 1795408297.5635, "kind": "gov"}
+{"probes": 0, "ticks": 317, "ticks_full": 300, "bursts": 5, "to_full": 1, "sentinel": true, "sent_alerts": {"collapse": 1, "probe_up": 3}, "cpu_main": 4.03, "cpu_slow": 0.44, "cpu_poll": 0.22, "slow_runs": 30, "slow_polls": 18, "ct_in_c": true, "t": 1795408311.3495, "kind": "gov"}

@@ -1,0 +1,10 @@
+qdisc netem 8002: dev check1 root refcnt 4 limit 1000 delay 10ms seed 1573195414667392657
+qdisc cake 8001: dev check0 root refcnt 4 bandwidth 100Mbit diffserv3 triple-isolate nonat nowash no-ack-filter split-gso rtt 100ms raw overhead 0 
+Linux (none) 6.12.118+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.118-1 (2026-11-20) x86_64 GNU/Linux
+3
+tsc
+tsc hpet acpi_pm 
+tcpdump version 4.99.5
+libpcap version 1.10.5 (with TPACKET_V3)
+OpenSSL 3.5.9 29 Sep 2026
+64-bit build, 64-bit time_t

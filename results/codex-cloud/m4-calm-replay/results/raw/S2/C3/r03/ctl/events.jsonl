@@ -1,0 +1,35 @@
+{"mode": {"plan_dl": 50.0, "plan_ul": 10.0, "rmin_dl": 2.0, "rmin_ul": 0.5, "safe_dl": 20.0, "safe_ul": 4.0, "autorate": 1, "classifier": "heur", "model": "/tmp/m4-calm-replay/halo/model.pkl", "collect": false, "promote_p": 0.9, "voice_envelope": 6.0, "reflectors": ["10.9.0.3", "10.9.0.4", "10.9.0.5", "fd00:9::6"], "probe_hz": 20.0, "tick": 0.1, "quiet_probe_hz": 2.0, "quiet_tick": 0.25, "sentinel": 1, "sentinel_lib": "", "health_s": 5.0, "out": "/tmp/m4-calm-replay/results/raw/S2/C3/r03/ctl", "nice": 10}, "t": 1795403044.239, "kind": "start"}
+{"lkg": "3e08979d1a8a7cf3", "why": "initial", "t": 1795403044.4021, "kind": "commit"}
+{"msg": "C calm-mode thread loaded", "t": 1795403044.422, "kind": "sentinel"}
+{"key": ["udp", "10.0.0.10", 39089, "10.9.0.2", 3478], "cls": "call", "p": 1.0, "abstain": false, "tin": 4, "stage": 1, "age": 0.0, "t": 1795403057.563, "kind": "classify"}
+{"probes": 0, "ticks": 48, "ticks_full": 45, "bursts": 2, "to_full": 0, "sentinel": true, "sent_alerts": {}, "cpu_main": 3.22, "cpu_slow": 0.04, "cpu_poll": 0.03, "slow_runs": 3, "slow_polls": 3, "ct_in_c": true, "t": 1795403058.0506, "kind": "gov"}
+{"why": "delay", "ach_dl": 0.39, "ach_ul": 0.67, "t": 1795403059.7908, "kind": "sent_alert"}
+{"why": "delay", "ach_dl": 0.24, "ach_ul": 0.04, "t": 1795403069.7531, "kind": "sent_alert"}
+{"probes": 0, "ticks": 58, "ticks_full": 54, "bursts": 8, "to_full": 2, "sentinel": true, "sent_alerts": {"delay": 2}, "cpu_main": 3.55, "cpu_slow": 0.35, "cpu_poll": 0.05, "slow_runs": 12, "slow_polls": 4, "ct_in_c": true, "t": 1795403069.8887, "kind": "gov"}
+{"why": "delay", "ach_dl": 5.59, "ach_ul": 0.91, "t": 1795403074.2235, "kind": "sent_alert"}
+{"probes": 0, "ticks": 70, "ticks_full": 65, "bursts": 10, "to_full": 5, "sentinel": true, "sent_alerts": {"delay": 3}, "cpu_main": 4.6, "cpu_slow": 0.86, "cpu_poll": 0.46, "slow_runs": 15, "slow_polls": 6, "ct_in_c": true, "t": 1795403080.1641, "kind": "gov"}
+{"dir": "ul", "old": 9.5, "new": 1.014, "why": "bloat_fast_down", "c_est": 3.381, "ach": 4.198, "shield": [], "decision_t": 1795403083.993897, "t": 1795403084.0028, "kind": "rate"}
+{"dir": "ul", "old": 1.014, "new": 1.115, "why": "drain_refine", "c_est": 2.874, "ach": 1.682, "shield": ["clip_up_step"], "decision_t": 1795403084.2957869, "t": 1795403089.5894, "kind": "rate"}
+{"why": "probe_up", "ach_dl": 1.35, "ach_ul": 1.25, "t": 1795403090.7827, "kind": "sent_alert"}
+{"dir": "dl", "t": 1795403090.7839, "kind": "estimator_degraded"}
+{"dir": "ul", "t": 1795403090.7842, "kind": "estimator_degraded"}
+{"probes": 0, "ticks": 85, "ticks_full": 80, "bursts": 10, "to_full": 6, "sentinel": true, "sent_alerts": {"delay": 3, "probe_up": 1}, "cpu_main": 6.35, "cpu_slow": 0.95, "cpu_poll": 0.49, "slow_runs": 17, "slow_polls": 8, "ct_in_c": true, "t": 1795403090.7847, "kind": "gov"}
+{"probes": 0, "ticks": 88, "ticks_full": 83, "bursts": 10, "to_full": 8, "sentinel": true, "sent_alerts": {"delay": 3, "probe_up": 1}, "cpu_main": 6.78, "cpu_slow": 0.95, "cpu_poll": 0.49, "slow_runs": 17, "slow_polls": 8, "ct_in_c": true, "t": 1795403102.9275, "kind": "gov"}
+{"dir": "ul", "old": 1.115, "new": 0.5, "why": "bloat_fast_down", "c_est": 1.056, "ach": 4.427, "shield": [], "decision_t": 1795403105.1278505, "t": 1795403105.1562, "kind": "rate"}
+{"dir": "ul", "old": 0.5, "new": 0.951, "why": "settle_at_margin", "c_est": 1.056, "ach": 0.498, "shield": [], "decision_t": 1795403106.4663627, "t": 1795403106.4697, "kind": "rate"}
+{"why": "probe_up", "ach_dl": 3.01, "ach_ul": 0.96, "t": 1795403112.2816, "kind": "sent_alert"}
+{"probes": 0, "ticks": 138, "ticks_full": 132, "bursts": 12, "to_full": 8, "sentinel": true, "sent_alerts": {"delay": 3, "probe_up": 2}, "cpu_main": 7.31, "cpu_slow": 1.05, "cpu_poll": 0.53, "slow_runs": 19, "slow_polls": 10, "ct_in_c": true, "t": 1795403112.2941, "kind": "gov"}
+{"dir": "ul", "old": 0.951, "new": 0.989, "why": "slow_up", "c_est": 2.823, "ach": 2.823, "shield": [], "decision_t": 1795403113.2102175, "t": 1795403113.221, "kind": "rate"}
+{"dir": "ul", "old": 0.989, "new": 1.06, "why": "slow_up", "c_est": 2.823, "ach": 1.035, "shield": [], "decision_t": 1795403113.71611, "t": 1795403113.7271, "kind": "rate"}
+{"dir": "ul", "old": 1.06, "new": 1.197, "why": "slow_up", "c_est": 2.823, "ach": 1.053, "shield": [], "decision_t": 1795403114.2902384, "t": 1795403114.2962, "kind": "rate"}
+{"dir": "ul", "old": 1.197, "new": 1.476, "why": "slow_up", "c_est": 2.823, "ach": 1.212, "shield": [], "decision_t": 1795403114.8183835, "t": 1795403114.8322, "kind": "rate"}
+{"dir": "ul", "old": 1.476, "new": 2.096, "why": "slow_up", "c_est": 2.823, "ach": 1.387, "shield": [], "decision_t": 1795403115.5151446, "t": 1795403115.5271, "kind": "rate"}
+{"dir": "ul", "old": 2.096, "new": 2.18, "why": "slow_up", "c_est": 2.823, "ach": 1.64, "shield": [], "decision_t": 1795403116.2015898, "t": 1795403116.238, "kind": "rate"}
+{"dir": "ul", "old": 2.18, "new": 2.267, "why": "slow_up", "c_est": 2.823, "ach": 1.698, "shield": [], "decision_t": 1795403116.728711, "t": 1795403116.7342, "kind": "rate"}
+{"dir": "ul", "old": 2.267, "new": 2.358, "why": "slow_up", "c_est": 2.823, "ach": 1.724, "shield": [], "decision_t": 1795403117.7635674, "t": 1795403117.7777, "kind": "rate"}
+{"probes": 0, "ticks": 214, "ticks_full": 208, "bursts": 12, "to_full": 8, "sentinel": true, "sent_alerts": {"delay": 3, "probe_up": 2}, "cpu_main": 7.86, "cpu_slow": 1.11, "cpu_poll": 0.55, "slow_runs": 21, "slow_polls": 12, "ct_in_c": true, "t": 1795403122.3278, "kind": "gov"}
+{"why": "probe_up", "ach_dl": 17.56, "ach_ul": 1.66, "t": 1795403129.16, "kind": "sent_alert"}
+{"why": "probe_up", "ach_dl": 18.1, "ach_ul": 1.93, "t": 1795403131.1298, "kind": "sent_alert"}
+{"dir": "ul", "old": 2.358, "new": 2.452, "why": "slow_up", "c_est": 2.823, "ach": 1.929, "shield": [], "decision_t": 1795403131.1202643, "t": 1795403131.1513, "kind": "rate"}
+{"probes": 0, "ticks": 272, "ticks_full": 265, "bursts": 13, "to_full": 8, "sentinel": true, "sent_alerts": {"delay": 3, "probe_up": 4}, "cpu_main": 8.17, "cpu_slow": 1.16, "cpu_poll": 0.58, "slow_runs": 23, "slow_polls": 14, "ct_in_c": true, "t": 1795403132.4394, "kind": "gov"}
+{"probes": 0, "ticks": 299, "ticks_full": 289, "bursts": 13, "to_full": 8, "sentinel": true, "sent_alerts": {"delay": 3, "probe_up": 4}, "cpu_main": 8.29, "cpu_slow": 1.21, "cpu_poll": 0.61, "slow_runs": 26, "slow_polls": 17, "ct_in_c": true, "t": 1795403143.1538, "kind": "gov"}

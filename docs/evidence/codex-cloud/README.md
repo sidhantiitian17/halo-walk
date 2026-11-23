@@ -124,6 +124,7 @@ In the packet-tap repetition, 13,246 call packets matched at modem ingress, gate
 | `m4-native` | 2.10, never, 2.20 | 2.10% | 2.55% | Fail |
 | `m4-shared-threshold` | 2.60, 2.30, 1.50 | 2.32% | 2.24% | Fail |
 | `m4-fresh-delivery` | never, never, 1.70 | 4.21% | 16.05% | Fail |
+| `m4-calm-replay` | 1.70, 1.80, never | 5.17% | 2.11% | Fail |
 
 In the native midpoint campaign, the failed S2 run had cut rates before the capacity step following late-probe alerts. In the CPU runs, the native thread reached 1.56% of a core in one heuristic repetition and 1.75% in one ML repetition. Both were measured inside the original process-wide CPU window. See the [quorum evidence](../../../results/codex-cloud/m4-quorum) and [native evidence](../../../results/codex-cloud/m4-native).
 
@@ -131,4 +132,17 @@ The widened native detector made the first cut within 26 ms of the harness marke
 
 The fresh-sample detector applied its first cut 83 ms after the marker and entered the rate band at 0.80 s in the 1.70 s repetition. Its first repetition instead confirmed a drop using a sample 2.90 s old, beyond the 0.40 s confirmation window. One heuristic CPU repetition made a rate cut during routine replay while the native watcher had withheld an alert. All three M4 repetitions and all six CPU and control runs are included in the failed campaign. See the [fresh-sample evidence](../../../results/codex-cloud/m4-fresh-delivery).
 
+The restarted `m4-calm-replay` campaign passed M4, with a 1.80 s median adaptation, 15.15 s median recovery and 0.0 rate changes per minute. In its non-adapting repetition the nominal 18-second step was recorded 26.61 seconds after traffic began. Both CPU medians missed. One heuristic repetition triggered a fast cut at an observed 29.38 Mbit/s on a 47.5 Mbit/s shaper. Another spent most of its CPU window climbing back from an initial low-rate episode. See the [restarted controller campaign](../../../results/codex-cloud/m4-calm-replay) and [guest preflight](restarted-guest-preflight.txt).
+
 The first fidelity capture was empty because package extraction had skipped creating the Debian `tcpdump` account. An independent run confirmed that the original `iperf3` flow reached the receiver and that HTB dequeued packets while `tcpdump` reported `Couldn't find user 'tcpdump'`. After installing the account, the original scorer passed 20 and 50 Mbit/s under the adopted criterion. The 100 Mbit/s test measured 94.33 Mbit/s and failed the ±4% limit. See the [capture diagnostic](../../../results/codex-cloud/m1-platform-diagnostic) and [fidelity repetitions](../../../results/codex-cloud/m1-platform-fixed).
+
+## Original-kernel comparison
+
+The restarted Debian guest measured 89.39 Mbit/s in the 100 Mbit/s fidelity test. A separate guest reused the Debian userspace and QEMU 10.0.13 with the Ubuntu 6.8.0-149 kernel and iperf3 3.16 listed in `VERSIONS.lock`. Its Linux namespaces, veth, CAKE and NetEm passed preflight. The guest selected HPET. Its original fidelity runs measured 19.24, 43.56 and 59.15 Mbit/s on nominal links of 20, 50 and 100 Mbit/s. See the [restarted Debian captures](../../../results/codex-cloud/m1-restarted), [Ubuntu kernel captures](../../../results/codex-cloud/reference-fidelity), [guest preflight](reference-guest-preflight.txt) and [package hashes](reference-packages.sha256).
+
+To build the Ubuntu kernel comparison guest from a prepared Debian guest, run the following from the checkout. The script downloads the named packages through Ubuntu's signed archive and records the exact package hashes in the exchange directory.
+
+```bash
+scripts/cloud_vm/prepare-reference.sh /workspace/halo-benchmark-vm /workspace/halo-reference-vm
+HALO_VM_VCPUS=3 scripts/cloud_vm/boot.sh /workspace/halo-reference-vm
+```

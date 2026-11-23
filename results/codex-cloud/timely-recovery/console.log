@@ -1,0 +1,18 @@
+HALO_RUN timely-recovery S2 C3 1
+done /tmp/timely-recovery/results/raw/S2/C3/r01
+HALO_RUN timely-recovery S2 C3 2
+done /tmp/timely-recovery/results/raw/S2/C3/r02
+HALO_RUN timely-recovery S2 C3 3
+done /tmp/timely-recovery/results/raw/S2/C3/r03
+HALO_RUN timely-recovery CPU C1 1
+done /tmp/timely-recovery/results/raw/CPU/C1/r01
+HALO_RUN timely-recovery CPU C3 1
+done /tmp/timely-recovery/results/raw/CPU/C3/r01
+HALO_RUN timely-recovery CPU C4 1
+done /tmp/timely-recovery/results/raw/CPU/C4/r01
+HALO_RUN timely-recovery CPU C1 2
+done /tmp/timely-recovery/results/raw/CPU/C1/r02
+HALO_RUN timely-recovery CPU C3 2
+done /tmp/timely-recovery/results/raw/CPU/C3/r02
+HALO_RUN timely-recovery CPU C4 2
+done /tmp/timely-recovery/results/raw/CPU/C4/r02

@@ -650,3 +650,22 @@ def test_hold_is_longer_when_plan_limit_is_close_to_the_settle_point():
     far = hold_after_settle(20.0)
     assert len(near) <= len(far)
     assert len(near) <= 2
+
+
+def test_recovery_can_restore_only_previously_demonstrated_rate_below_normal_load():
+    est = DirEstimator(EstParams(r_max=60), rate=30, state="STEADY", last_ceiling=10, clear_peak=45)
+    est.on_probe(0, 10, 1)
+    est.on_probe(1, 10, 1)
+    assert est.tick(1, 14) == (None, "")
+    assert est.tick(1.5, 20) == (31.2, "slow_up")
+
+    est.rate = 44
+    assert est.tick(2, 20) == (45, "slow_up")
+    assert est.tick(2.5, 20) == (None, "")
+
+
+def test_recovery_does_not_probe_below_normal_load_without_clear_capacity_history():
+    est = DirEstimator(EstParams(r_max=60), rate=30, state="STEADY", last_ceiling=10)
+    est.on_probe(0, 10, 1)
+    est.on_probe(1, 10, 1)
+    assert est.tick(1, 20) == (None, "")

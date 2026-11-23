@@ -60,9 +60,10 @@ def _params(**kw):
     p = S.Params()
     p.tick_s, p.probe_s, p.thresh_ms, p.late_s, p.confirm_win, p.confirm_n = 0.1, 0.2, 15.0, 0.4, 0.4, 3
     p.base_alpha, p.peak_tau, p.gate_s, p.ewma_alpha_ref, p.ewma_dt_ref = 0.002, 2.0, S.GATE_S, 0.6, 0.1
-    p.load_thresh, p.collapse = 0.75, 0.7
+    p.collapse = 0.7
     for i in range(2):
         p.rate[i] = p.rmax[i] = 100.0
+        p.probe_gate[i] = 75.0
         p.hold_until[i] = time.time() + 1e6
         p.st[i].value = b"STEADY"
     p.fsm = b"STEADY"
@@ -265,6 +266,7 @@ def test_collapse_and_probe_up_alerts_use_the_params_python_hands_over(refl, tmp
         refl.extra_ms = 0.0
         p = _params()
         p.rate[0], p.rmax[0], p.hold_until[0] = 1.0, 100.0, 0.0     # room to probe upwards, hold expired, link loaded
+        p.probe_gate[0] = 0.75
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         stopl = threading.Event()
 

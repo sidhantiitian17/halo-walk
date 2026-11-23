@@ -146,3 +146,7 @@ To build the Ubuntu kernel comparison guest from a prepared Debian guest, run th
 scripts/cloud_vm/prepare-reference.sh /workspace/halo-benchmark-vm /workspace/halo-reference-vm
 HALO_VM_VCPUS=3 scripts/cloud_vm/boot.sh /workspace/halo-reference-vm
 ```
+
+The severe-drop revision (`ee51eea`) ran the full targeted gate on the Ubuntu-kernel guest. Heuristic CPU passed at 1.97%. ML CPU failed at 5.41%, and M4 failed at 2.80 s with 20.6 steady-state changes per minute. See the [targeted gate and all repetitions](../../../results/codex-cloud/reference-severe-drop).
+
+QEMU 8.2.2 with the same Ubuntu kernel and two vCPUs passed the namespace and qdisc preflight. The original 50 Mbit/s fidelity test measured 43.15 Mbit/s and failed. The 100 Mbit/s test hit the 120-second execution limit, after which the guest also failed to complete cleanup. See the [QEMU 8.2 fidelity logs, captures and package hashes](../../../results/codex-cloud/qemu8-fidelity).

@@ -20,7 +20,7 @@ for rate in 20 50 100; do
     else
         echo "HALO_FIDELITY_FAILED $rate exit=$?"
         [[ ! -f /tmp/fid.pcap ]] || cp /tmp/fid.pcap "$dest/fid_$rate.pcap"
-        rig/rig_down.sh
+        timeout --kill-after=5 20 rig/rig_down.sh
         rc=1
     fi
     cat "$dest/fid_$rate.log"

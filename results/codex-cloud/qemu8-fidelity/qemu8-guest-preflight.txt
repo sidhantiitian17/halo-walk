@@ -1,0 +1,9 @@
+qdisc netem 8002: dev check1 root refcnt 3 limit 1000 delay 10ms seed 4599862958900619045
+qdisc cake 8001: dev check0 root refcnt 3 bandwidth 100Mbit diffserv3 triple-isolate nonat nowash no-ack-filter split-gso rtt 100ms raw overhead 0 
+Linux (none) 6.8.0-149-generic #149-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:21:10 UTC 2026 x86_64 GNU/Linux
+2
+iperf 3.16 (cJSON 1.7.15)
+Linux (none) 6.8.0-149-generic #149-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:21:10 UTC 2026 x86_64
+Optional features available: CPU affinity setting, IPv6 flow label, SCTP, TCP congestion algorithm setting, sendfile / zerocopy, socket pacing, authentication, bind to device, support IPv4 don't fragment, POSIX threads
+hpet
+hpet acpi_pm 

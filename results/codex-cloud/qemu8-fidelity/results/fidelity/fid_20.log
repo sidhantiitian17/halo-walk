@@ -1,0 +1,1 @@
+{'rate': 20.0, 'pkts': 7423, 'measured_mbit': 19.89, 'rate_err_pct': -0.55, 'mtu_time_us': 605.6, 'dev_p50_us': 99.01, 'dev_p95_us': 570.6, 'dev_p99_us': 1361.07, 'cpu_idle_pct': 30.48, 'pass': False}

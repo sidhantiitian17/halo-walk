@@ -1,0 +1,18 @@
+c[?7l[2J[0mSeaBIOS (version 1.16.3-debian-1.16.3-2)
+Booting from ROM...
+c[?7l[2JHALO_GUEST_READY 6.8.0-149-generic 2 CPUs
+qdisc netem 8002: dev check1 root refcnt 3 limit 1000 delay 10ms seed 4599862958900619045
+qdisc cake 8001: dev check0 root refcnt 3 bandwidth 100Mbit diffserv3 triple-isolate nonat nowash no-ack-filter split-gso rtt 100ms raw overhead 0 
+Linux (none) 6.8.0-149-generic #149-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:21:10 UTC 2026 x86_64 GNU/Linux
+2
+iperf 3.16 (cJSON 1.7.15)
+Linux (none) 6.8.0-149-generic #149-Ubuntu SMP PREEMPT_DYNAMIC Fri Oct 23 13:21:10 UTC 2026 x86_64
+Optional features available: CPU affinity setting, IPv6 flow label, SCTP, TCP congestion algorithm setting, sendfile / zerocopy, socket pacing, authentication, bind to device, support IPv4 don't fragment, POSIX threads
+hpet
+hpet acpi_pm 
+HALO_FIDELITY qemu8-fidelity 20
+{'rate': 20.0, 'pkts': 7423, 'measured_mbit': 19.89, 'rate_err_pct': -0.55, 'mtu_time_us': 605.6, 'dev_p50_us': 99.01, 'dev_p95_us': 570.6, 'dev_p99_us': 1361.07, 'cpu_idle_pct': 30.48, 'pass': False}
+HALO_FIDELITY qemu8-fidelity 50
+{'rate': 50.0, 'pkts': 15099, 'measured_mbit': 43.15, 'rate_err_pct': -13.71, 'mtu_time_us': 242.24, 'dev_p50_us': 182.22, 'dev_p95_us': 525.31, 'dev_p99_us': 2735.21, 'cpu_idle_pct': 31.12, 'pass': False}
+HALO_FIDELITY qemu8-fidelity 100
+HALO_FIDELITY_FAILED 100 exit=124

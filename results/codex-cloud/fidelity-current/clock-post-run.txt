@@ -1,0 +1,19 @@
+Mon Nov 23 04:24:27 UTC 2026
+2027.10 3349.42
+console=ttyS0 rdinit=/init quiet panic=1
+hpet acpi_pm 
+hpet
+[    0.526464] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+[    1.433529] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    1.474210] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604467 ns
+[    1.516337] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x2127ae29baf, max_idle_ns: 440795319577 ns
+[    2.830239] clocksource: Switched to clocksource tsc-early
+[    2.899849] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    4.044297] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x212793982db, max_idle_ns: 440795293883 ns
+[    4.044763] clocksource: Switched to clocksource tsc
+[   93.341824] clocksource: Long readout interval, skipping watchdog check: cs_nsec: 2539635710 wd_nsec: 2539634920
+[  152.025481] clocksource: timekeeping watchdog on CPU1: wd-tsc-wd excessive read-back delay of 2666320ns vs. limit of 125000ns, wd-wd read-back delay only 30340ns, attempt 2, marking tsc unstable
+[  152.027970] tsc: Marking TSC unstable due to clocksource watchdog
+[  152.028454] TSC found unstable after boot, most likely due to broken BIOS. Use 'tsc=unstable'.
+[  152.706871] clocksource: Checking clocksource tsc synchronization from CPU 0 to CPUs 1-2.
+[  152.732074] clocksource: Switched to clocksource hpet

@@ -42,6 +42,9 @@ def main():
         if run.cfg not in ("C2", "C3", "C4"):
             continue
         telemetry, start = run.telemetry(), run.t("start")
+        if run.scn == "DATAGEN" and start is None:
+            end = run.ev["end"]
+            start = end["t"] - end["rel"]
         if start is None or telemetry is None or telemetry["t"][0] > start:
             late_controller.append(run.id)
     summary = analysis.run()

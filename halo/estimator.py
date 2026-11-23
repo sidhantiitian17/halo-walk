@@ -93,6 +93,7 @@ class DirEstimator:
     t_bloat_on: float = -1.0
     t_native_collapse: float = float("-inf")
     t_native_confirmed: float = float("-inf")
+    drain_clear_probes: dict = field(default_factory=dict)
     t_burst_on: float = -1.0
     ach_onset: float = 0.0
     ach_hist: deque = field(default_factory=lambda: deque(maxlen=64))   # (t, achieved) for the 'has it fallen' test
@@ -112,6 +113,11 @@ class DirEstimator:
         self.last_seen[refl] = t
         self.last_delta = owd_ms - b
         self.votes.append((t, self.last_delta > self.p.thresh_ms))
+        if self.behind and self.state == "DRAIN":
+            if self.last_delta <= self.p.thresh_ms / 2:
+                self.drain_clear_probes[refl] = t
+            else:
+                self.drain_clear_probes.pop(refl, None)
 
     def on_late(self, t, age_ms):
         """a probe still unanswered after age_ms: in a standing queue replies arrive late, so an outstanding probe is
@@ -173,11 +179,16 @@ class DirEstimator:
                             return self._set(max(p.r_min, p.drain_factor * self.c_est), "drain_refine")
                         self.delta_at_action = self.last_delta
                 return None, ""
-            if t - self.t_clear >= p.min_drain:
+            severe = self.behind and self.c_est < 0.5 * self.rate_before
+            # The WAN-side probes bypass the LAN shaper. Once multiple reflectors
+            # see the modem queue clear, start the staged refill to drain the local queue.
+            clear_paths = (severe and not self.t_refill and achieved <= p.deep_settle_margin * self.c_est
+                           and self.last_delta <= p.thresh_ms / 2
+                           and sum(0 <= t - seen <= p.min_drain for seen in self.drain_clear_probes.values()) >= p.vote_k)
+            if t - self.t_clear >= p.min_drain or clear_paths:
                 # episode confirmed (>= confirm s of sustained bloat with a non-rising arrival rate), so it is
                 # never undone: settle at margin x the capacity evidence gathered during the episode
                 # (behind: 90th pct of arrival rate while the queue stood; ahead/upload: the cut estimate).
-                severe = self.behind and self.c_est < 0.5 * self.rate_before
                 margin = min(p.margin, p.deep_settle_margin) if severe else p.margin
                 if severe and not self.t_refill:
                     # Release the deep clamp in two steps. A single jump from the drain rate
@@ -243,6 +254,7 @@ class DirEstimator:
             self.delta_at_action = self.last_delta
             self.t_episode, self.samples = t, [(ts, a) for (ts, a) in self.ach_hist if ts >= tb] if tb >= 0 else []
             self.rate_before = self.rate
+            self.drain_clear_probes.clear()
             near = self.last_ceiling > 0 and abs(c - self.last_ceiling) <= 0.10 * self.last_ceiling
             self.hold = min(p.hold_max, self.hold * 2) if near else p.hold_base
             self.last_ceiling = c

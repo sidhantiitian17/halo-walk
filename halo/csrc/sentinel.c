@@ -298,18 +298,29 @@ void *sentinel_thread(void *arg) {
             }
             if (drop_check && __builtin_popcount(delayed_reflectors) >= p.confirm_n) {
                 double dt = now - t_last;
-                int recovered = 0;
+                uint64_t nrx = rx;
+                double arrival = ach[0];
                 if (dt >= 0.04) {
-                    uint64_t nrx = rd_ctr(G.fd_rx);
-                    recovered = (double)(nrx - rx) * 8 / dt / 1e6 >= p.collapse * p.rate[0];
+                    nrx = rd_ctr(G.fd_rx);
+                    arrival = (double)(nrx - rx) * 8 / dt / 1e6;
                 }
-                if (recovered) {
+                if (arrival >= p.collapse * p.rate[0]) {
                     /* The fall recovered during confirmation. Keep the normal
                      * counter cadence and let the genuine delay samples stand. */
                     dl_collapse_at = 0;
                     drop_check_until = 0;
                     watch_until = 0;
                 } else {
+                    if (dt >= 0.04 && arrival >= 0.10 * p.rate[0]) {
+                        /* The interval after the drop excludes the prior operating
+                         * rate, which would otherwise linger in the smoothed estimate. */
+                        uint64_t ntx = rd_ctr(G.fd_tx);
+                        ach[0] = arrival;
+                        ach[1] += (1.0 - pow(1.0 - p.ewma_alpha_ref, dt / p.ewma_dt_ref))
+                                * ((double)(ntx - tx) * 8 / dt / 1e6 - ach[1]);
+                        rx = nrx; tx = ntx; t_last = now;
+                        push(EV_ACH, now, ach[0], ach[1], 0);
+                    }
                     for (int i = 0; i < G.nsock; i++)
                         if (early_late[i] > 0) push(EV_LATE, now, early_late[i], 1, i);
                     push(EV_DROP_CONFIRMED, now, dl_collapse_at, 0, 0);

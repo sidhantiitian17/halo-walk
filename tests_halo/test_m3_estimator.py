@@ -556,6 +556,24 @@ def test_capacity_drop_with_lagging_arrival_settles_once_within_10pct():
     assert st[0][1] == pytest.approx(0.95 * 10.0, rel=0.10)
 
 
+@pytest.mark.parametrize("reflectors,arrival,refills", [((0, 1, 2), 4.0, True), ((0, 0, 0), 4.0, False),
+                                                       ((0, 1, 2), 9.0, False)])
+def test_severe_drain_can_refill_early_after_multiple_clear_paths(reflectors, arrival, refills):
+    estimator = DirEstimator(EstParams(), rate=3.0, state="DRAIN", rate_before=45.0, c_est=10.0, t_clear=1.0)
+    for reflector in range(4):
+        estimator.on_probe(reflector, 20.0, 0.9)
+    estimator.drain_clear_probes.clear()
+    for index, reflector in enumerate(reflectors):
+        estimator.on_probe(reflector, 21.0, 1.05 + 0.05 * index)
+
+    rate, reason = estimator.tick(1.16, arrival)
+    if refills:
+        assert reason == "drain_refill"
+        assert 3.0 < rate < estimator.p.deep_settle_margin * estimator.c_est
+    else:
+        assert rate is None
+
+
 def test_mild_burst_episodes_do_not_spiral_capacity_estimate_down():
     """episodes whose arrival evidence is a little below the previous estimate (burst queues below the real capacity)
     may only lower c_est by keep_decay per episode (S2 low phase: 10 -> 9.3 -> 8.5 -> 7.4 -> 6.8 Mbit/s)"""

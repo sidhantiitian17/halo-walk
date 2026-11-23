@@ -93,15 +93,20 @@ def tap_profile(run_path, taps):
     start = run.t("rate_down")
     modem = tap_packets(taps / "modem-ingress.pcap")
     gateway = tap_packets(taps / "gateway-ingress.pcap")
+    egress_file = taps / "gateway-egress.pcap"
+    egress = tap_packets(egress_file) if egress_file.exists() else None
     call = run.rt("call")
     samples = []
     for seq, received in zip(call["seq"], call["t"]):
-        if seq not in modem or seq not in gateway:
+        if seq not in modem or seq not in gateway or (egress is not None and seq not in egress):
             continue
         admitted, sent = modem[seq]
         delivered, _ = gateway[seq]
-        samples.append((received - start, (admitted - sent) * 1e3,
-                        (delivered - admitted) * 1e3, (received - delivered) * 1e3))
+        delays = [(admitted - sent) * 1e3, (delivered - admitted) * 1e3, (received - delivered) * 1e3]
+        if egress is not None:
+            dequeued, _ = egress[seq]
+            delays.extend([(dequeued - delivered) * 1e3, (received - dequeued) * 1e3])
+        samples.append((received - start, *delays))
     if not samples:
         raise ValueError("no call packets matched across both taps and the receiver")
     samples = np.asarray(samples)
@@ -111,8 +116,10 @@ def tap_profile(run_path, taps):
         phase = samples[(samples[:, 0] >= lower) & (samples[:, 0] < upper)]
         if phase.size:
             p95 = np.percentile(phase[:, 1:], 95, axis=0).round(3)
-            phases[label] = {"matched_packets": len(phase), "p95_sender_to_modem_ms": float(p95[0]),
-                             "p95_modem_to_gateway_ms": float(p95[1]), "p95_gateway_to_client_ms": float(p95[2])}
+            names = ("sender_to_modem", "modem_to_gateway", "gateway_to_client", "inside_gateway", "egress_to_client")
+            phases[label] = {"matched_packets": len(phase), **{
+                f"p95_{name}_ms": float(value) for name, value in zip(names, p95)
+            }}
     return {"matched_packets": len(samples), "phases": phases}
 
 

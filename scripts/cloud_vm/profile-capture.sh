@@ -19,9 +19,12 @@ ip netns exec modem tcpdump -n -i m-isp -Q in -s 58 -U -w "$dir/modem-ingress.pc
 ingress_pid=$!
 ip netns exec gw tcpdump -n -i wan0 -Q in -s 58 -U -w "$dir/gateway-ingress.pcap" "$filter" 2>"$dir/gateway-ingress.log" &
 gateway_pid=$!
+ip netns exec gw tcpdump -n -i lan0 -Q out -s 58 -U -w "$dir/gateway-egress.pcap" "$filter" 2>"$dir/gateway-egress.log" &
+egress_pid=$!
 rc=0
 wait "$bench_pid" || rc=$?
 wait "$ingress_pid" 2>/dev/null || true
 wait "$gateway_pid" 2>/dev/null || true
+wait "$egress_pid" 2>/dev/null || true
 cp "$dir/"* "$dest/"
 exit "$rc"

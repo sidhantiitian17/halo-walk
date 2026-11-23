@@ -2,6 +2,7 @@
 set -euo pipefail
 cd "${1:-/workspace/halo-benchmark-vm}"
 export LD_LIBRARY_PATH="$PWD/host/usr/lib/x86_64-linux-gnu"
+export QEMU_MODULE_DIR="$PWD/host/usr/lib/x86_64-linux-gnu/qemu"
 vcpus=${HALO_VM_VCPUS:-2}
 exec host/usr/bin/qemu-system-x86_64 -L "$PWD/host/usr/share/qemu" \
     -bios "$PWD/host/usr/share/seabios/bios-256k.bin" -accel tcg,thread=multi -cpu max -smp "$vcpus" -m 4096 \

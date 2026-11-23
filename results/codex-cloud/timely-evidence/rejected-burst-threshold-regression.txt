@@ -1,0 +1,57 @@
+........................................................................ [ 21%]
+...x................F..............FF................................... [ 43%]
+........................................................................ [ 65%]
+........................................................................ [ 86%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+________________ test_flat_rate_near_shaper_needs_full_confirm _________________
+
+    def test_flat_rate_near_shaper_needs_full_confirm():
+        p = EstParams(r_max=100.0)
+        e = DirEstimator(p, rate=100.0)
+        t = 0.0
+        for _ in range(20):
+            for r in range(4):
+                e.on_probe(r, 20.0, t)
+            e.tick(t, 90.0)    # flat arrival: no flow-start ramp
+            t += 0.1
+        seen = []
+        for _ in range(15):
+            for r in range(4):
+                e.on_probe(r, 80.0, t)
+            seen.append((round(t, 2), e.tick(t, 90.0)[1]))     # arrival still ~ shaper rate (no collapse)
+            t += 0.1
+        cut = [ts for ts, w in seen if w == "bloat_fast_down"]
+        onset = next(ts for ts, w in seen if w == "bloat_unconfirmed")
+>       assert len(cut) == 1 and cut[0] - onset >= p.confirm - 1e-9 and cut[0] - onset <= p.confirm + 0.15
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests_halo/test_m3_estimator.py:294: AssertionError
+_______ test_flow_start_patience_is_bounded_standing_queue_still_drained _______
+
+    def test_flow_start_patience_is_bounded_standing_queue_still_drained():
+        p = EstParams(r_max=47.5)
+        e, out = _ramp_start(p, 25.0, 4.0)
+        cut = [o for o in out if o[1] == "bloat_fast_down"]
+>       assert len(cut) == 1 and p.start_patience - 0.2 <= cut[0][0] <= p.start_patience + 0.5
+E       AssertionError: assert (1 == 1 and 3.4 <= (2.0 + 0.5))
+E        +  where 1 = len([(3.4, 'bloat_fast_down', 30.8)])
+E        +  and   2.0 = EstParams(r_min=2.0, r_max=47.5, thresh_ms=15.0, vote_n=6, vote_k=3, sample_ttl=1.0, drain_factor=0.7, ref_margin=0.95..., near_max_hold=4.0, burst_max=1.5, at_capacity=0.9, start_ratio=1.5, start_win=1.5, start_patience=2.0, ramp_tol=1.15).start_patience
+
+tests_halo/test_m3_estimator.py:520: AssertionError
+______________ test_flow_start_with_deep_queue_is_cut_immediately ______________
+
+    def test_flow_start_with_deep_queue_is_cut_immediately():
+        p = EstParams(r_max=47.5)
+        e, out = _ramp_start(p, 150.0, 2.0)
+        cut = [o for o in out if o[1] == "bloat_fast_down"]
+>       assert cut and cut[0][0] <= p.confirm + 0.4
+E       assert ([])
+
+tests_halo/test_m3_estimator.py:527: AssertionError
+=========================== short test summary info ============================
+FAILED tests_halo/test_m3_estimator.py::test_flat_rate_near_shaper_needs_full_confirm
+FAILED tests_halo/test_m3_estimator.py::test_flow_start_patience_is_bounded_standing_queue_still_drained
+FAILED tests_halo/test_m3_estimator.py::test_flow_start_with_deep_queue_is_cut_immediately
+3 failed, 328 passed, 1 xfailed in 46.32s

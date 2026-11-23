@@ -25,7 +25,7 @@ apt-get -o "Dir::Cache::archives=$work/apt/host" -o Debug::NoLocking=true \
 apt-get -o "Dir::Cache::archives=$work/apt/guest" -o "Dir::State::status=$work/apt/guest.status" \
     -o Debug::NoLocking=true --download-only --no-install-recommends -y install \
     linux-image-amd64 busybox-static bash coreutils util-linux kmod python3.13 iproute2 iputils-ping \
-    nftables iperf3 conntrack ethtool curl libgomp1 libstdc++6 tar e2fsprogs mount procps psmisc gawk sed grep findutils jq
+    nftables iperf3 conntrack ethtool curl tcpdump libgomp1 libstdc++6 tar e2fsprogs mount procps psmisc gawk sed grep findutils jq
 for package in apt/host/*.deb; do dpkg-deb -x "$package" host; done
 for package in apt/guest/*.deb; do dpkg-deb -x "$package" guest; done
 
@@ -44,6 +44,7 @@ ln -sfn ../seabios/vgabios-stdvga.bin host/usr/share/qemu/vgabios-stdvga.bin
 ln -sfn ../seabios/bios-256k.bin host/usr/share/qemu/bios-256k.bin
 install -m755 "$repo/scripts/cloud_vm/bench.sh" exchange/bench.sh
 install -m755 "$repo/scripts/cloud_vm/preflight.sh" exchange/preflight.sh
+install -m755 "$repo/scripts/cloud_vm/fidelity.sh" exchange/fidelity.sh
 
 export UV_CACHE_DIR="$work/uv-cache"
 uv venv --python /usr/bin/python3.13 "$work/venv"

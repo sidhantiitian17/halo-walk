@@ -13,6 +13,7 @@ python="$shared_venv/bin/python"
 if [[ -x "$guest_venv/bin/python" ]]; then
     python="$guest_venv/bin/python"
 fi
+batch_rc=0
 for spec in "$@"; do
     IFS=, read -r scenario config rep <<< "$spec"
     if [[ "$config" == C4 && "$python" == "$shared_venv/bin/python" ]]; then
@@ -27,7 +28,7 @@ for spec in "$@"; do
     fi
     echo "HALO_RUN $label $scenario $config $rep"
     set +e
-    timeout 200 "$python" scenarios/run.py "$scenario" "$config" "$rep"
+    timeout 400 "$python" scenarios/run.py "$scenario" "$config" "$rep"
     rc=$?
     set -e
     printf -v run 'r%02d' "$rep"
@@ -37,7 +38,9 @@ for spec in "$@"; do
         cp -r "$src" "$dest/$scenario/$config/"
     fi
     if ((rc != 0)); then
+        echo "HALO_FAILED $label $scenario $config $rep exit=$rc"
         rig/rig_down.sh
-        exit "$rc"
+        batch_rc=1
     fi
 done
+exit "$batch_rc"
